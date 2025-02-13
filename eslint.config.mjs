@@ -14,7 +14,7 @@ const eslintConfig = [
   {
     files: ["**/*"], // 프로젝트 전체에 적용할 기본 규칙
     rules: {
-      "no-unused-vars": "warning", // 기본적으로 unused-vars 규칙 활성화
+      "no-unused-vars": "warning", // unused-vars 규칙 비활성화
     },
   },
 ];
