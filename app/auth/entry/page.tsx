@@ -1,3 +1,5 @@
+"use client";
+
 import { AuthTokenContext } from "@/contexts/AuthTokenContext";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
@@ -24,6 +26,6 @@ export default async function Page({
     }
   } else {
     alert("잘못된 요청입니다.");
-    router.replace("/login");
+    router.replace("/auth/login");
   }
 }

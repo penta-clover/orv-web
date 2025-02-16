@@ -1,7 +1,7 @@
 "use client";
 
 import { AuthTokenContext } from "@/contexts/AuthTokenContext";
-import { use, useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 
 export default function Page() {
   // for Test
