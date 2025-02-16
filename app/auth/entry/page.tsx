@@ -1,5 +1,5 @@
 import { AuthTokenContext } from "@/contexts/AuthTokenContext";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useContext } from "react";
 
 export default async function Page({
