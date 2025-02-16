@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Providers from "./providers";
 
 export const metadata: Metadata = {
   title: "Orv",
@@ -14,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={`antialiased overflow-hidden safe-area`}>
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
