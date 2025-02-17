@@ -1,14 +1,4 @@
-"use client";
-
-import { AuthTokenContext } from "@/contexts/AuthTokenContext";
-import { useContext, useEffect } from "react";
-
 export default function Page() {
-  // for Test
-  const { authToken } = useContext(AuthTokenContext);
-  useEffect(() => alert(authToken), [authToken]);
-  //
-
   return (
     <div className="flex flex-col max-w-[450px] h-screen mx-auto py-10 px-5 space-y-4">
       <h1 className="text-2xl font-extrabold">당신을 부를 호칭을 정해주세요</h1>
