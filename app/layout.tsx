@@ -13,7 +13,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={`antialiased safe-area hide-scrollbar`}>
+      <body className={`antialiased hide-scrollbar safe-area`}>
         {children}
       </body>
     </html>

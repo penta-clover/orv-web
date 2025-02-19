@@ -1,4 +1,5 @@
 export default function Page() {
+  // TODO: 로직 처리
   return (
     <div className="flex flex-col max-w-[450px] h-screen mx-auto py-10 px-5 space-y-10">
       <h1 className="text-2xl font-extrabold">이용약관 및 정책</h1>
