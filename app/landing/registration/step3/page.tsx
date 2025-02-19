@@ -1,12 +1,12 @@
 "use client";
 
-import { EarlybirdRepository } from "@/repositories/earlybirdRepository";
+import { useEarlybirdRepository } from "@/providers/EarlybirdRepositoryContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Page() {
   const router = useRouter();
-  const earlybirdRepository = new EarlybirdRepository();
+  const earlybirdRepository = useEarlybirdRepository();
 
 
   // API에서 받아올 최종 숫자

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEarlybirdRepository } from "@/providers/EarlybirdRepositoryContext";
 import { EarlybirdRepository } from "@/repositories/earlybirdRepository";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -8,7 +9,7 @@ export default function Page() {
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const router = useRouter();
-  const earlybirdRepository = new EarlybirdRepository();
+  const earlybirdRepository = useEarlybirdRepository();
 
   return (
     <div className="flex flex-col gap-[4]">
