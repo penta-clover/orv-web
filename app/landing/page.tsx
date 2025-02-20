@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import ActionBar from "./actionBar";
 import { useRouter } from "next/navigation";
 import EndingComment from "./endingComment";
@@ -17,6 +16,7 @@ import ProjectorSection from "./projectorSection";
 
 import './blackBody.css';
 import DescriptionSection from "./descriptionSection";
+import { useRef } from "react";
 
 export default function Page() {
   const videoRef = useRef(null);
