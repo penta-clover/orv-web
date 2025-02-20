@@ -1,18 +1,13 @@
 "use client";
 
+import "./globals.css";
 import { Api } from "@/data/Api";
 import { AuthRepositoryImpl } from "@/data/repository/AuthRepositoryImpl";
 import { JoinUsecase } from "@/domain/usecase/JoinUsecase";
-
-import "./globals.css";
 import { FirebaseProvider } from "@/providers/firebaseContext";
 import { EarlybirdRepositoryProvider } from "@/providers/earlybirdRepositoryContext";
-import { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Orv",
-  description: "나를 바라보는 시간",
-};
+import Head from "next/head";
 
 export default function RootLayout({
   children,
@@ -26,7 +21,12 @@ export default function RootLayout({
   
   return (
     <html lang="ko">
-      <body className={`antialiased hide-scrollbar safe-area`}>
+      <Head>
+        <title>Orv</title>
+        <meta name="description" content="나를 바라보는 시간" />
+      </Head>
+      <body className={`antialiased hide-scrollbar safe-area font-pretendard`}>
+        <link rel="stylesheet" as="style" crossOrigin="anonymous" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
         <FirebaseProvider>
           <EarlybirdRepositoryProvider>
             {children}

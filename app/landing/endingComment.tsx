@@ -35,7 +35,7 @@ const Typewriter: React.FC<TypewriterProps> = ({
     return () => clearInterval(intervalId);
   }, [text, speed, onComplete]);
 
-  return <div>{displayedText}</div>;
+  return <div className="h-[26px]">{displayedText}</div>;
 };
 
 /**
@@ -60,7 +60,7 @@ const EndingComment: React.FC = () => {
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.3 }
     );
 
     if (containerRef.current) {
@@ -77,17 +77,17 @@ const EndingComment: React.FC = () => {
   };
 
   return (
-    <div ref={containerRef} className="flex flex-col items-center text-white">
+    <div ref={containerRef} className="flex flex-col items-end text-white mr-[16px]">
       {hasStarted ? (
         texts.map((text, index) => (
-          <div className="h-[100px]" key={index}>
+          <div className="text-main-beige50 text-body2" key={index}>
             {index < currentIndex ? (
               // 이미 타이핑 완료된 텍스트
               <span>{text}</span>
             ) : index === currentIndex ? (
               // 현재 타이핑 중인 텍스트
               <Typewriter text={text} onComplete={handleComplete} speed={130} />
-            ) : null}
+            ) : <span className="h-[26px] text-dark">o</span>}
           </div>
         ))
       ) : (
