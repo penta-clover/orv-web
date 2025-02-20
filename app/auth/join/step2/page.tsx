@@ -15,19 +15,19 @@ function Body() {
   const [gender, setGender] = useState<Gender|null>(null);
   
   const onNextClicked = () => {
-    if (gender == null) {
+    if (gender === null) {
       alert("성별을 입력해주세요.");
       return;
     }
-    if (birthYear == null) {
+    if (birthYear === null) {
       alert("출생 연도를 입력해주세요.");
       return;
     }
-    if (birthMonth == null) {
+    if (birthMonth === null) {
       alert("출생 월을 입력해주세요.");
       return;
     }
-    if (birthDay == null) {
+    if (birthDay === null) {
       alert("출생 일을 입력해주세요.");
       return;
     }

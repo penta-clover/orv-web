@@ -1,14 +1,10 @@
-import type { Metadata } from "next";
-import "./globals.css";
+"use client";
 
+import "./globals.css";
 import { Api } from "@/data/Api";
 import { AuthRepositoryImpl } from "@/data/repository/AuthRepositoryImpl";
-import { JoinUsecase } from "@/domain/usecase/JoinUsecase";
-
-export const metadata: Metadata = {
-  title: "Orv",
-  description: "나를 바라보는 시간",
-};
+import { JoinService } from "@/domain/service/JoinService";
+import { JoinProvider } from "@/context/JoinContext";
 
 export default function RootLayout({
   children,
@@ -18,12 +14,14 @@ export default function RootLayout({
   
   const api = new Api();
   const authRepository = new AuthRepositoryImpl(api);
-  const joinUsecase = new JoinUsecase(authRepository);
+  const joinService = new JoinService(authRepository);
   
   return (
     <html lang="ko">
       <body className={`antialiased overflow-hidden safe-area`}>
-        {children}
+        <JoinProvider joinService={joinService}>
+          {children}
+        </JoinProvider>
       </body>
     </html>
   );
