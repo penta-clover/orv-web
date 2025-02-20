@@ -1,20 +1,23 @@
-// EarlybirdRepositoryContext.tsx
+'use client';
+
 import React, { createContext, useContext } from "react";
 import { FirebaseApp } from "firebase/app";
 import { EarlybirdRepository, IEarlybirdRepository } from "@/repositories/earlybirdRepository";
+import { useFirebase } from "@/providers/firebaseContext";
 
 // 초기값을 null로 설정합니다.
 const EarlybirdRepositoryContext = createContext<IEarlybirdRepository | null>(null);
 
 interface EarlybirdRepositoryProviderProps {
   children: React.ReactNode;
-  firebaseApp: FirebaseApp;
 }
 
 export const EarlybirdRepositoryProvider = ({
   children,
-  firebaseApp,
 }: EarlybirdRepositoryProviderProps) => {
+  // FirebaseProvider 내부에 있으므로 안전하게 useFirebase()를 호출할 수 있습니다.
+  const firebaseApp: FirebaseApp = useFirebase();
+
   // firebaseApp을 이용해 repository 인스턴스를 생성합니다.
   const repository = new EarlybirdRepository(firebaseApp);
 

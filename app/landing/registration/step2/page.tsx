@@ -1,7 +1,6 @@
 "use client";
 
-import { useEarlybirdRepository } from "@/providers/EarlybirdRepositoryContext";
-import { EarlybirdRepository } from "@/repositories/earlybirdRepository";
+import { useEarlybirdRepository } from "@/providers/earlybirdRepositoryContext";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 

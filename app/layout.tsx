@@ -1,11 +1,13 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import { FirebaseProvider, useFirebase } from "@/providers/FirebaseContext";
-import { EarlybirdRepositoryProvider } from "@/providers/EarlybirdRepositoryContext";
+"use client";
 
 import { Api } from "@/data/Api";
 import { AuthRepositoryImpl } from "@/data/repository/AuthRepositoryImpl";
 import { JoinUsecase } from "@/domain/usecase/JoinUsecase";
+
+import "./globals.css";
+import { FirebaseProvider } from "@/providers/firebaseContext";
+import { EarlybirdRepositoryProvider } from "@/providers/earlybirdRepositoryContext";
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Orv",
@@ -26,7 +28,7 @@ export default function RootLayout({
     <html lang="ko">
       <body className={`antialiased hide-scrollbar safe-area`}>
         <FirebaseProvider>
-          <EarlybirdRepositoryProvider firebaseApp={useFirebase()}>
+          <EarlybirdRepositoryProvider>
             {children}
           </EarlybirdRepositoryProvider>
         </FirebaseProvider>

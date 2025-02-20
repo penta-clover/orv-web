@@ -1,13 +1,8 @@
-// EarlybirdRepository.ts
+import { EarlybirdRepository } from "@/domain/repository/EarlybirdRepository";
 import { FirebaseApp } from "firebase/app";
 import { addDoc, collection, getDocs, getFirestore } from "firebase/firestore";
 
-export interface IEarlybirdRepository {
-  register(data: any): Promise<any>;
-  getWaitingNumber(): Promise<number>;
-}
-
-export class EarlybirdRepository implements IEarlybirdRepository {
+export class EarlybirdRepositoryImpl implements EarlybirdRepository {
   constructor(private app: FirebaseApp) {}
 
   async register(data: any): Promise<any> {
