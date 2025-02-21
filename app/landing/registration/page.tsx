@@ -47,7 +47,7 @@ function Headline() {
   return (
     <div className="flex flex-col items-center">
       <div className="text-head2 text-main-lilac50">
-        오브 얼리버드 혜택 마감까지
+        얼리버드 혜택 마감까지
       </div>
       <div className="h-[4px]" />
       <Deadline
@@ -210,7 +210,7 @@ function Step1(props: { onComplete: () => void }) {
           카카오뱅크(최현준) 3333-32-8277762
         </div>
         <div className="text-grayscale-500 bg-grayscale-800 text-caption1 w-[37px] h-[22px] flex flex-row items-center justify-center rounded-[4px]">
-          {isCopied ? "복사됨" : "복사"}
+          {isCopied ? "완료" : "복사"}
         </div>
       </div>
       <div className="text-body2 text-grayscale-300">계좌로 입금해주세요.</div>
@@ -246,9 +246,10 @@ function Step2(props: { onRegister: () => void }) {
       <input
         id="name"
         type="text"
+        placeholder="입금자명과 동일하게 입력해주세요."
         defaultValue=""
         suppressHydrationWarning
-        className="bg-grayscale-700 rounded-[8px] h-[48px] text-white text-body3 px-[16px] py-[13px] border border-transparent focus:border-grayscale-200 focus:outline-none focus:ring-0"
+        className="bg-grayscale-700 rounded-[8px] h-[48px] text-white text-body3 px-[16px] py-[13px] border border-transparent placeholder-grayscale-500 placeholder-body3 focus:border-grayscale-200 focus:outline-none focus:ring-0"
         onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
           setName(e.target.value)
         }
@@ -262,9 +263,10 @@ function Step2(props: { onRegister: () => void }) {
       <input
         id="phone-number"
         type="tel"
+        placeholder="01012345678"
         defaultValue=""
         suppressHydrationWarning
-        className="bg-grayscale-700 rounded-[8px] h-[48px] text-white text-body3 px-[16px] py-[13px] border border-transparent focus:border-grayscale-200 focus:outline-none focus:ring-0"
+        className="bg-grayscale-700 rounded-[8px] h-[48px] text-white text-body3 px-[16px] py-[13px] border border-transparent placeholder-grayscale-500 placeholder-body3 focus:border-grayscale-200 focus:outline-none focus:ring-0"
         onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
           setPhoneNumber(e.target.value)
         }
