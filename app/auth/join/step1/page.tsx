@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useJoinContext } from "@/context/JoinContext";
 import JoinStep1Presentation from "./JoinStep1Presentation"; 
 
 export default function Page() {
   const router = useRouter();
+  const { joinService } = useJoinContext();
   const [nickname, setNickname] = useState<string>("");
   const [validated, setValidated] = useState<boolean>(false);
   
@@ -18,17 +20,23 @@ export default function Page() {
     router.push(`/auth/join/step2?nickname=${nickname}`);
   };
   
-  const onValidateClicked = () => {
-  	// TODO: 서버에 유효성 요청 보내기
-    // 중복 여부랑 유효성 여부 모두 서버에서 체크 가능.
-    if(true) {
-      setValidated(true);
+  const onValidateClicked = async () => {
+  	const validationResult = await joinService.validateNickname(nickname);
+    
+    if(validationResult.isExists) {
+      alert("이미 다른 사람이 사용 중인 호칭입니다.");
+      return;
     }
+    if(!validationResult.isValid) {
+      alert("호칭이 규칙에 맞지 않습니다.");
+      return;
+    }
+    setValidated(true);
   }
   
   const onNicknameInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value);
-    setValidated(false);
+    setValidated(false); // 닉네임 수정시 중복확인을 다시 해야함.
   };
   
   return <JoinStep1Presentation

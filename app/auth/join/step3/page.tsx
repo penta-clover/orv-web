@@ -1,37 +1,62 @@
+"use client";
+
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useJoinContext } from "@/context/JoinContext";
+import JoinStep3Presentation, { POLICIES } from "./JoinStep3Presentation"; 
+
+function Body() {
+	const router = useRouter();
+  const params = useSearchParams();
+  const { joinService } = useJoinContext();
+  const [checked, setChecked] = useState<string[]>([]);
+  
+  const essentialPolicies = ["age", "term", "privacy"];
+  
+  const isChecked = (name: string) => checked.includes(name);
+  const onCheckAllChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if(e.target.checked) setChecked(Object.keys(POLICIES));
+    else setChecked([]);
+  };
+  const onCheckChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if(e.target.checked) setChecked([...checked, e.target.name]);
+    else setChecked(checked.filter((item) => item != e.target.name));
+  };
+  
+  const onNextClicked = async () => {
+    for (let policy of essentialPolicies) {
+      if (!checked.includes(policy)) {
+        alert("모든 필수 약관에 동의해주세요.");
+        return;
+      }
+    }
+    
+    const nickname = params.get("nickname");
+    const gender = params.get("gender");
+    const birthDay = params.get("birthDate");
+    if (nickname === null || gender === null || birthDay === null) {
+      alert("가입 중 문제가 발생하였습니다. 다시 시도해주세요.");
+      router.replace("/auth/login");
+      return;
+    }
+    
+    await joinService.join({nickname, gender, birthDay});
+    alert("회원 가입이 완료되었습니다.");
+    router.push("/");
+  };
+  
+  return <JoinStep3Presentation
+           isAllChecked={checked.length === Object.keys(POLICIES).length}
+           isChecked={isChecked}
+           onCheckAllChanged={onCheckAllChanged}
+           onCheckChanged={onCheckChanged}
+           onNextClicked={onNextClicked} />;
+}
+
 export default function Page() {
-  // TODO: 로직 처리
-  return (
-    <div className="flex flex-col max-w-[450px] h-screen mx-auto py-10 px-5 space-y-10">
-      <h1 className="text-2xl font-extrabold">이용약관 및 정책</h1>
-      <label>
-        <input type="checkbox" className="mr-2 text-sm" />
-        모두 동의합니다.
-      </label>
-      <div className="flex flex-col items-start flex-grow w-full space-y-4">
-        <label>
-          <input type="checkbox" className="mr-2 text-sm" />
-          [필수] 만 14세 이상입니다
-        </label>
-        <label>
-          <input type="checkbox" className="mr-2 text-sm" />
-          [필수] 이용약관에 동의합니다
-        </label>
-        <label>
-          <input type="checkbox" className="mr-2 text-sm" />
-          [필수] 개인정보 수집 및 이용에 동의합니다
-        </label>
-        <label>
-          <input type="checkbox" className="mr-2 text-sm" />
-          [선택] 이벤트 및 혜택 알림 수신에 동의합니다
-        </label>
-        <label>
-          <input type="checkbox" className="mr-2 text-sm" />
-          [선택] 서비스 품질 향상에 동의합니다
-        </label>
-      </div>
-      <button className="w-full py-2 bg-gray-300 rounded-md text-m">
-        다음
-      </button>
-    </div>
+	return (
+    <Suspense>
+    	<Body/>
+  	</Suspense>
   );
 }
