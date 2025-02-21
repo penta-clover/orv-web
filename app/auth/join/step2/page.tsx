@@ -32,7 +32,7 @@ function Body() {
       return;
     }
     
-    const birthDate = `${birthYear}-${birthMonth}-${birthDay}`;
+    const birthDate = `${birthYear}-${birthMonth < 10 ? 0 : ""}${birthMonth}-${birthDay < 10 ? 0 : ""}${birthDay}`; // 그냥 new Date 하는 게 맞나?
     router.push(`/auth/join/step3?nickname=${nickname}&birthDate=${birthDate}&gender=${gender}`);
   };
   
