@@ -2,12 +2,14 @@
 
 import "./globals.css";
 import { Api } from "@/data/Api";
+import { Storage } from "@/data/Storage";
 import { AuthRepositoryImpl } from "@/data/repository/AuthRepositoryImpl";
 import { FirebaseProvider } from "@/providers/firebaseContext";
 import { EarlybirdRepositoryProvider } from "@/providers/earlybirdRepositoryContext";
 import Head from "next/head";
-import { JoinService } from "@/domain/service/JoinService";
-import { JoinProvider } from "@/context/JoinContext";
+
+import { AuthService } from "@/domain/service/AuthService";
+import { AuthProvider } from "@/context/AuthContext";
 
 export default function RootLayout({
   children,
@@ -15,8 +17,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const api = new Api();
-  const authRepository = new AuthRepositoryImpl(api);
-  const joinService = new JoinService(authRepository);
+  const storage = new Storage();
+  const authRepository = new AuthRepositoryImpl(api, storage);
+  const authService = new AuthService(authRepository);
 
   return (
     <html lang="ko">
@@ -32,13 +35,13 @@ export default function RootLayout({
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
         />
 
-        <JoinProvider joinService={joinService}>
+        <AuthProvider authService={authService}>
           <FirebaseProvider>
             <EarlybirdRepositoryProvider>
               {children}
             </EarlybirdRepositoryProvider>
           </FirebaseProvider>
-        </JoinProvider>
+        </AuthProvider>
       </body>
     </html>
   );

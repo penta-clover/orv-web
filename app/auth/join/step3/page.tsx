@@ -2,13 +2,13 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useJoinContext } from "@/context/JoinContext";
+import { useAuthContext } from "@/context/AuthContext";
 import JoinStep3Presentation, { POLICIES } from "./JoinStep3Presentation"; 
 
 function Body() {
 	const router = useRouter();
   const params = useSearchParams();
-  const { joinService } = useJoinContext();
+  const { authService } = useAuthContext();
   const [checked, setChecked] = useState<string[]>([]);
   
   const essentialPolicies = ["age", "term", "privacy"];
@@ -40,7 +40,7 @@ function Body() {
       return;
     }
     
-    await joinService.join({nickname, gender, birthDay});
+    await authService.join({nickname, gender, birthDay});
     alert("회원 가입이 완료되었습니다.");
     router.push("/");
   };
