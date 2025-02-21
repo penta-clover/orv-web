@@ -15,6 +15,8 @@ import { useCallback, useEffect, useState } from "react";
 import { useEarlybirdRepository } from "@/providers/earlybirdRepositoryContext";
 
 export default function Page() {
+  const router = useRouter();
+
   useEffect(() => {
     const viewport = document.querySelector('meta[name="viewport"]');
 
@@ -28,7 +30,14 @@ export default function Page() {
 
   return (
     <div className="flex flex-col h-[calc(100dvh)]">
-      <ActionBar />
+      <ActionBar
+        onClickGuide={() => {
+          router.push("/guide");
+        }}
+        onClickExplore={() => {
+          router.push("/");
+        }}
+      />
       <div className="flex flex-col h-full items-center">
         <div className="h-[23px]" />
         <Headline />
@@ -46,9 +55,7 @@ function Headline() {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="text-head2 text-main-lilac50">
-        얼리버드 혜택 마감까지
-      </div>
+      <div className="text-head2 text-main-lilac50">얼리버드 혜택 마감까지</div>
       <div className="h-[4px]" />
       <Deadline
         deadline={new Date("2025-02-26T00:00:00Z")}
@@ -124,8 +131,7 @@ function CarouselContainer() {
                 setInProgressIndex((prev) => Math.max(1, prev));
                 setTimeout(() => {
                   emblaApi?.scrollNext();
-                }
-                , 50); // waiting until rendering next card
+                }, 50); // waiting until rendering next card
               }}
             />
           </CarouselItem>
@@ -136,8 +142,7 @@ function CarouselContainer() {
                   setInProgressIndex((prev) => Math.max(2, prev));
                   setTimeout(() => {
                     emblaApi?.scrollNext();
-                  }
-                  , 50); // waiting until rendering next card
+                  }, 50); // waiting until rendering next card
                 }}
               />
             </CarouselItem>
@@ -187,20 +192,20 @@ function Step1(props: { onComplete: () => void }) {
         step 1. 오브 월간 사용권 구매하기
       </div>
       <div className="relative w-[calc(100%)] h-[106px] mb-[12px]">
-        {
-          isLoadingImage && <div className="w-full h-full bg-grayscale-800 rounded-[8px] animate-pulse-fast"/>
-        }
+        {isLoadingImage && (
+          <div className="w-full h-full bg-grayscale-800 rounded-[8px] animate-pulse-fast" />
+        )}
         <Image
-              src="/images/coupon.svg"
-              alt="coupon"
-              fill
-              style={{
-                objectFit: "contain",
-                width: "100%",
-                height: "100%",
-              }}
-              onLoad={() => setIsLoadingImage(false)}
-            />
+          src="/images/coupon.svg"
+          alt="coupon"
+          fill
+          style={{
+            objectFit: "contain",
+            width: "100%",
+            height: "100%",
+          }}
+          onLoad={() => setIsLoadingImage(false)}
+        />
       </div>
       <div
         className="flex flex-row items-center pt-[4px] gap-[6px] active:scale-95 active:shadow-md transition-all rounded-[4px] pr-[4px]"

@@ -14,7 +14,7 @@ import {
 import FloatingButton from "./floatingButton";
 import ProjectorSection from "./projectorSection";
 
-import './blackBody.css';
+import "./blackBody.css";
 import DescriptionSection from "./descriptionSection";
 import { useRef } from "react";
 
@@ -30,7 +30,14 @@ export default function Page() {
   return (
     <div className="relative bg-dark">
       <div className="absolute top-0 w-full">
-        <ActionBar />
+        <ActionBar
+          onClickGuide={() => {
+            router.push("/guide");
+          }}
+          onClickExplore={() => {
+            window.scrollTo({ top: window.innerHeight, behavior: "smooth" });
+          }}
+        />
       </div>
       <div className="w-full h-[calc(100dvh)] flex justify-center items-center">
         <video
