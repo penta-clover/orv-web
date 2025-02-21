@@ -13,7 +13,7 @@ export default function FloatingButton() {
       />
       <div
         className="flex flex-row justify-center items-center w-full bg-gd rounded-[12px] h-[48px] text-head4 text-[#1B2729] mt-[14px] active:scale-95 transition-all"
-        onClick={() => router.push("/landing/registration/step1")}
+        onClick={() => router.push("/landing/registration")}
       >
         오브 시작하기
       </div>

@@ -37,23 +37,8 @@ export default function Deadline(props: props) {
     }, [props.deadline]);
     
     return (
-        <div className="flex flex-row">
-            <div className="flex flex-row">
-                <div className="text-2xl font-bold">{leftTime.day}</div>
-                <div>일</div>
-            </div>
-            <div className="flex flex-row">
-                <div className="text-2xl font-bold">{leftTime.hour}</div>
-                <div>시간</div>
-            </div>
-            <div className="flex flex-row">
-                <div className="text-2xl font-bold">{leftTime.minute}</div>
-                <div>분</div>
-            </div>
-            <div className="flex flex-row">
-                <div className="text-2xl font-bold">{leftTime.second}</div>
-                <div>초</div>
-            </div>
+        <div className="text-grayscale-white text-head0">
+            {`${leftTime.day}일 ${leftTime.hour}시간 ${leftTime.minute}분 ${leftTime.second}초`}
         </div>
 
     )
