@@ -32,7 +32,7 @@ export default function Page() {
       <div className="absolute top-0 w-full">
         <ActionBar />
       </div>
-      <div className="w-screen h-[calc(100dvh)] flex justify-center items-center">
+      <div className="w-full h-[calc(100dvh)] flex justify-center items-center">
         <video
           ref={videoRef}
           autoPlay
@@ -74,7 +74,7 @@ export default function Page() {
         지금 신청하기
       </button>
 
-      <div className="fixed bottom-[32px] w-full z-50">
+      <div className="fixed bottom-[32px] w-full max-w-[450px] z-50">
         <FloatingButton />
       </div>
     </div>

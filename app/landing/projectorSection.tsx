@@ -79,7 +79,7 @@ export default function ProjectorSection() {
               />
             </div>
   
-            <div className="absolute top-[0px] right-[-8px] overflow-x-hidden overflow-y-visible z-5" style={{ width: "calc(100vw)", height: "220px" }}>
+            <div className="absolute top-[0px] right-[-8px] overflow-x-hidden overflow-y-visible z-5" style={{ width: "calc(100%)", height: "220px" }}>
               <Image
                 src="/images/line.png"
                 alt="film"

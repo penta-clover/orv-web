@@ -9,7 +9,7 @@ export default function Page() {
     return (
       <div className="flex flex-col">
         <div>registration</div>
-        <Deadline deadline={new Date("2025-2-21")} onDeadline={() => router.push("/landing/deadline")} />
+        <Deadline deadline={new Date("2025-2-26")} onDeadline={() => router.push("/")} />
         <button onClick={() => navigator.clipboard.writeText("110-472-357-341")}>
           계좌번호 복사
         </button>
