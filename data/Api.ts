@@ -10,10 +10,15 @@ export class Api {
     }).then((response) => response.json()).then((data) => (data as ApiResult<T>));
   }
 
-  post<T>(path: string, body: object, headers: HeadersInit = {}): Promise<ApiResult<T>> {
+  post<T>(path: string, body: object, headers: object = {}): Promise<ApiResult<T>> {
+    const requestHeaders: HeadersInit = {
+      ...headers,
+      "Content-Type": "application/json; charset=UTF-8",
+    };
+    
     return fetch(`${Api.baseUrl}${path}`, {
     	method: "POST",
-      headers: headers,
+      headers: requestHeaders,
       body: JSON.stringify(body),
     }).then((response) => response.json()).then((data) => (data as ApiResult<T>));
   }

@@ -7,7 +7,7 @@ export class AuthService {
   
   async validateNickname(nickname: string): Promise<NicknameValidation> {
     const result = await this.authRepository.validateNickname(nickname);
-    if (result.statusCode !== "200") throw new Error(result.message);
+    if (result.statusCode !== "200") throw new Error(result.message); // 에러 처리 어떡하지?
     return result.data;
   }
   
