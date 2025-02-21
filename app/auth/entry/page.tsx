@@ -3,15 +3,17 @@
 import { setCookie } from "cookies-next";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect } from "react";
+import { useAuthContext } from "@/context/AuthContext";
 
 function Body() {
   const router = useRouter();
   const params = useSearchParams();
+  const { authService } = useAuthContext();
 
   useEffect(() => {
     if (params.has("jwtToken")) {
       const jwtToken = params.get("jwtToken");
-      setCookie("authToken", jwtToken!);
+      authService.setToken(jwtToken!);
 
       const isNewUser = params.get("isNewUser") === "true";
       if (isNewUser) {

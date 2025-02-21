@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useJoinContext } from "@/context/JoinContext";
+import { useAuthContext } from "@/context/AuthContext";
 import JoinStep1Presentation from "./JoinStep1Presentation"; 
 
 export default function Page() {
   const router = useRouter();
-  const { joinService } = useJoinContext();
+  const { authService } = useAuthContext();
   const [nickname, setNickname] = useState<string>("");
   const [validated, setValidated] = useState<boolean>(false);
   
@@ -21,7 +21,7 @@ export default function Page() {
   };
   
   const onValidateClicked = async () => {
-  	const validationResult = await joinService.validateNickname(nickname);
+  	const validationResult = await authService.validateNickname(nickname);
     
     if(validationResult.isExists) {
       alert("이미 다른 사람이 사용 중인 호칭입니다.");
