@@ -239,6 +239,8 @@ function Step2(props: { onRegister: () => void }) {
   const [isAgreed, setIsAgreed] = useState(false);
   const earlybirdRepository = useEarlybirdRepository();
 
+  const router = useRouter();
+
   return (
     <Card>
       <div className="text-head3 text-grayscale-100 mb-[12px]">
@@ -297,7 +299,9 @@ function Step2(props: { onRegister: () => void }) {
           </div>
         </label>
 
-        <div className="flex flex-col justify-center items-center h-[24px] w-[24px]">
+        <div className="flex flex-col justify-center items-center h-[24px] w-[24px]" onClick={() => {
+          window.open('https://cac.notion.site/1a2bfb0d0b4e80c0a034df3ac3b8ae09?pvs=4', '_blank');
+        }}>
           <Image
             src="/icons/right-arrow.svg"
             alt="right-arrow"
