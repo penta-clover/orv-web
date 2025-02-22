@@ -1,5 +1,5 @@
 export interface ApiResult<T> {
-  statusCode: string;
+  statusCode: number;
   message: string;
-  data: T;
+  data: T | null;
 };
