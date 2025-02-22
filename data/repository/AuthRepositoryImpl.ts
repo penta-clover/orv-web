@@ -23,7 +23,7 @@ export class AuthRepositoryImpl implements AuthRepository {
       'Authorization': `Bearer ${this.storage.getAuthToken()}`
     });
 
-    if (result.statusCode !== 200) {
+    if (result.statusCode != 200) {
       throw new Error(result.message);
     }
     return result.data!;
