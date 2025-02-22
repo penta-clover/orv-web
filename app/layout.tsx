@@ -7,6 +7,7 @@ import { AuthRepositoryImpl } from "@/data/repository/AuthRepositoryImpl";
 import { FirebaseProvider } from "@/providers/firebaseContext";
 import { EarlybirdRepositoryProvider } from "@/providers/earlybirdRepositoryContext";
 import Head from "next/head";
+import * as ChannelService from "@channel.io/channel-web-sdk-loader";
 
 import { AuthService } from "@/domain/service/AuthService";
 import { AuthProvider } from "@/context/AuthContext";
@@ -20,6 +21,8 @@ export default function RootLayout({
   const storage = new Storage();
   const authRepository = new AuthRepositoryImpl(api, storage);
   const authService = new AuthService(authRepository);
+
+  ChannelService.loadScript();
 
   return (
     <html lang="ko">
