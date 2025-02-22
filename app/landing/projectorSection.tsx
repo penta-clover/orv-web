@@ -18,7 +18,7 @@ export default function ProjectorSection() {
           });
         },
         {
-          rootMargin: '0px 0px -40% 0px'
+          rootMargin: '0px 0px -35% 0px'
         }
       );
   

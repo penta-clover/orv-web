@@ -27,7 +27,7 @@ export default function DescriptionSection() {
         });
       },
       {
-        rootMargin: "0px 0px -25% 0px",
+        rootMargin: "0px 0px -20% 0px",
       }
     );
 
