@@ -44,7 +44,14 @@ const Typewriter: React.FC<TypewriterProps> = ({
  * 요소가 화면에 보일 때부터 타이핑이 시작됩니다.
  */
 const EndingComment: React.FC = () => {
-  const texts: string[] = ["2025.02.17", "나를 기록하기", "끝."];
+  const today = new Date();
+  const formattedDate =
+    today.getFullYear() +
+    "." +
+    (today.getMonth() + 1).toString().padStart(2, "0") +
+    "." +
+    today.getDate().toString().padStart(2, "0");
+  const texts: string[] = [formattedDate, "나를 기록하기", "끝."];
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [hasStarted, setHasStarted] = useState<boolean>(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -77,7 +84,10 @@ const EndingComment: React.FC = () => {
   };
 
   return (
-    <div ref={containerRef} className="flex flex-col items-end text-white mr-[16px]">
+    <div
+      ref={containerRef}
+      className="flex flex-col items-end text-white mr-[16px]"
+    >
       {hasStarted ? (
         texts.map((text, index) => (
           <div className="text-main-beige50 text-body2" key={index}>
@@ -87,7 +97,9 @@ const EndingComment: React.FC = () => {
             ) : index === currentIndex ? (
               // 현재 타이핑 중인 텍스트
               <Typewriter text={text} onComplete={handleComplete} speed={130} />
-            ) : <span className="h-[26px] text-dark">o</span>}
+            ) : (
+              <span className="h-[26px] text-dark">o</span>
+            )}
           </div>
         ))
       ) : (
