@@ -4,6 +4,10 @@ import "./globals.css";
 import { Api } from "@/data/Api";
 import { Storage } from "@/data/Storage";
 import { AuthRepositoryImpl } from "@/data/repository/AuthRepositoryImpl";
+import { FirebaseProvider } from "@/providers/firebaseContext";
+import { EarlybirdRepositoryProvider } from "@/providers/earlybirdRepositoryContext";
+import Head from "next/head";
+
 import { AuthService } from "@/domain/service/AuthService";
 import { AuthProvider } from "@/context/AuthContext";
 
@@ -12,17 +16,31 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  
   const api = new Api();
   const storage = new Storage();
   const authRepository = new AuthRepositoryImpl(api, storage);
   const authService = new AuthService(authRepository);
-  
+
   return (
     <html lang="ko">
-      <body className={`antialiased overflow-hidden safe-area`}>
+      <Head>
+        <title>Orv</title>
+        <meta name="description" content="나를 바라보는 시간" />
+      </Head>
+      <body className={`antialiased hide-scrollbar safe-area font-pretendard`}>
+        <link
+          rel="stylesheet"
+          as="style"
+          crossOrigin="anonymous"
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
+        />
+
         <AuthProvider authService={authService}>
-          {children}
+          <FirebaseProvider>
+            <EarlybirdRepositoryProvider>
+              {children}
+            </EarlybirdRepositoryProvider>
+          </FirebaseProvider>
         </AuthProvider>
       </body>
     </html>
