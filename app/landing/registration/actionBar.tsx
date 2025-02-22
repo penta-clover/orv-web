@@ -22,12 +22,12 @@ export default function ActionBar(
       />
       <div className="flex flex-row items-center h-full">
         <div
-          className="text-body3 text-[#F1F1F4]"
+          className="text-body3 text-[#F1F1F4] px-[12px] h-full flex items-center"
           onClick={() => props.onClickGuide()}
         >
           사용 가이드
         </div>
-        <div className="w-[1.5px] h-[12px] mx-[12px]">
+        <div className="w-[1.5px] h-[12px]">
           <Image
             src="/icons/vertical-separator.svg"
             width={1.5}
@@ -36,7 +36,7 @@ export default function ActionBar(
           />
         </div>
         <div
-          className="text-body3 text-[#F1F1F4]"
+          className="text-body3 text-[#F1F1F4] pl-[12px] h-full flex items-center"
           onClick={() => props.onClickExplore()}
         >
           서비스 소개
