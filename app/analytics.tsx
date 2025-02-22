@@ -1,24 +1,26 @@
 "use client";
 
-import * as amplitude from '@amplitude/analytics-browser';
+import * as amplitude from "@amplitude/analytics-browser";
 import Script from "next/script";
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 export default function Analytics() {
   // amplitude
   useEffect(() => {
-    amplitude.init('15a38dcdf0b5dab274c2a74f5db296e2', {
-      autocapture: {
-        elementInteractions: true
-      }
-    });
+    if (process.env.NEXT_PUBLIC_AMPLITUDE_TRACKING_ENABLED === "true") {
+      amplitude.init(process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY as string, {
+        autocapture: {
+          elementInteractions: true,
+        },
+      });
+    }
   }, []);
 
-  return (
+  return process.env.NEXT_PUBLIC_GA_TRACKING_ENABLED === "true" ? (
+    // google analytics
     <>
-      {/* Google Analytics */}
       <Script
-        src="https://www.googletagmanager.com/gtag/js?id=G-VGK4GCEN7R"
+        src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
         strategy="afterInteractive"
       />
       <Script id="gtag-init" strategy="afterInteractive">
@@ -26,9 +28,9 @@ export default function Analytics() {
             window.dataLayer = window.dataLayer || [];
             function gtag(){ dataLayer.push(arguments); }
             gtag('js', new Date());
-            gtag('config', 'G-VGK4GCEN7R');
+            gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
         `}
       </Script>
     </>
-  );
+  ) : null;
 }
