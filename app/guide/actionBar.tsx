@@ -19,7 +19,7 @@ export default function ActionBar(
           className="text-body3 text-[#F1F1F4] px-[12px] h-full flex items-center"
           onClick={() => props.onServiceIntroductionClick()}
         >
-          서비스소개
+          서비스 소개
         </div>
         <div className="w-[1.5px] h-[12px]">
           <Image

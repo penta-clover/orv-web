@@ -75,6 +75,8 @@ export default function Page() {
         </div>
       </div>
 
+      <h1 id="introduction-start" className="h-[0]" />
+
       <MirrorSection />
 
       <div className="h-[150px]" />

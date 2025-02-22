@@ -46,7 +46,7 @@ export default function Page() {
           router.push("/");
         }}
         onExploreClick={function (): void {
-          router.push("/");
+          router.push("/landing#introduction-start");
         }}
       />
 
