@@ -24,12 +24,14 @@ export default function Page() {
 
   // 영상 재생 종료 시 화면 아래로 스크롤
   const handleVideoEnd = () => {
-    window.scrollTo({ top: window.innerHeight, behavior: "smooth" });
+    if (window.scrollY < 50) {
+      window.scrollTo({ top: window.innerHeight, behavior: "smooth" });
+    }
   };
 
   return (
     <div className="relative bg-dark">
-      <div className="absolute top-0 w-full">
+      <div className="absolute top-0 w-full z-50">
         <ActionBar
           onClickGuide={() => {
             router.push("/guide");
@@ -39,18 +41,38 @@ export default function Page() {
           }}
         />
       </div>
-      <div className="w-full h-[calc(100dvh)] flex justify-center items-center">
+      <div className="relative w-full h-[calc(100dvh)] flex justify-center items-center">
+        <div className="absolute top-[52px] w-full">
+          <Image
+            src="/images/dark-wave.png"
+            width={375}
+            height={222}
+            alt="dark wave"
+            className="w-full h-auto"
+          />
+        </div>
+
         <video
           ref={videoRef}
           autoPlay
           muted
           playsInline
           onEnded={handleVideoEnd}
-          className="w-full block"
+          className="w-full block z-10"
         >
           <source src="videos/landing-video.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
+
+        <div className="absolute bottom-[135px] w-full transform scale-[-1]">
+          <Image
+            src="/images/dark-wave.png"
+            width={375}
+            height={222}
+            alt="dark wave"
+            className="w-full h-auto"
+          />
+        </div>
       </div>
 
       <MirrorSection />
