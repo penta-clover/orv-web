@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/carousel";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
-import { useEarlybirdRepository } from "@/providers/earlybirdRepositoryContext";
+import { useEarlybirdRepository } from "@/providers/EarlybirdRepositoryContext";
 
 export default function Page() {
   const router = useRouter();

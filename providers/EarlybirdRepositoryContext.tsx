@@ -4,7 +4,7 @@ import React, { createContext, useContext } from "react";
 import { FirebaseApp } from "firebase/app";
 import { EarlybirdRepository } from "@/domain/repository/EarlybirdRepository";
 import { EarlybirdRepositoryImpl } from "@/data/repository/EarlybirdRepositoryImpl";
-import { useFirebase } from "@/providers/firebaseContext";
+import { useFirebase } from "@/providers/FirebaseContext";
 
 // 초기값을 null로 설정합니다.
 const EarlybirdRepositoryContext = createContext<EarlybirdRepository | null>(null);

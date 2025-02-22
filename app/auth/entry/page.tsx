@@ -1,19 +1,18 @@
 "use client"; // for Search Params
 
-import { setCookie } from "cookies-next";
+import { useAuthRepository } from "@/providers/AuthRepositoryContext";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect } from "react";
-import { useAuthContext } from "@/context/AuthContext";
 
 function Body() {
   const router = useRouter();
   const params = useSearchParams();
-  const { authService } = useAuthContext();
+  const authReposiroty = useAuthRepository();
 
   useEffect(() => {
     if (params.has("jwtToken")) {
       const jwtToken = params.get("jwtToken");
-      authService.setToken(jwtToken!);
+      authReposiroty.setAuthToken(jwtToken!);
 
       const isNewUser = params.get("isNewUser") === "true";
       if (isNewUser) {

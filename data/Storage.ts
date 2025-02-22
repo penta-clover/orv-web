@@ -1,13 +1,13 @@
 "use client";
 
 export class Storage {
-  get(key: string): string | null {
+  getAuthToken(): string | null {
     if (window === undefined) return null;
-    return window.localStorage.getItem(key);
+    return window.localStorage.getItem("authToken");
   }
 
-  set(key: string, value: string) {
+  setAuthToken(value: string) {
     if (window === undefined) return;
-    return window.localStorage.setItem(key, value);
+    return window.localStorage.setItem("authToken", value);
   }
 }

@@ -1,14 +1,14 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useAuthContext } from "@/context/AuthContext";
 import JoinStep3Presentation, { POLICIES } from "./JoinStep3Presentation"; 
+import { useAuthRepository } from "@/providers/AuthRepositoryContext";
 
 function Body() {
 	const router = useRouter();
   const params = useSearchParams();
-  const { authService } = useAuthContext();
+  const authRepository = useAuthRepository();
   const [checked, setChecked] = useState<string[]>([]);
   
   const essentialPolicies = ["age", "term", "privacy"];
@@ -40,7 +40,7 @@ function Body() {
       return;
     }
     
-    await authService.join({nickname, gender, birthDay});
+    await authRepository.join({nickname, gender, birthDay});
     alert("회원 가입이 완료되었습니다.");
     router.push("/");
   };
