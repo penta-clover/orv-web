@@ -11,6 +11,7 @@ import * as ChannelService from "@channel.io/channel-web-sdk-loader";
 
 import { AuthService } from "@/domain/service/AuthService";
 import { AuthProvider } from "@/context/AuthContext";
+import Analytics from "./analytics";
 
 export default function RootLayout({
   children,
@@ -31,6 +32,7 @@ export default function RootLayout({
         <meta name="description" content="나를 바라보는 시간" />
       </Head>
       <body className={`antialiased hide-scrollbar safe-area font-pretendard`}>
+        <Analytics />
         <link
           rel="stylesheet"
           as="style"
