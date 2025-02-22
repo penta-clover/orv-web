@@ -8,6 +8,7 @@ import { FirebaseProvider } from "@/providers/firebaseContext";
 import { EarlybirdRepositoryProvider } from "@/providers/earlybirdRepositoryContext";
 import Head from "next/head";
 import * as ChannelService from "@channel.io/channel-web-sdk-loader";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 import { AuthService } from "@/domain/service/AuthService";
 import { AuthProvider } from "@/context/AuthContext";
@@ -33,6 +34,7 @@ export default function RootLayout({
       </Head>
       <body className={`antialiased hide-scrollbar safe-area font-pretendard`}>
         <Analytics />
+        <SpeedInsights />
         <link
           rel="stylesheet"
           as="style"
