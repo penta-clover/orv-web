@@ -77,7 +77,7 @@ export default function Page() {
             <div className="w-full text-body2 text-grayscale-500 mb-[32px]">
               1. www.orv.im 접속
               <br />
-              2. 결제 및 예약 확정 (주간 사용권)
+              2. 결제 및 예약 확정 (월간 사용권)
               <br />
               3. 주제 선택
             </div>
