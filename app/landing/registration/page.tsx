@@ -62,7 +62,7 @@ function Headline() {
       <div className="text-head2 text-main-lilac50">얼리버드 혜택 마감까지</div>
       <div className="h-[4px]" />
       <Deadline
-        deadline={new Date("2025-02-26T00:00:00Z")}
+        deadline={new Date("2025-02-26T00:00:00+09:00")}
         onDeadline={() => {
           router.push("/");
         }}
