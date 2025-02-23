@@ -85,6 +85,7 @@ export default {
       },
       fontFamily: {
         pretendard: ["Pretendard", "sans-serif"],
+        onglyph: ['온글잎 콘콘체', 'sans-serif'],
       },
       fontWeight: {
         thin: "100",
