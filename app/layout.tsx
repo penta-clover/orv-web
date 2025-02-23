@@ -18,8 +18,13 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <Head>
-        <title>Orv</title>
-        <meta name="description" content="나를 바라보는 시간" />
+        <title>나를 마주하는 시간 오브</title>
+        <meta name="description" content="나를 마주할 기회를 선물하는 곳" />
+
+        <meta property="og:title" content="오브 Orv" />
+        <meta property="og:description" content="나를 마주할 기회를 선물하는 곳" />
+        <meta property="og:image" content="/images/orv-og-thumbnail.jpeg" />
+        <meta property="og:url" content="www.orv.im" />
       </Head>
       <body className={`antialiased hide-scrollbar safe-area font-pretendard`}>
         <Analytics />
