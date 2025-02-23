@@ -258,6 +258,7 @@ function Step1(props: { onComplete: () => void }) {
 function Step2(props: { onRegister: () => void }) {
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [isAgreed, setIsAgreed] = useState(false);
   const earlybirdRepository = useEarlybirdRepository();
 
@@ -343,17 +344,23 @@ function Step2(props: { onRegister: () => void }) {
 
       <button
         className="mt-[6px] py-[6px]"
-        onClick={() => {
-          earlybirdRepository
-            .register({
+        onClick={async () => {
+          try {
+            setIsLoading(true);
+
+            await earlybirdRepository.register({
               name: name,
               phoneNumber: phoneNumber,
-            })
-            .then(() => {
-              props.onRegister();
             });
+
+            setIsLoading(false);
+
+            props.onRegister();
+          } catch (e) {
+            alert("신청 중 오류가 발생했습니다. 다시 시도해주세요.");
+          }
         }}
-        disabled={!name || !phoneNumber || !isAgreed}
+        disabled={!name || !phoneNumber || !isAgreed || isLoading}
       >
         <div
           className={`flex flex-col justify-center items-center w-full h-[48px] rounded-[12px] text-head4 active:scale-95 transition-all ${
@@ -362,7 +369,16 @@ function Step2(props: { onRegister: () => void }) {
               : "bg-grayscale-800 text-grayscale-500"
           }`}
         >
-          신청하기
+          {isLoading ? (
+            <Image
+              src="/icons/rolling-spinner.gif"
+              width={20}
+              height={20}
+              alt="loading spinner"
+            />
+          ) : (
+            "신청하기"
+          )}
         </div>
       </button>
     </Card>
