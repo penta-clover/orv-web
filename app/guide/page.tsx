@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from "uuid";
 import CircleNumber from "./circleNumber";
 import Line from "./line";
 import { motion } from "framer-motion";
+import { track } from "../amplitude";
 
 // 애니메이션 Variants 설정
 const stepVariants = {
@@ -42,10 +43,12 @@ export default function Page() {
   return (
     <div className="flex flex-col min-h-[calc(100dvh)] w-full">
       <ActionBar
-        onServiceIntroductionClick={function (): void {
+        onClickIntroduction={function (): void {
+          track("click_introduction_landing");
           router.push("/");
         }}
-        onExploreClick={function (): void {
+        onClickExplore={function (): void {
+          track("click_lookaround_guide");
           router.push("/landing#introduction-start");
         }}
       />

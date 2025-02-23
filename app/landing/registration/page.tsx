@@ -13,6 +13,7 @@ import {
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { useEarlybirdRepository } from "@/providers/earlybirdRepositoryContext";
+import { track } from "@/app/amplitude";
 
 export default function Page() {
   const router = useRouter();
@@ -32,9 +33,11 @@ export default function Page() {
     <div className="flex flex-col h-[calc(100dvh)]">
       <ActionBar
         onClickGuide={() => {
+          track("click_guide_landing");
           router.push("/guide");
         }}
-        onClickExplore={() => {
+        onClickIntroduction={() => {
+          track("click_introduction_landing");
           router.push("/");
         }}
       />
@@ -128,6 +131,7 @@ function CarouselContainer() {
           <CarouselItem>
             <Step1
               onComplete={() => {
+                track("click_complete_deposit");
                 setInProgressIndex((prev) => Math.max(1, prev));
                 setTimeout(() => {
                   emblaApi?.scrollNext();
@@ -139,6 +143,7 @@ function CarouselContainer() {
             <CarouselItem>
               <Step2
                 onRegister={() => {
+                  track("click_apply_reservation");
                   setInProgressIndex((prev) => Math.max(2, prev));
                   setTimeout(() => {
                     emblaApi?.scrollNext();
@@ -149,7 +154,9 @@ function CarouselContainer() {
           )}
           {inProgressIndex >= 2 && (
             <CarouselItem>
-              <Step3 />
+              <Step3 onClickCheckOrder={() => {
+                  track("click_check_waitinglist");
+              }} />
             </CarouselItem>
           )}
         </CarouselContent>
@@ -182,6 +189,7 @@ function Step1(props: { onComplete: () => void }) {
   const [isLoadingImage, setIsLoadingImage] = useState(true);
   const onClickCopy = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
+    track("click_copy_accountnumber");
     copyText("카카오뱅크(최현준) 3333-32-8277762");
     setIsCopied(true);
   };
@@ -341,7 +349,9 @@ function Step2(props: { onRegister: () => void }) {
   );
 }
 
-function Step3() {
+function Step3(props: {
+  onClickCheckOrder: () => void;
+}) {
   const earlybirdRepository = useEarlybirdRepository();
 
   // API에서 받아올 최종 숫자
@@ -352,11 +362,12 @@ function Step3() {
   // API 호출로 targetNumber 값을 가져오기
   useEffect(() => {
     earlybirdRepository.getWaitingNumber().then((number) => {
-      setTargetNumber(1016 + number);
+      setTargetNumber(1026 + number);
     });
   }, []);
 
   const loadNumber = () => {
+    props.onClickCheckOrder();
     if (targetNumber > 0) {
       const interval = setInterval(() => {
         setDisplayNumber((prev) => {

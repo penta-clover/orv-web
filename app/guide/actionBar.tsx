@@ -4,8 +4,8 @@ import Image from "next/image";
 
 export default function ActionBar(
   props: {
-    onServiceIntroductionClick: () => void;
-    onExploreClick: () => void;
+    onClickIntroduction: () => void;
+    onClickExplore: () => void;
   }
 ) {
 
@@ -17,7 +17,7 @@ export default function ActionBar(
       <div className="flex flex-row items-center h-full">
         <div
           className="text-body3 text-[#F1F1F4] px-[12px] h-full flex items-center"
-          onClick={() => props.onServiceIntroductionClick()}
+          onClick={() => props.onClickIntroduction()}
         >
           서비스 소개
         </div>
@@ -31,7 +31,7 @@ export default function ActionBar(
         </div>
         <div
           className="text-body3 text-[#F1F1F4] pl-[12px] h-full flex items-center"
-          onClick={() => props.onExploreClick()}
+          onClick={() => props.onClickExplore()}
         >
           둘러보기
         </div>

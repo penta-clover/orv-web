@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 export default function ActionBar(
   props: {
     onClickGuide: () => void;
-    onClickExplore: () => void;
+    onClickIntroduction: () => void;
   }
 ) {
   const router = useRouter();
@@ -37,7 +37,7 @@ export default function ActionBar(
         </div>
         <div
           className="text-body3 text-[#F1F1F4] pl-[12px] h-full flex items-center"
-          onClick={() => props.onClickExplore()}
+          onClick={() => props.onClickIntroduction()}
         >
           서비스 소개
         </div>

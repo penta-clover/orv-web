@@ -18,6 +18,7 @@ import "./blackBody.css";
 import DescriptionSection from "./descriptionSection";
 import { useRef } from "react";
 import Footer from "./footer";
+import { track } from "../amplitude";
 
 export default function Page() {
   const videoRef = useRef(null);
@@ -30,14 +31,21 @@ export default function Page() {
     }
   };
 
+  const onClickStartButton = () => {
+    track("click_start_orv", { "y_top": window.scrollY, "y_bottom": window.scrollY + window.innerHeight });
+    router.push("/landing/registration");
+  }
+  
   return (
     <div className="relative bg-dark">
       <div className="absolute top-0 w-full z-50">
         <ActionBar
           onClickGuide={() => {
+            track("click_guide_landing");
             router.push("/guide");
           }}
           onClickExplore={() => {
+            track("click_lookaround_landing");
             window.scrollTo({ top: window.innerHeight, behavior: "smooth" });
           }}
         />
@@ -105,7 +113,7 @@ export default function Page() {
       <Footer />
 
       <div className="fixed bottom-[32px] w-full max-w-[450px] z-50">
-        <FloatingButton />
+        <FloatingButton onClick={onClickStartButton} />
       </div>
     </div>
   );
