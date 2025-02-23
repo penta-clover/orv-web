@@ -3,21 +3,18 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-export default function ActionBar(
-  props: {
-    onClickGuide: () => void;
-    onClickIntroduction: () => void;
-  }
-) {
+export default function ActionBar(props: {
+  onClickGuide: () => void;
+  onClickIntroduction: () => void;
+}) {
   const router = useRouter();
   return (
-    <div className="flex flex-row items-center justify-between h-[48px] px-[16px]">
+    <div className="flex flex-row items-center justify-between h-[56px] px-[16px]">
       <Image
         src="/icons/logo.svg"
         width={42}
         height={20}
         alt={""}
-        className="h-full"
         onClick={() => router.push("/")}
       />
       <div className="flex flex-row items-center h-full">

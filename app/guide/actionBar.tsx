@@ -10,7 +10,7 @@ export default function ActionBar(
 ) {
 
   return (
-    <div className="flex flex-row items-center justify-between h-[48px] px-[16px]">
+    <div className="flex flex-row items-center justify-between h-[56px] px-[16px]">
       <div className="text-head2 text-white">
         사용 가이드
       </div>
