@@ -18,7 +18,7 @@ export default function DescriptionSection() {
         });
       },
       {
-        rootMargin: "-64% 0px -35% 0px",
+        rootMargin: "-62% 0px -35% 0px",
         threshold: 0,
       },
     );
