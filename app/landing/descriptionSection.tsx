@@ -3,12 +3,7 @@ import { useEffect, useRef, useState } from "react";
 
 export default function DescriptionSection() {
   const textRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [textVisible, setTextVisible] = useState<boolean[]>([
-    false,
-    false,
-    false,
-    false,
-  ]);
+  const [offsetHightlighted, setOffsetHightlighted] = useState<number>(0);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -18,17 +13,14 @@ export default function DescriptionSection() {
             (ref) => ref === entry.target
           );
           if (index !== -1 && entry.isIntersecting) {
-            setTextVisible((prev) => {
-              const newState = [...prev];
-              newState[index] = true;
-              return newState;
-            });
+            setOffsetHightlighted(index);
           }
         });
       },
       {
-        rootMargin: "0px 0px -30% 0px",
-      }
+        rootMargin: "-64% 0px -35% 0px",
+        threshold: 0,
+      },
     );
 
     textRefs.current.forEach((ref) => {
@@ -56,14 +48,14 @@ export default function DescriptionSection() {
       >
         <div
           className={`font-medium text-[16px]/[26px] transition-colors duration-700 ${
-            textVisible[0] ? "text-main-lilac50" : "text-dark"
+            offsetHightlighted === 0 ? "text-grayscale-white" : "text-grayscale-500"
           }`}
         >
           내가 하지 않으면 그 누구도 대신해주지 않을
         </div>
         <div
           className={`font-medium text-[16px]/[26px] transition-colors duration-700 ${
-            textVisible[0] ? "text-main-lilac50" : "text-dark"
+            offsetHightlighted === 0 ? "text-grayscale-white" : "text-grayscale-500"
           }`}
         >
           "나 스스로에 대해 알아가기"
@@ -78,21 +70,21 @@ export default function DescriptionSection() {
       >
         <div
           className={`font-medium text-[16px]/[26px] transition-colors duration-700 ${
-            textVisible[1] ? "text-main-lilac50" : "text-grayscale-500"
+            offsetHightlighted === 1 ? "text-grayscale-white" : "text-grayscale-500"
           }`}
         >
           누구나 한번쯤은 '나는 누구인가' '언제 행복을 느끼는가'
         </div>
         <div
           className={`font-medium text-[16px]/[26px] transition-colors duration-700 ${
-            textVisible[1] ? "text-main-lilac50" : "text-grayscale-500"
+            offsetHightlighted === 1 ? "text-grayscale-white" : "text-grayscale-500"
           }`}
         >
           '내가 원하는 것은 무엇일까'라는 생각을 해보지만
         </div>
         <div
           className={`font-medium text-[16px]/[26px] transition-colors duration-700 ${
-            textVisible[1] ? "text-main-lilac50" : "text-grayscale-500"
+            offsetHightlighted === 1 ? "text-grayscale-white" : "text-grayscale-500"
           }`}
         >
           결국 잠깐일 뿐 잊혀지게 됩니다.
@@ -107,14 +99,14 @@ export default function DescriptionSection() {
       >
         <div
           className={`font-medium text-[16px]/[26px] transition-colors duration-700 ${
-            textVisible[2] ? "text-main-lilac50" : "text-grayscale-500"
+            offsetHightlighted === 2 ? "text-grayscale-white" : "text-grayscale-500"
           }`}
         >
           오브에서는 당신을 위한 특별한 질문을 던지고
         </div>
         <div
           className={`font-medium text-[16px]/[26px] transition-colors duration-700 ${
-            textVisible[2] ? "text-main-lilac50" : "text-grayscale-500"
+            offsetHightlighted === 2 ? "text-grayscale-white" : "text-grayscale-500"
           }`}
         >
           이에 대답하는 당신의 모습을 영상으로 남겨요
@@ -126,7 +118,7 @@ export default function DescriptionSection() {
           textRefs.current[3] = el;
         }}
         className={`text-head2 mb-[32px] transition-colors duration-700 ${
-          textVisible[3] ? "text-main-lilac50" : "text-grayscale-500"
+          offsetHightlighted === 3 ? "text-grayscale-white" : "text-grayscale-500"
         }`}
       >
         지금 시작하세요
