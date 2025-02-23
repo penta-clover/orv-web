@@ -11,7 +11,7 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useEarlybirdRepository } from "@/providers/earlybirdRepositoryContext";
 import { track } from "@/app/amplitude";
 
@@ -154,9 +154,11 @@ function CarouselContainer() {
           )}
           {inProgressIndex >= 2 && (
             <CarouselItem>
-              <Step3 onClickCheckOrder={() => {
+              <Step3
+                onClickCheckOrder={() => {
                   track("click_check_waitinglist");
-              }} />
+                }}
+              />
             </CarouselItem>
           )}
         </CarouselContent>
@@ -187,11 +189,22 @@ function Card(props: { children: React.ReactNode }) {
 function Step1(props: { onComplete: () => void }) {
   const [isCopied, setIsCopied] = useState(false);
   const [isLoadingImage, setIsLoadingImage] = useState(true);
+  const copyTimeout = useRef<NodeJS.Timeout | null>(null);
+
   const onClickCopy = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     track("click_copy_accountnumber");
     copyText("카카오뱅크(최현준) 3333-32-8277762");
     setIsCopied(true);
+
+    // 이전 타임아웃이 존재하면 해제
+    if (copyTimeout.current) {
+      clearTimeout(copyTimeout.current);
+    }
+    // 새로운 타임아웃 설정
+    copyTimeout.current = setTimeout(() => {
+      setIsCopied(false);
+    }, 5000);
   };
 
   return (
@@ -307,9 +320,15 @@ function Step2(props: { onRegister: () => void }) {
           </div>
         </label>
 
-        <div className="flex flex-col justify-center items-center h-[24px] w-[24px]" onClick={() => {
-          window.open('https://cac.notion.site/1a2bfb0d0b4e80c0a034df3ac3b8ae09?pvs=4', '_blank');
-        }}>
+        <div
+          className="flex flex-col justify-center items-center h-[24px] w-[24px]"
+          onClick={() => {
+            window.open(
+              "https://cac.notion.site/1a2bfb0d0b4e80c0a034df3ac3b8ae09?pvs=4",
+              "_blank"
+            );
+          }}
+        >
           <Image
             src="/icons/right-arrow.svg"
             alt="right-arrow"
@@ -349,9 +368,7 @@ function Step2(props: { onRegister: () => void }) {
   );
 }
 
-function Step3(props: {
-  onClickCheckOrder: () => void;
-}) {
+function Step3(props: { onClickCheckOrder: () => void }) {
   const earlybirdRepository = useEarlybirdRepository();
 
   // API에서 받아올 최종 숫자
