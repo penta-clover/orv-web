@@ -42,7 +42,7 @@ export default function Page() {
           }}
         />
       </div>
-      <div className="relative w-full h-[calc(100dvh)] flex justify-center items-center">
+      <div className="relative w-full h-[calc(100vh)] flex justify-center items-center">
         <div className="absolute top-[52px] w-full">
           <Image
             src="/images/dark-wave.png"
@@ -103,10 +103,6 @@ export default function Page() {
       <div className="h-[72px]" />
 
       <Footer />
-
-      <button onClick={() => router.push("/landing/registration/step1")}>
-        지금 신청하기
-      </button>
 
       <div className="fixed bottom-[32px] w-full max-w-[450px] z-50">
         <FloatingButton />
