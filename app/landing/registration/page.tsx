@@ -375,16 +375,20 @@ function Step3(props: { onClickCheckOrder: () => void }) {
   const [targetNumber, setTargetNumber] = useState(0);
   // 애니메이션으로 보여줄 숫자
   const [displayNumber, setDisplayNumber] = useState(0);
+  // 숫자가 표시되고 있는지
+  const [isNumberShown, setIsNumberShown] = useState(false);
 
   // API 호출로 targetNumber 값을 가져오기
   useEffect(() => {
     earlybirdRepository.getWaitingNumber().then((number) => {
-      setTargetNumber(1026 + number);
+      setTargetNumber(1045 + number);
     });
   }, []);
 
   const loadNumber = () => {
     props.onClickCheckOrder();
+    setIsNumberShown(true);
+
     if (targetNumber > 0) {
       const interval = setInterval(() => {
         setDisplayNumber((prev) => {
@@ -427,13 +431,18 @@ function Step3(props: { onClickCheckOrder: () => void }) {
           ))}
       </div>
 
-      <div className="h-[39px]" />
-
-      <button className="mt-[6px] py-[6px]" onClick={loadNumber}>
-        <div className="flex flex-col justify-center items-center w-full h-[48px] bg-main-lilac50 rounded-[12px] text-grayscale-800 text-head4 active:scale-95 transition-all">
-          예상 순번 확인하기
+      {isNumberShown ? (
+        <div className="flex flex-col items-center mt-[38px] mb-[16px] text-main-lilac50 text-body3">
+          <div>예상 소요 기간은 약 3일이며</div>
+          <div>3일 후 바로 서비스를 이용할 수 있어요</div>
         </div>
-      </button>
+      ) : (
+        <button className="mt-[37px] py-[6px]" onClick={loadNumber}>
+          <div className="flex flex-col justify-center items-center w-full h-[48px] bg-main-lilac50 rounded-[12px] text-grayscale-800 text-head4 active:scale-95 transition-all">
+            예상 순번 확인하기
+          </div>
+        </button>
+      )}
     </Card>
   );
 }
