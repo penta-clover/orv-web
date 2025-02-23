@@ -10,7 +10,7 @@ const firebaseConfig = {
     storageBucket: "orv-im.firebasestorage.app",
     messagingSenderId: "700370221085",
     appId: "1:700370221085:web:01080dc817c2ab7301eef4",
-    measurementId: "G-VGK4GCEN7R"
+    measurementId: process.env.NEXT_PUBLIC_GA_ID
   };
 
 // Context 생성 (초깃값은 null)

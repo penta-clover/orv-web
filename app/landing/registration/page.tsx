@@ -11,8 +11,10 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useEarlybirdRepository } from "@/providers/EarlybirdRepositoryContext";
+import { track } from "@/app/amplitude";
 
 export default function Page() {
   const router = useRouter();
@@ -29,12 +31,14 @@ export default function Page() {
   }, []);
 
   return (
-    <div className="flex flex-col h-[calc(100dvh)]">
+    <div className="flex flex-col min-h-[calc(100dvh)]">
       <ActionBar
         onClickGuide={() => {
+          track("click_guide_landing");
           router.push("/guide");
         }}
-        onClickExplore={() => {
+        onClickIntroduction={() => {
+          track("click_introduction_landing");
           router.push("/");
         }}
       />
@@ -128,6 +132,7 @@ function CarouselContainer() {
           <CarouselItem>
             <Step1
               onComplete={() => {
+                track("click_complete_deposit");
                 setInProgressIndex((prev) => Math.max(1, prev));
                 setTimeout(() => {
                   emblaApi?.scrollNext();
@@ -139,6 +144,7 @@ function CarouselContainer() {
             <CarouselItem>
               <Step2
                 onRegister={() => {
+                  track("click_apply_reservation");
                   setInProgressIndex((prev) => Math.max(2, prev));
                   setTimeout(() => {
                     emblaApi?.scrollNext();
@@ -149,7 +155,11 @@ function CarouselContainer() {
           )}
           {inProgressIndex >= 2 && (
             <CarouselItem>
-              <Step3 />
+              <Step3
+                onClickCheckOrder={() => {
+                  track("click_check_waitinglist");
+                }}
+              />
             </CarouselItem>
           )}
         </CarouselContent>
@@ -180,10 +190,22 @@ function Card(props: { children: React.ReactNode }) {
 function Step1(props: { onComplete: () => void }) {
   const [isCopied, setIsCopied] = useState(false);
   const [isLoadingImage, setIsLoadingImage] = useState(true);
+  const copyTimeout = useRef<NodeJS.Timeout | null>(null);
+
   const onClickCopy = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
+    track("click_copy_accountnumber");
     copyText("카카오뱅크(최현준) 3333-32-8277762");
     setIsCopied(true);
+
+    // 이전 타임아웃이 존재하면 해제
+    if (copyTimeout.current) {
+      clearTimeout(copyTimeout.current);
+    }
+    // 새로운 타임아웃 설정
+    copyTimeout.current = setTimeout(() => {
+      setIsCopied(false);
+    }, 5000);
   };
 
   return (
@@ -238,6 +260,8 @@ function Step2(props: { onRegister: () => void }) {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isAgreed, setIsAgreed] = useState(false);
   const earlybirdRepository = useEarlybirdRepository();
+
+  const router = useRouter();
 
   return (
     <Card>
@@ -297,7 +321,15 @@ function Step2(props: { onRegister: () => void }) {
           </div>
         </label>
 
-        <div className="flex flex-col justify-center items-center h-[24px] w-[24px]">
+        <div
+          className="flex flex-col justify-center items-center h-[24px] w-[24px]"
+          onClick={() => {
+            window.open(
+              "https://cac.notion.site/1a2bfb0d0b4e80c0a034df3ac3b8ae09?pvs=4",
+              "_blank"
+            );
+          }}
+        >
           <Image
             src="/icons/right-arrow.svg"
             alt="right-arrow"
@@ -337,22 +369,27 @@ function Step2(props: { onRegister: () => void }) {
   );
 }
 
-function Step3() {
+function Step3(props: { onClickCheckOrder: () => void }) {
   const earlybirdRepository = useEarlybirdRepository();
 
   // API에서 받아올 최종 숫자
   const [targetNumber, setTargetNumber] = useState(0);
   // 애니메이션으로 보여줄 숫자
   const [displayNumber, setDisplayNumber] = useState(0);
+  // 숫자가 표시되고 있는지
+  const [isNumberShown, setIsNumberShown] = useState(false);
 
   // API 호출로 targetNumber 값을 가져오기
   useEffect(() => {
     earlybirdRepository.getWaitingNumber().then((number) => {
-      setTargetNumber(1016 + number);
+      setTargetNumber(1045 + number);
     });
   }, []);
 
   const loadNumber = () => {
+    props.onClickCheckOrder();
+    setIsNumberShown(true);
+
     if (targetNumber > 0) {
       const interval = setInterval(() => {
         setDisplayNumber((prev) => {
@@ -395,13 +432,18 @@ function Step3() {
           ))}
       </div>
 
-      <div className="h-[39px]" />
-
-      <button className="mt-[6px] py-[6px]" onClick={loadNumber}>
-        <div className="flex flex-col justify-center items-center w-full h-[48px] bg-main-lilac50 rounded-[12px] text-grayscale-800 text-head4 active:scale-95 transition-all">
-          예상 순번 확인하기
+      {isNumberShown ? (
+        <div className="flex flex-col items-center mt-[38px] mb-[16px] text-main-lilac50 text-body3">
+          <div>예상 소요 기간은 약 3일이며</div>
+          <div>3일 후 바로 서비스를 이용할 수 있어요</div>
         </div>
-      </button>
+      ) : (
+        <button className="mt-[37px] py-[6px]" onClick={loadNumber}>
+          <div className="flex flex-col justify-center items-center w-full h-[48px] bg-main-lilac50 rounded-[12px] text-grayscale-800 text-head4 active:scale-95 transition-all">
+            예상 순번 확인하기
+          </div>
+        </button>
+      )}
     </Card>
   );
 }

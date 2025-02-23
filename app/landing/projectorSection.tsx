@@ -18,7 +18,7 @@ export default function ProjectorSection() {
           });
         },
         {
-          rootMargin: '0px 0px -40% 0px'
+          rootMargin: '0px 0px -35% 0px'
         }
       );
   
@@ -51,7 +51,7 @@ export default function ProjectorSection() {
           <div className="absolute top-[38px] text-caption1 text-grayscale-700">
             24 : 00 : 00
           </div>
-          <div className="absolute top-0 bottom-0 flex flex-col items-center justify-center z-10">
+          <div className="absolute top-0 bottom-0 flex flex-col items-center justify-center z-10 w-full">
             <div className="text-white text-[18px] font-semibold">
               일주일 중 하루만 기록해도
             </div>

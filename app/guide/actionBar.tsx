@@ -1,28 +1,25 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
-export default function ActionBar(props: {
-  onClickGuide: () => void;
-  onClickIntroduction: () => void;
-}) {
-  const router = useRouter();
+export default function ActionBar(
+  props: {
+    onClickIntroduction: () => void;
+    onClickExplore: () => void;
+  }
+) {
+
   return (
     <div className="flex flex-row items-center justify-between h-[56px] px-[16px]">
-      <Image
-        src="/icons/logo.svg"
-        width={42}
-        height={20}
-        alt={""}
-        onClick={() => router.push("/")}
-      />
+      <div className="text-head2 text-white">
+        사용 가이드
+      </div>
       <div className="flex flex-row items-center h-full">
         <div
           className="text-body3 text-[#F1F1F4] px-[12px] h-full flex items-center"
-          onClick={() => props.onClickGuide()}
+          onClick={() => props.onClickIntroduction()}
         >
-          사용 가이드
+          서비스 소개
         </div>
         <div className="w-[1.5px] h-[12px]">
           <Image
@@ -34,9 +31,9 @@ export default function ActionBar(props: {
         </div>
         <div
           className="text-body3 text-[#F1F1F4] pl-[12px] h-full flex items-center"
-          onClick={() => props.onClickIntroduction()}
+          onClick={() => props.onClickExplore()}
         >
-          서비스 소개
+          둘러보기
         </div>
       </div>
     </div>
