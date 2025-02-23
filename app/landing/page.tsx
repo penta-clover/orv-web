@@ -17,6 +17,7 @@ import ProjectorSection from "./projectorSection";
 import "./blackBody.css";
 import DescriptionSection from "./descriptionSection";
 import { useRef } from "react";
+import Footer from "./footer";
 
 export default function Page() {
   const videoRef = useRef(null);
@@ -99,7 +100,9 @@ export default function Page() {
 
       <EndingComment />
 
-      <div className="h-[108px]" />
+      <div className="h-[72px]" />
+
+      <Footer />
 
       <button onClick={() => router.push("/landing/registration/step1")}>
         지금 신청하기

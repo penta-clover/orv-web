@@ -86,11 +86,11 @@ const EndingComment: React.FC = () => {
   return (
     <div
       ref={containerRef}
-      className="flex flex-col items-end text-white mr-[16px]"
+      className="flex flex-col items-start text-white ml-[17px]"
     >
       {hasStarted ? (
         texts.map((text, index) => (
-          <div className="text-main-beige50 text-body2" key={index}>
+          <div className="text-main-beige50 text-head1" key={index}>
             {index < currentIndex ? (
               // 이미 타이핑 완료된 텍스트
               <span>{text}</span>
