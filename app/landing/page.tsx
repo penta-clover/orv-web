@@ -193,19 +193,23 @@ function VideoCarousel(props: { referralCode?: string }) {
   const images: { referral: string; src: string }[] = [
     {
       referral: "JM",
-      src: "/images/landing-demo-jm.png",
+      src: "/images/landing-demo-jm.jpg",
     },
     {
       referral: "JH",
-      src: "/images/landing-demo-jh.png",
+      src: "/images/landing-demo-jh.jpg",
     },
     {
       referral: "JS",
-      src: "/images/landing-demo-js.png",
+      src: "/images/landing-demo-js.jpg",
     },
     {
       referral: "HJ",
-      src: "/images/landing-demo-hj.png",
+      src: "/images/landing-demo-hj.jpg",
+    },
+    {
+      referral: "GA",
+      src: "/images/landing-demo-ga.jpg",
     },
   ];
 
