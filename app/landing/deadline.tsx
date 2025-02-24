@@ -22,11 +22,14 @@ export default function Deadline(props: props) {
     useEffect(() => {
         const interval = setInterval(() => {
             const now = new Date();
-            const diff = props.deadline.getTime() - now.getTime();
+            let diff = props.deadline.getTime() - now.getTime();
+
             if (diff <= 0) {
                 props.onDeadline();
                 clearInterval(interval);
+                diff = 0;
             }
+            
             const day = Math.floor(diff / (1000 * 60 * 60 * 24));
             const hour = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minute = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));

@@ -55,16 +55,15 @@ export default function Page() {
 }
 
 function Headline() {
-  const router = useRouter();
 
   return (
     <div className="flex flex-col items-center">
       <div className="text-head2 text-main-lilac50">얼리버드 혜택 마감까지</div>
       <div className="h-[4px]" />
       <Deadline
-        deadline={new Date("2025-02-26T00:00:00+09:00")}
+        deadline={new Date("2025-02-26T12:00:00+09:00")}
         onDeadline={() => {
-          router.push("/");
+          // nothing to do
         }}
       />
     </div>

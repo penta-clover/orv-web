@@ -23,6 +23,7 @@ import { track } from "../amplitude";
 export default function Page() {
   const videoRef = useRef(null);
   const router = useRouter();
+  const [referral, setReferral] = useState('')
 
   // 영상 재생 종료 시 화면 아래로 스크롤
   const handleVideoEnd = () => {
@@ -38,6 +39,21 @@ export default function Page() {
     });
     router.push("/landing/registration");
   };
+
+  // 레퍼럴 코드 쿠키에서 가져오기
+  useEffect(() => {
+    const parseCookies = () => {
+      return document.cookie.split('; ').reduce((cookies: any, cookieStr) => {
+        const [name, ...rest] = cookieStr.split('=');
+        cookies[name] = rest.join('=');
+        return cookies;
+      }, {});
+    };
+
+    const cookies = parseCookies();
+    setReferral(cookies['orv-landing-referral'] || '');
+  }, []);
+
 
   return (
     <div className="relative bg-dark">
@@ -93,7 +109,7 @@ export default function Page() {
 
       <div className="h-[150px]" />
 
-      <VideoCarousel />
+      <VideoCarousel referralCode={referral} />
 
       <div className="h-[150px]" />
 
@@ -173,7 +189,31 @@ function MirrorSection() {
   );
 }
 
-function VideoCarousel() {
+function VideoCarousel(props: { referralCode?: string }) {
+  const images: { referral: string; src: string }[] = [
+    {
+      referral: "JM",
+      src: "/images/landing-demo-jm.png",
+    },
+    {
+      referral: "JH",
+      src: "/images/landing-demo-jh.png",
+    },
+    {
+      referral: "JS",
+      src: "/images/landing-demo-js.png",
+    },
+    {
+      referral: "HJ",
+      src: "/images/landing-demo-hj.png",
+    },
+  ];
+
+  // props로 주어진 referral code와 동일한 referral을 가진 이미지 제외
+  const filteredImages = images.filter(
+    (image) => image.referral !== props.referralCode
+  );
+
   return (
     <div className="flex flex-col gap-[32px]">
       <Carousel
@@ -188,7 +228,22 @@ function VideoCarousel() {
         ]}
       >
         <CarouselContent className="flex">
-          <CarouselItem className="w-[256px] h-[152px] p-0 mx-[4px] basis-auto">
+          {filteredImages.map((image, index) => (
+            <CarouselItem
+              key={index}
+              className="w-[256px] h-[152px] p-0 mx-[4px] basis-auto"
+            >
+              <Image
+                src={image.src}
+                width={256}
+                height={152}
+                alt="card"
+                className="rounded"
+              />
+            </CarouselItem>
+          ))}
+
+          {/* <CarouselItem className="w-[256px] h-[152px] p-0 mx-[4px] basis-auto">
             <Image
               src="/images/demo-1.png"
               width={256}
@@ -241,7 +296,7 @@ function VideoCarousel() {
               alt="card"
               className="rounded"
             />
-          </CarouselItem>
+          </CarouselItem> */}
         </CarouselContent>
       </Carousel>
       <div className="flex flex-col items-center">
@@ -317,7 +372,9 @@ function QuestionExample() {
           style={{ objectFit: "fill" }}
         />
 
-        <div className={`absolute top-0 h-full w-full flex flex-col justify-center items-center transition-opacity duration-1000 opacity-${opacity}`}>
+        <div
+          className={`absolute top-0 h-full w-full flex flex-col justify-center items-center transition-opacity duration-1000 opacity-${opacity}`}
+        >
           {questions[selectedQuestionIdx].map((text, index) => (
             <div
               key={index}
