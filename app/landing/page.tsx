@@ -242,61 +242,6 @@ function VideoCarousel(props: { referralCode?: string }) {
               />
             </CarouselItem>
           ))}
-
-          {/* <CarouselItem className="w-[256px] h-[152px] p-0 mx-[4px] basis-auto">
-            <Image
-              src="/images/demo-1.png"
-              width={256}
-              height={152}
-              alt="card"
-              className="rounded"
-            />
-          </CarouselItem>
-          <CarouselItem className="w-[256px] h-[152px] p-0 mx-[4px] basis-auto">
-            <Image
-              src="/images/demo-2.png"
-              width={256}
-              height={152}
-              alt="card"
-              className="rounded"
-            />
-          </CarouselItem>
-          <CarouselItem className="w-[256px] h-[152px] p-0 mx-[4px] basis-auto">
-            <Image
-              src="/images/demo-3.png"
-              width={256}
-              height={152}
-              alt="card"
-              className="rounded"
-            />
-          </CarouselItem>
-          <CarouselItem className="w-[256px] h-[152px] p-0 mx-[4px] basis-auto">
-            <Image
-              src="/images/demo-1.png"
-              width={256}
-              height={152}
-              alt="card"
-              className="rounded"
-            />
-          </CarouselItem>
-          <CarouselItem className="w-[256px] h-[152px] p-0 mx-[4px] basis-auto">
-            <Image
-              src="/images/demo-2.png"
-              width={256}
-              height={152}
-              alt="card"
-              className="rounded"
-            />
-          </CarouselItem>
-          <CarouselItem className="w-[256px] h-[152px] p-0 mx-[4px] basis-auto">
-            <Image
-              src="/images/demo-3.png"
-              width={256}
-              height={152}
-              alt="card"
-              className="rounded"
-            />
-          </CarouselItem> */}
         </CarouselContent>
       </Carousel>
       <div className="flex flex-col items-center">
