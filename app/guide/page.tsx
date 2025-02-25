@@ -77,9 +77,13 @@ export default function Page() {
             <div className="w-full text-body2 text-grayscale-500 mb-[32px]">
               1. www.orv.im 접속
               <br />
-              2. 한달간 무제한으로 사용 가능해요
+              2. 월간 사용권 결제
+              <br />
+              &nbsp;&nbsp;&nbsp;&nbsp;- 한달간 무제한으로 사용 가능해요
               <br />
               3. 인터뷰 주제와 질문은 계속 업데이트 돼요
+              <br />
+              &nbsp;&nbsp;&nbsp;&nbsp;- 인터뷰 주제와 질문은 계속 업데이트 돼요
             </div>
           </div>
         </motion.div>
@@ -115,9 +119,9 @@ export default function Page() {
               인터뷰 진행하기
             </div>
             <div className="w-full text-body2 text-grayscale-500 mb-[32px]">
-              총 7~10개의 질문으로 인터뷰 진행
+              1. 총 7~10개의 질문으로 인터뷰 진행
               <br />
-              시간제한 없이 답변하기
+              &nbsp;&nbsp;&nbsp;&nbsp;- 시간제한 없이 답변하기
             </div>
           </div>
         </motion.div>
@@ -133,9 +137,9 @@ export default function Page() {
               받아보기
             </div>
             <div className="w-full text-body2 text-grayscale-500 mb-[24px]">
-              인터뷰를 마친 후,
+              1. 인터뷰를 마무리한 후
               <br />
-              QR 코드를 통해 영상 다운 받기
+              &nbsp;&nbsp;&nbsp;&nbsp;QR 코드를 통해 영상 다운 받기
             </div>
           </div>
           <div className="absolute top-[0px] inset-y-0 left-[11.25px] flex flex-col items-center">
