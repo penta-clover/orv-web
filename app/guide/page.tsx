@@ -81,7 +81,7 @@ export default function Page() {
               <br />
               &nbsp;&nbsp;&nbsp;&nbsp;- 한달간 무제한으로 사용 가능해요
               <br />
-              3. 인터뷰 주제와 질문은 계속 업데이트 돼요
+              3. 주제 선택
               <br />
               &nbsp;&nbsp;&nbsp;&nbsp;- 인터뷰 주제와 질문은 계속 업데이트 돼요
             </div>
