@@ -95,7 +95,7 @@ function CarouselContainer() {
   const [emblaApi, setEmblaApi] = useState<CarouselApi | null>(null);
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [inProgressIndex, setInProgressIndex] = useState(0);
+  const [inProgressIndex, setInProgressIndex] = useState(2);
 
   const totalSlides = 3; // 실제 슬라이드 개수에 맞게 수정
 
