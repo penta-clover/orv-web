@@ -23,7 +23,7 @@ import { track } from "../amplitude";
 export default function Page() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const router = useRouter();
-  const [referral, setReferral] = useState('')
+  const [referral, setReferral] = useState("");
 
   // 영상 재생 종료 시 화면 아래로 스크롤
   const handleVideoEnd = () => {
@@ -43,15 +43,15 @@ export default function Page() {
   // 레퍼럴 코드 쿠키에서 가져오기
   useEffect(() => {
     const parseCookies = () => {
-      return document.cookie.split('; ').reduce((cookies: any, cookieStr) => {
-        const [name, ...rest] = cookieStr.split('=');
-        cookies[name] = rest.join('=');
+      return document.cookie.split("; ").reduce((cookies: any, cookieStr) => {
+        const [name, ...rest] = cookieStr.split("=");
+        cookies[name] = rest.join("=");
         return cookies;
       }, {});
     };
 
     const cookies = parseCookies();
-    setReferral(cookies['orv-landing-referral'] || '');
+    setReferral(cookies["orv-landing-referral"] || "");
   }, []);
 
   // Intersection Observer를 사용하여 영상이 화면에 보일 때 재생, 그렇지 않으면 일시정지
@@ -86,23 +86,23 @@ export default function Page() {
     let lastTrackedPercentage = 0;
     const video = videoRef.current;
     if (!video) return;
-  
+
     const handleTimeUpdate = () => {
       // video.duration이 없는 경우 대비
       if (!video.duration) return;
-  
+
       const currentTime = video.currentTime;
       const currentPercentage = (currentTime / video.duration) * 100;
-  
+
       // 재생률이 2% 이상 증가했을 때 이벤트 전송
       if (currentPercentage - lastTrackedPercentage >= 2) {
         lastTrackedPercentage = Math.floor(currentPercentage);
         track("playing_landing_video", { playing_time: currentTime });
       }
     };
-  
+
     video.addEventListener("timeupdate", handleTimeUpdate);
-  
+
     return () => {
       video.removeEventListener("timeupdate", handleTimeUpdate);
     };
@@ -233,10 +233,10 @@ function MirrorSection() {
       </div>
 
       <div className="text-body2 text-white mt-[48px]">
-        당신을 인터뷰하는 질문에 답변하고
+        나만의 편안한 공간에서 <span className="text-main-lilac50">노트북</span>을 펴고
       </div>
-      <div className="text-body2 text-white ">
-        나의 목소리, 표정 그리고 그날의 분위기를 기록해요
+      <div className="text-body2 text-white">
+        <span className="text-main-lilac50">화면</span>에 보여지는 인터뷰 질문에 답해보세요.
       </div>
     </div>
   );

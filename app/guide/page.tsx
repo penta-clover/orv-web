@@ -101,7 +101,7 @@ export default function Page() {
             <div className="w-full text-body2 text-grayscale-500 mb-[32px]">
               1. 인터뷰를 위한 환경 조성하기
               <br />
-              2. 음향 및 화면 각도 조절하기
+              2. 음향 및 노트북 화면 각도 조절하기
               <br />
               3. 영상 필터 선택하기
             </div>
