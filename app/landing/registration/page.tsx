@@ -247,7 +247,7 @@ function Step1(props: { onComplete: () => void }) {
 
       <button className="mt-[6px] py-[6px]" onClick={() => props.onComplete()}>
         <div className="flex flex-col justify-center items-center w-full h-[48px] bg-main-lilac50 rounded-[12px] text-grayscale-800 text-head4 active:scale-95 transition-all">
-          입금을 완료했어요
+          입금 완료 후 다음으로
         </div>
       </button>
     </Card>
