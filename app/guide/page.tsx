@@ -77,9 +77,9 @@ export default function Page() {
             <div className="w-full text-body2 text-grayscale-500 mb-[32px]">
               1. www.orv.im 접속
               <br />
-              2. 결제 및 예약 확정 (월간 사용권)
+              2. 한달간 무제한으로 사용 가능해요
               <br />
-              3. 주제 선택
+              3. 인터뷰 주제와 질문은 계속 업데이트 돼요
             </div>
           </div>
         </motion.div>
