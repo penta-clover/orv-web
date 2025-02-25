@@ -192,20 +192,20 @@ function MirrorSection() {
 function VideoCarousel(props: { referralCode?: string }) {
   const images: { referral: string; src: string }[] = [
     {
-      referral: "JM",
-      src: "/images/landing-demo-jm.jpg",
-    },
-    {
       referral: "JH",
       src: "/images/landing-demo-jh.jpg",
     },
     {
-      referral: "JS",
-      src: "/images/landing-demo-js.jpg",
-    },
-    {
       referral: "HJ",
       src: "/images/landing-demo-hj.jpg",
+    },
+    {
+      referral: "JM",
+      src: "/images/landing-demo-jm.jpg",
+    },
+    {
+      referral: "JS",
+      src: "/images/landing-demo-js.jpg",
     },
     {
       referral: "GA",
@@ -298,12 +298,12 @@ function QuestionExample() {
       // 현재 표시되고 있는 질문 fade-out 효과 주기
       setOpacity(0);
 
-      // 0.5초 뒤에 질문 바꾸고 fade-in 효과 주기
+      // 질문 바꾸고 fade-in 효과 주기
       setTimeout(() => {
         setSelectedQuestionIdx((prev) => (prev + 1) % questions.length);
         setOpacity(100);
-      }, 1000);
-    }, 2500); // 이 과정을 5초마다 반복
+      }, 700);
+    }, 2500); // 이 과정을 일정 주기로 반복
 
     return () => clearInterval(interval);
   }, []);
@@ -322,7 +322,7 @@ function QuestionExample() {
         />
 
         <div
-          className={`absolute top-0 h-full w-full flex flex-col justify-center items-center transition-opacity duration-1000 opacity-${opacity}`}
+          className={`absolute top-0 h-full w-full flex flex-col justify-center items-center transition-opacity duration-700 opacity-${opacity}`}
         >
           {questions[selectedQuestionIdx].map((text, index) => (
             <div
