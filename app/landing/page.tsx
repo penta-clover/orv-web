@@ -21,7 +21,7 @@ import Footer from "./footer";
 import { track } from "../amplitude";
 
 export default function Page() {
-  const videoRef = useRef(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const router = useRouter();
   const [referral, setReferral] = useState('')
 
@@ -54,6 +54,59 @@ export default function Page() {
     setReferral(cookies['orv-landing-referral'] || '');
   }, []);
 
+  // Intersection Observer를 사용하여 영상이 화면에 보일 때 재생, 그렇지 않으면 일시정지
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (videoRef.current) {
+            if (entry.isIntersecting) {
+              videoRef.current.play();
+            } else {
+              videoRef.current.pause();
+            }
+          }
+        });
+      },
+      { threshold: 0.5 } // 영상의 50% 이상이 보일 때 isIntersecting가 true가 됩니다.
+    );
+
+    if (videoRef.current) {
+      observer.observe(videoRef.current);
+    }
+
+    return () => {
+      if (videoRef.current) {
+        observer.unobserve(videoRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    let lastTrackedPercentage = 0;
+    const video = videoRef.current;
+    if (!video) return;
+  
+    const handleTimeUpdate = () => {
+      // video.duration이 없는 경우 대비
+      if (!video.duration) return;
+  
+      const currentTime = video.currentTime;
+      const currentPercentage = (currentTime / video.duration) * 100;
+  
+      // 재생률이 2% 이상 증가했을 때 이벤트 전송
+      if (currentPercentage - lastTrackedPercentage >= 2) {
+        lastTrackedPercentage = Math.floor(currentPercentage);
+        track("playing_landing_video", { playing_time: currentTime });
+      }
+    };
+  
+    video.addEventListener("timeupdate", handleTimeUpdate);
+  
+    return () => {
+      video.removeEventListener("timeupdate", handleTimeUpdate);
+    };
+  }, []);
 
   return (
     <div className="relative bg-dark">
