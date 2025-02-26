@@ -95,7 +95,7 @@ function CarouselContainer() {
   const [emblaApi, setEmblaApi] = useState<CarouselApi | null>(null);
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [inProgressIndex, setInProgressIndex] = useState(2);
+  const [inProgressIndex, setInProgressIndex] = useState(0);
 
   const totalSlides = 3; // 실제 슬라이드 개수에 맞게 수정
 
@@ -210,15 +210,15 @@ function Step1(props: { onComplete: () => void }) {
   return (
     <Card>
       <div className="text-head3 text-grayscale-100 mb-[12px]">
-        step 1. 오브 월간 사용권 구매하기
+        step 1. 오브 일일 사용권 구매하기
       </div>
       <div className="relative w-[calc(100%)] h-[106px] mb-[12px]">
         {isLoadingImage && (
           <div className="w-full h-full bg-grayscale-800 rounded-[8px] animate-pulse-fast" />
         )}
         <Image
-          src="/images/coupon.svg"
-          alt="coupon"
+          src="/images/coupon-daily.svg"
+          alt="coupon-daily"
           fill
           style={{
             objectFit: "contain",
