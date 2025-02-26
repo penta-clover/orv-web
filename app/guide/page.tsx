@@ -77,9 +77,9 @@ export default function Page() {
             <div className="w-full text-body2 text-grayscale-500 mb-[32px]">
               1. www.orv.im 접속
               <br />
-              2. 월간 사용권 결제
+              2. 일일 사용권 결제
               <br />
-              &nbsp;&nbsp;&nbsp;&nbsp;- 한달간 무제한으로 사용 가능해요
+              &nbsp;&nbsp;&nbsp;&nbsp;- 24시간 동안 무제한으로 사용 가능해요
               <br />
               3. 주제 선택
               <br />
