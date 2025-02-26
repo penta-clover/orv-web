@@ -17,7 +17,7 @@ export default function FloatingButton(props: {
         className="flex flex-row justify-center items-center w-full bg-gd rounded-[12px] h-[48px] text-head4 text-[#1B2729] mt-[14px] active:scale-95 transition-all"
         onClick={() => props.onClick()}
       >
-        오브 시작하기
+        오브 얼리버드 신청하기
       </div>
     </div>
   );
