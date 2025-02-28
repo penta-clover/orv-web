@@ -2,7 +2,7 @@
 
 import ActionBar from "./actionBar";
 import "@/app/landing/blackBody.css";
-import Deadline from "../deadline";
+import Deadline from "../(components)/deadline";
 import { useRouter } from "next/navigation";
 import {
   Carousel,
