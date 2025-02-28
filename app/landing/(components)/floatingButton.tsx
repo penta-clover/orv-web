@@ -12,6 +12,7 @@ export default function FloatingButton(props: {
         width={14}
         height={26.09}
         alt="down arrow"
+        className="w-auto h-auto"
       />
       <div
         className="flex flex-row justify-center items-center w-full bg-gd rounded-[12px] h-[48px] text-head4 text-[#1B2729] mt-[14px] active:scale-95 transition-all"

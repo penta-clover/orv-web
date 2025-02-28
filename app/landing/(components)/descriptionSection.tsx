@@ -37,7 +37,7 @@ export default function DescriptionSection() {
         width={54}
         height={16.62}
         alt="logo"
-        className="mb-[32px]"
+        className="mb-[32px] w-auto h-auto"
       />
 
       <div
@@ -129,7 +129,7 @@ export default function DescriptionSection() {
         width={54}
         height={16.62}
         alt="logo"
-        className="mb-[32px]"
+        className="mb-[32px] w-auto h-auto"
       />
     </div>
   );

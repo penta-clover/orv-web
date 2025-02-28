@@ -8,7 +8,7 @@ export default function MirrorSection() {
         width={54}
         height={16.62}
         alt="logo"
-        className="mb-[12px]"
+        className="mb-[12px] w-auto h-auto"
       />
       <div className="text-head1 text-white mb-[16px]">
         나만을 위한 인터뷰 시간

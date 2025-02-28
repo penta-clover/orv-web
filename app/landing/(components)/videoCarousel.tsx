@@ -59,7 +59,7 @@ export default function VideoCarousel(props: { referralCode?: string }) {
                 width={256}
                 height={152}
                 alt="card"
-                className="rounded"
+                className="rounded w-[256px] h-[152px]"
               />
             </CarouselItem>
           ))}

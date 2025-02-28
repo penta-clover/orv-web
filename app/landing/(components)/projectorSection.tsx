@@ -35,9 +35,9 @@ export default function ProjectorSection() {
           <Image
             src="/images/film.svg"
             alt="film"
-            width={0}
+            width={376}
             height={237}
-            className="w-full"
+            className="w-auto h-auto"
           />
           <div className="absolute top-[38px] left-[31px] z-10 flex flex-row items-center gap-[7px]">
             <Image
@@ -72,17 +72,16 @@ export default function ProjectorSection() {
             >
               <Image
                 src="/images/reel.png"
-                alt="film"
+                alt="reel"
                 width={81}
                 height={81}
-                objectFit="fill"
               />
             </div>
   
             <div className="absolute top-[0px] right-[-8px] overflow-x-hidden overflow-y-visible z-5" style={{ width: "calc(100%)", height: "220px" }}>
               <Image
                 src="/images/line.png"
-                alt="film"
+                alt="line"
                 fill
                 style={{ width: "100%", height: "100%" }}
               />
@@ -106,7 +105,6 @@ export default function ProjectorSection() {
               alt="beam"
               width={0}
               height={0}
-              objectFit="cover"
               style={{ width: "calc(100vw)" }}
             />
   

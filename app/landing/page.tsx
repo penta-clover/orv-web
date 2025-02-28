@@ -127,6 +127,7 @@ export default function Page() {
             width={375}
             height={222}
             alt="dark wave"
+            priority
             className="w-full h-auto"
           />
         </div>
@@ -149,6 +150,7 @@ export default function Page() {
             width={375}
             height={222}
             alt="dark wave"
+            priority
             className="w-full h-auto"
           />
         </div>
