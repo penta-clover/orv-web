@@ -56,11 +56,11 @@ export default function Page() {
       (entries) => {
         entries.forEach((entry) => {
           if (videoRef.current) {
-            if (entry.isIntersecting) {
+            if (entry.isIntersecting && videoRef.current.paused) {
               videoRef.current.play().catch((error) => {
                 console.warn("Video play interrupted:", error);
               });
-            } else {
+            } else if (!entry.isIntersecting && !videoRef.current.paused) {
               videoRef.current.pause();
             }
           }
@@ -137,6 +137,7 @@ export default function Page() {
           autoPlay
           muted
           playsInline
+          preload="auto"
           onEnded={handleVideoEnd}
           className="w-full block z-10"
         >
