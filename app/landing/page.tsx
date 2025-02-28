@@ -61,7 +61,9 @@ export default function Page() {
         entries.forEach((entry) => {
           if (videoRef.current) {
             if (entry.isIntersecting) {
-              videoRef.current.play();
+              videoRef.current.play().catch((error) => {
+                console.warn("Video play interrupted:", error);
+              });
             } else {
               videoRef.current.pause();
             }
@@ -233,10 +235,12 @@ function MirrorSection() {
       </div>
 
       <div className="text-body2 text-white mt-[48px]">
-        나만의 편안한 공간에서 <span className="text-main-lilac50">노트북</span>을 펴고
+        나만의 편안한 공간에서 <span className="text-main-lilac50">노트북</span>
+        을 펴고
       </div>
       <div className="text-body2 text-white">
-        <span className="text-main-lilac50">화면</span>에 보여지는 인터뷰 질문에 답해보세요.
+        <span className="text-main-lilac50">화면</span>에 보여지는 인터뷰 질문에
+        답해보세요.
       </div>
     </div>
   );
