@@ -15,6 +15,7 @@ export default function Page() {
     "내일 죽는다면 오늘은 무얼 하고 싶은가요?",
     "무엇들 사이에서 갈등하고 있나요?",
     "지난 1년 동안 얻은 것중 가장 값진 것은 무엇인가요?",
+    "어렸을 때 상상했던 지금 나이의 내 모습과 지금의 나는 무엇이 다른가요?",
   ];
 
   return (
@@ -29,14 +30,13 @@ export default function Page() {
             {`Q${currentQuestionIdx + 1}. ${questions[currentQuestionIdx]}`}
           </div> */}
 
-          <div className="font-semibold text-head4 lg:text-[33px] lg:leading-[54px] text-grayscale-white text-center ml-[25px] lg:ml-[72px]">
+          <div className="font-semibold text-head4 lg:text-[33px] lg:leading-[54px] text-grayscale-white text-center ml-[20px] mr-[20px] lg:ml-[72px]">
             다섯번째 질문
           </div>
-          <div className="font-light text-body1 lg:text-[44px] lg:leading-[54px] text-grayscale-white text-center ml-[25px] lg:ml-[72px] text-start">
-            어렸을 때 상상했던 지금 나이의 내 모습과 지금의 나는 무엇이
-            다른가요?
+          <div className="font-light text-body1 leading-[20px] lg:text-[44px] lg:leading-[54px] text-grayscale-white text-center ml-[20px] mr-[20px] lg:ml-[72px] text-start">
+            살아오며 가장 행복했던 순간은 언제인가요?
           </div>
-          <div className="h-[3vh] lg:h-[70px]" />
+          <div className="h-[2vh] lg:h-[70px]" />
         </div>
       </div>
 
