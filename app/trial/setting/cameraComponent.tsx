@@ -14,6 +14,7 @@ export const CameraComponent = React.forwardRef<HTMLVideoElement>((props, ref) =
         try {
           const stream = await navigator.mediaDevices.getUserMedia({
             video: true,
+            audio: true,
           });
           if (localVideoRef.current) {
             localVideoRef.current.srcObject = stream;
@@ -32,6 +33,7 @@ export const CameraComponent = React.forwardRef<HTMLVideoElement>((props, ref) =
       ref={localVideoRef}
       autoPlay
       playsInline
+      muted
       style={{
         width: "100%",
         aspectRatio: "16/9",
