@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://www.orv.im
+
+# Sitemaps
+Sitemap: https://www.orv.im/sitemap.xml
