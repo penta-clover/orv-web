@@ -11,7 +11,7 @@ import "./blackBody.css";
 import DescriptionSection from "./(components)/descriptionSection";
 import { useEffect, useRef, useState } from "react";
 import Footer from "./(components)/footer";
-import { track } from "../amplitude";
+import { track } from "@/app/amplitude";
 import QuestionExample from "./(components)/questionExample";
 import VideoCarousel from "./(components)/videoCarousel";
 import MirrorSection from "./(components)/mirrorSection";

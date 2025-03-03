@@ -151,11 +151,25 @@ export default {
         body3: [
           "14px",
           {
+            lineHeight: "24px",
+            fontWeight: "600",
+          },
+        ],
+        body4: [
+          "14px",
+          {
+            lineHeight: "22px",
+            fontWeight: "500",
+          },
+        ],
+        caption1: [
+          "12px",
+          {
             lineHeight: "22px",
             fontWeight: "600",
           },
         ],
-        caption1: [
+        caption2: [
           "12px",
           {
             lineHeight: "22px",

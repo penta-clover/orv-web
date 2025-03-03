@@ -49,7 +49,7 @@ export default function Page() {
         }}
         onClickExplore={function (): void {
           track("click_lookaround_guide");
-          router.push("/landing#introduction-start");
+          router.push("/landing/v2#introduction-start");
         }}
       />
 

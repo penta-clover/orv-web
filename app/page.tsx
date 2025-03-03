@@ -4,5 +4,5 @@ import { redirect } from "next/navigation";
 
 // https://api.orv.im/docs/index.html
 export default function Home() {
-  redirect("/landing");
+  redirect("/landing/v2");
 }
