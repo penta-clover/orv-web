@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import ActionBar from "./actionBar";
-import "../blackBody.css";
+import "@/app/components/blackBody.css";
 
 import FAQ from "@/app/components/faq";
 import ChannelTalkButton from "@/app/components/channelTalkButton";

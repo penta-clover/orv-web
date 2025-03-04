@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
-import "./blackBody.css";
+import "@/app/components/blackBody.css";
 import { CameraComponent } from "./cameraComponent";
 import ActionBar from "./actionBar";
 

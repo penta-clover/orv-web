@@ -50,8 +50,8 @@ export default function InterviewStrength() {
 
       <Carousel
         opts={{
-          align: "center",
           loop: true,
+          skipSnaps: true,
         }}
         className="w-full"
       >

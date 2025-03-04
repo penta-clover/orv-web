@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import ActionBar from "./actionBar";
-import "./blackBody.css";
+import "@/app/components/blackBody.css";
 import CircleNumber from "./circleNumber";
 import Line from "./line";
 import { motion } from "framer-motion";

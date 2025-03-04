@@ -6,7 +6,7 @@ import EndingComment from "./(components)/endingComment";
 import Image from "next/image";
 import ProjectorSection from "./(components)/projectorSection";
 
-import "./blackBody.css";
+import "@/app/components/blackBody.css";
 import { useEffect, useRef, useState } from "react";
 import Footer from "./(components)/footer";
 import { track } from "../../amplitude";
@@ -153,7 +153,10 @@ export default function Page() {
 
       <div className="h-[36px]" />
 
-      <CTA text="주제 미리보기" onClick={() => {}} />
+      <CTA
+        text="주제 미리보기"
+        onClick={() => router.push("/landing/v2/topic")}
+      />
 
       <div className="h-[100px]" />
 

@@ -7,7 +7,7 @@ import Image from "next/image";
 import FloatingButton from "./(components)/floatingButton";
 import ProjectorSection from "./(components)/projectorSection";
 
-import "./blackBody.css";
+import "@/app/components/blackBody.css";
 import DescriptionSection from "./(components)/descriptionSection";
 import { useEffect, useRef, useState } from "react";
 import Footer from "./(components)/footer";

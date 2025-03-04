@@ -1,7 +1,7 @@
 "use client";
 
 import ActionBar from "./actionBar";
-import "@/app/landing/v2/blackBody.css";
+import "@/app/components/blackBody.css";
 import Deadline from "../(components)/deadline";
 import { useRouter } from "next/navigation";
 import {
