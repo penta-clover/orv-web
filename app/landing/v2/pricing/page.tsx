@@ -81,7 +81,7 @@ function Headline() {
 
 function OneTimeTicket() {
   return (
-    <div className="flex flex-col w-[315px] h-[318px] bg-grayscale-white rounded-[8px] p-[18px]">
+    <div className="flex flex-col w-[315px] bg-grayscale-white rounded-[8px] p-[18px]">
       <span className="text-head3 text-grayscale-black mb-[2px]">
         &lt;삶과 나&gt; 인터뷰 1회 이용권
       </span>
@@ -113,7 +113,7 @@ function OneTimeTicket() {
 
 function PackageTicket() {
   return (
-    <div className="flex flex-col w-[315px] h-[400px] bg-grayscale-white rounded-[8px] p-[18px]">
+    <div className="flex flex-col w-[315px] bg-grayscale-white rounded-[8px] p-[18px]">
       <div className="flex flex-row gap-[4px] mb-[12px]">
         <span className="flex items-center justify-center w-[39px] h-[24px] bg-system-info text-grayscale-white rounded-[4px] text-body3">
           추천
