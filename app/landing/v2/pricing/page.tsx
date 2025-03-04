@@ -4,12 +4,7 @@ import { useRouter } from "next/navigation";
 import ActionBar from "./actionBar";
 import "../blackBody.css";
 
-import {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent,
-} from "@/components/ui/custom-accordion";
+import FAQ from "@/app/components/faq";
 import ChannelTalkButton from "@/app/components/channelTalkButton";
 
 export default function Page() {
@@ -35,7 +30,7 @@ export default function Page() {
 
       <div className="h-[44px]" />
 
-      <FAQ />
+      <FAQ faqData={getFAQData()} />
 
       <div className="h-[36px]" />
 
@@ -150,49 +145,27 @@ function PackageTicket() {
   );
 }
 
-function FAQ() {
-  // 자주 묻는 질문/답변 리스트
+
+function getFAQData() {
   const faqData = [
-    {
-      question: "1회권이 아닌 이유는 무엇인가요?",
-      answer: "예시 답변: 1회권이 아닌 이유에 대한 자세한 설명...",
-    },
-    {
-      question: "인터뷰 주제는 몇 개로 구성되어 있나요?",
-      answer:
-        "예시 답변: 인터뷰 주제는 총 몇 개이며 어떤 내용들로 구성되어 있는지...",
-    },
-    {
-      question: "오브 프로세스가 어떻게 되나요?",
-      answer: "예시 답변: 오브 프로세스(OB Process)에 대한 상세한 진행 절차...",
-    },
-    {
-      question: "오브 프로세스가 어떻게 되나요? (중복)",
-      answer: "예시 답변: 동일 질문에 대한 예시 답변...",
-    },
-  ];
+      {
+        question: "1회권이 아닌 이유는 무엇인가요?",
+        answer: "예시 답변: 1회권이 아닌 이유에 대한 자세한 설명...",
+      },
+      {
+        question: "인터뷰 주제는 몇 개로 구성되어 있나요?",
+        answer:
+          "예시 답변: 인터뷰 주제는 총 몇 개이며 어떤 내용들로 구성되어 있는지...",
+      },
+      {
+        question: "오브 프로세스가 어떻게 되나요?",
+        answer: "예시 답변: 오브 프로세스(OB Process)에 대한 상세한 진행 절차...",
+      },
+      {
+        question: "오브 프로세스가 어떻게 되나요? (중복)",
+        answer: "예시 답변: 동일 질문에 대한 예시 답변...",
+      },
+    ];
 
-  return (
-    <div className="flex flex-col w-full px-[16px]">
-      <h3 className="text-head4 mb-[16px] text-grayscale-300">
-        자주 묻는 질문
-      </h3>
-
-      {/* Accordion */}
-      <Accordion type="single" collapsible className="w-full">
-        {faqData.map((item, idx) => (
-          <AccordionItem
-            key={idx}
-            value={`item-${idx}`}
-            className="!text-grayscale-300 text-head3 border-b-1px border-grayscale-700"
-          >
-            <AccordionTrigger>{item.question}</AccordionTrigger>
-            <AccordionContent className="!text-grayscale-500 text-body4">
-              {item.answer}
-            </AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
-    </div>
-  );
+    return faqData;
 }

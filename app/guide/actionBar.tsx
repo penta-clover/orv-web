@@ -2,39 +2,35 @@
 
 import Image from "next/image";
 
-export default function ActionBar(
-  props: {
-    onClickIntroduction: () => void;
-    onClickExplore: () => void;
-  }
-) {
-
+export default function ActionBar(props: {
+  title?: string;
+  onClickBack: () => void;
+  onClickMenu: () => void;
+}) {
   return (
-    <div className="flex flex-row items-center justify-between h-[56px] px-[16px]">
-      <div className="text-head2 text-white">
-        사용 가이드
+    <div className="flex flex-row items-center justify-between h-[56px] w-full">
+      <div className="h-[56px] w-[64px] flex items-center justify-center">
+        <Image
+          src="/icons/left-arrow.svg"
+          width={32}
+          height={32}
+          alt="left arrow"
+          onClick={() => props.onClickBack()}
+        />
       </div>
-      <div className="flex flex-row items-center h-full">
-        <div
-          className="text-body3 text-[#F1F1F4] px-[12px] h-full flex items-center"
-          onClick={() => props.onClickIntroduction()}
-        >
-          서비스 소개
-        </div>
-        <div className="w-[1.5px] h-[12px]">
-          <Image
-            src="/icons/vertical-separator.svg"
-            width={1.5}
-            height={12}
-            alt="separator"
-          />
-        </div>
-        <div
-          className="text-body3 text-[#F1F1F4] pl-[12px] h-full flex items-center"
-          onClick={() => props.onClickExplore()}
-        >
-          둘러보기
-        </div>
+
+      <div className="flex items-center justify-center grow text-head4 text-grayscale-white">
+        {props.title}
+      </div>
+
+      <div className="h-[56px] w-[64px] flex items-center justify-center">
+        <Image
+          src="/icons/hamburger.svg"
+          width={32}
+          height={32}
+          alt="left arrow"
+          onClick={() => props.onClickMenu()}
+        />
       </div>
     </div>
   );
