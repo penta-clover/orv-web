@@ -35,7 +35,7 @@ export default function Page() {
       <ActionBar
         onClickGuide={() => {
           track("click_guide_landing");
-          router.push("/guide");
+          router.push("/landing/v2/guide");
         }}
         onClickIntroduction={() => {
           track("click_introduction_landing");

@@ -6,16 +6,18 @@ import "@/app/components/blackBody.css";
 
 import FAQ from "@/app/components/faq";
 import ChannelTalkButton from "@/app/components/channelTalkButton";
+import { useSidebar } from "../sidebarContext";
 
 export default function Page() {
   const router = useRouter();
+  const { setIsSidebarOpen } = useSidebar()!;
 
   return (
     <div className="flex flex-col items-center justify-center">
       <ActionBar
         title="오브 티켓 구매하기"
         onClickBack={() => router.back()}
-        onClickMenu={() => {}}
+        onClickMenu={() => setIsSidebarOpen(true)}
       />
 
       <div className="h-[16px]" />

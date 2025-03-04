@@ -112,7 +112,7 @@ export default function Page() {
         <ActionBar
           onClickGuide={() => {
             track("click_guide_landing");
-            router.push("/guide");
+            router.push("/landing/v1/guide");
           }}
           onClickExplore={() => {
             track("click_lookaround_landing");

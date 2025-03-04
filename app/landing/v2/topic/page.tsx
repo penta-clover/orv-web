@@ -11,13 +11,19 @@ import AutoScroll from "embla-carousel-auto-scroll";
 import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSidebar } from "../sidebarContext";
 
 export default function Page() {
   const router = useRouter();
+  const { setIsSidebarOpen } = useSidebar()!;
 
   return (
     <div>
-      <ActionBar title="주제 미리보기" onClickMenu={() => {}} />
+      <ActionBar
+        title="주제 미리보기"
+        onClickBack={() => router.back()}
+        onClickMenu={() => setIsSidebarOpen(true)}
+      />
       <div className="flex flex-col h-full items-center">
         <div className="h-[24px]" />
 
@@ -48,7 +54,9 @@ export default function Page() {
 
         <div
           className="flex flex-row justify-center items-center bg-main-lilac50 rounded-[12px] h-[56px] w-[calc(100%-32px)] mx-[16px] text-head4 text-grayscale-800 active:scale-95 transition-all"
-          onClick={() => {router.push("/landing/v2")}}
+          onClick={() => {
+            router.push("/landing/v2");
+          }}
         >
           소개 페이지로 돌아가기
         </div>
@@ -111,9 +119,7 @@ function PeopleExample(props: { referralCode?: string }) {
       ]}
       className="w-full"
     >
-      <CarouselContent
-        className="flex"
-      >
+      <CarouselContent className="flex">
         {filteredImages.map((image, index) => (
           <CarouselItem
             key={index}

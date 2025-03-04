@@ -7,16 +7,18 @@ import Image from "next/image";
 import "@/app/components/blackBody.css";
 import { useEffect, useState } from "react";
 import YouTube, { YouTubeEvent, YouTubePlayer } from "react-youtube";
+import { useSidebar } from "../sidebarContext";
 
 export default function Page() {
   const router = useRouter();
+  const { setIsSidebarOpen } = useSidebar()!;
 
   return (
     <div className="flex flex-col w-full items-center">
       <ActionBar
         title="브랜드 스토리"
         onClickBack={router.back}
-        onClickMenu={() => {}}
+        onClickMenu={() => setIsSidebarOpen(true)}
       />
 
       <CoverImage />

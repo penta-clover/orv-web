@@ -21,11 +21,13 @@ import PriceSection from "./(components)/priceSection";
 import PeopleExampleSection from "./(components)/peopleExampleSection";
 import BirthstorySection from "./(components)/birthstorySection";
 import { cn } from "@/lib/utils";
+import { useSidebar } from "./sidebarContext";
 
 export default function Page() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const router = useRouter();
   const [referral, setReferral] = useState("");
+  const { setIsSidebarOpen } = useSidebar()!;
 
   // 영상 재생 종료 시 화면 아래로 스크롤
   const handleVideoEnd = () => {
@@ -114,8 +116,12 @@ export default function Page() {
 
   return (
     <div className="relative bg-dark">
-      <div className="absolute top-0 w-full z-50">
-        <ActionBar onClickMenu={() => {}} />
+      <div className="absolute top-0 w-full z-30">
+        <ActionBar
+          onClickMenu={() => {
+            setIsSidebarOpen(true);
+          }}
+        />
       </div>
 
       <div className="relative flex flex-col items-center justify-center h-[100svh]">
@@ -145,7 +151,12 @@ export default function Page() {
 
       <div className="h-[36px]" />
 
-      <CTA text="얼리버드 혜택 받고 시작하기" onClick={() => {router.push("/landing/v2/pricing")}} />
+      <CTA
+        text="얼리버드 혜택 받고 시작하기"
+        onClick={() => {
+          router.push("/landing/v2/pricing");
+        }}
+      />
 
       <div className="h-[100px]" />
 
@@ -168,7 +179,7 @@ export default function Page() {
 
       <div className="h-[36px]" />
 
-      <CTA text="오브 사용법 알아보기" onClick={() => router.push("/guide")} />
+      <CTA text="오브 사용법 알아보기" onClick={() => router.push("/landing/v2/guide")} />
 
       <div className="h-[136px]" />
 

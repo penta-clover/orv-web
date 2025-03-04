@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 
 export default function ActionBar(props: {
@@ -6,7 +8,7 @@ export default function ActionBar(props: {
   onClickMenu: () => void;
 }) {
   return (
-    <div className="flex flex-row items-center justify-between h-[56px]">
+    <div className="flex flex-row items-center justify-between h-[56px] w-full">
       <div className="h-[56px] w-[64px] flex items-center justify-center">
         <Image
           src="/icons/left-arrow.svg"
@@ -21,15 +23,13 @@ export default function ActionBar(props: {
         {props.title}
       </div>
 
-      <div
-        className="h-[56px] w-[64px] flex items-center justify-center"
-        onClick={props.onClickMenu}
-      >
+      <div className="h-[56px] w-[64px] flex items-center justify-center">
         <Image
           src="/icons/hamburger.svg"
           width={32}
           height={32}
           alt="left arrow"
+          onClick={() => props.onClickMenu()}
         />
       </div>
     </div>
