@@ -174,7 +174,7 @@ export default function Page() {
 
       <div className="h-[36px]" />
 
-      <CTA text="오브 사용법 알아보기" onClick={() => {}} />
+      <CTA text="오브 사용법 알아보기" onClick={() => router.push("/guide")} />
 
       <div className="h-[136px]" />
 
