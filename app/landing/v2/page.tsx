@@ -184,7 +184,7 @@ export default function Page() {
 
       <CTA text="티켓 가격 알아보기" onClick={() => {}} />
 
-      <div className="h-[92px]" />
+      <div className="h-[100px]" />
 
       <PeopleExampleSection />
 

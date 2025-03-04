@@ -4,9 +4,42 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 
 export default function InterviewStrength() {
   const reviews = getReviews();
+  const [activeIndex, setActiveIndex] = useState(0);
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.6, // Increased threshold for better visibility detection
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const index = itemRefs.current.findIndex(ref => ref === entry.target);
+          if (index !== -1) {
+            setActiveIndex(index);
+          }
+        }
+      });
+    }, observerOptions);
+
+    // Clear previous refs and observe current ones
+    itemRefs.current.forEach((ref, index) => {
+      if (ref) {
+        observer.observe(ref);
+      }
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [itemRefs]);
 
   return (
     <div className="flex flex-col items-center w-full">
@@ -22,13 +55,18 @@ export default function InterviewStrength() {
         }}
         className="w-full"
       >
-
         // gap between items: 16px
         <CarouselContent className="flex">
           {reviews.map(({ profile, content }, index) => (
             <CarouselItem
               key={index}
-              className="flex flex-col w-[307px] mx-[8px] h-[210px] py-[16px] px-[11px] rounded-[4px] bg-grayscale-white basis-auto"
+              ref={(el) => {
+                itemRefs.current[index] = el;
+                console.log(itemRefs.current);
+              }}
+              className={`flex flex-col w-[307px] mx-[8px] h-[210px] py-[16px] px-[11px] rounded-[4px] bg-grayscale-white basis-auto transition-opacity ${
+                activeIndex === index ? "opacity-100" : "opacity-60"
+              }`}
             >
               <FiveStars />
               <div className="w-full h-[1px] bg-grayscale-100 mt-[16px]" />
@@ -124,6 +162,6 @@ function getReviews() {
           </span>
         </div>
       ),
-    }
+    },
   ];
 }
