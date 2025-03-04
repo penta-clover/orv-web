@@ -115,16 +115,7 @@ export default function Page() {
   return (
     <div className="relative bg-dark">
       <div className="absolute top-0 w-full z-50">
-        <ActionBar
-          onClickGuide={() => {
-            track("click_guide_landing");
-            router.push("/guide");
-          }}
-          onClickExplore={() => {
-            track("click_lookaround_landing");
-            window.scrollTo({ top: window.innerHeight, behavior: "smooth" });
-          }}
-        />
+        <ActionBar onClickMenu={() => {}} />
       </div>
 
       <div className="relative flex flex-col items-center justify-center h-[100svh]">
@@ -182,7 +173,12 @@ export default function Page() {
 
       <div className="h-[36px]" />
 
-      <CTA text="티켓 가격 알아보기" onClick={() => {router.push("/landing/v2/pricing")}} />
+      <CTA
+        text="티켓 가격 알아보기"
+        onClick={() => {
+          router.push("/landing/v2/pricing");
+        }}
+      />
 
       <div className="h-[100px]" />
 
