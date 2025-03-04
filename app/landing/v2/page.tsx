@@ -182,7 +182,7 @@ export default function Page() {
 
       <div className="h-[36px]" />
 
-      <CTA text="티켓 가격 알아보기" onClick={() => {}} />
+      <CTA text="티켓 가격 알아보기" onClick={() => {router.push("/landing/v2/pricing")}} />
 
       <div className="h-[100px]" />
 

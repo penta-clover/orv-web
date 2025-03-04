@@ -28,7 +28,7 @@ const Typewriter: React.FC<TypewriterProps> = ({
         clearInterval(intervalId);
         setTimeout(() => {
           onComplete && onComplete();
-        }, 500);
+        }, 300);
       }
     }, speed);
 
@@ -96,7 +96,7 @@ const EndingComment: React.FC = () => {
               <span>{text}</span>
             ) : index === currentIndex ? (
               // 현재 타이핑 중인 텍스트
-              <Typewriter text={text} onComplete={handleComplete} speed={130} />
+              <Typewriter text={text} onComplete={handleComplete} speed={100} />
             ) : (
               <span className="h-[26px] text-dark">o</span>
             )}
