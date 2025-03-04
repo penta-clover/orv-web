@@ -27,7 +27,7 @@ export default function Page() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const router = useRouter();
   const [referral, setReferral] = useState("");
-  const { setIsSidebarOpen } = useSidebar()!;
+  const { isSidebarOpen, setIsSidebarOpen } = useSidebar()!;
 
   // 영상 재생 종료 시 화면 아래로 스크롤
   const handleVideoEnd = () => {
@@ -35,6 +35,16 @@ export default function Page() {
       window.scrollTo({ top: window.innerHeight, behavior: "smooth" });
     }
   };
+
+  useEffect(() => {
+    if (isSidebarOpen) {
+      videoRef.current?.pause();
+    } else {
+      videoRef.current?.play().catch((error) => {
+        console.warn("Video play interrupted:", error);
+      });
+    }
+  }, [isSidebarOpen]);
 
   const onClickStartButton = () => {
     track("click_start_orv", {
@@ -179,7 +189,10 @@ export default function Page() {
 
       <div className="h-[36px]" />
 
-      <CTA text="오브 사용법 알아보기" onClick={() => router.push("/landing/v2/guide")} />
+      <CTA
+        text="오브 사용법 알아보기"
+        onClick={() => router.push("/landing/v2/guide")}
+      />
 
       <div className="h-[136px]" />
 
