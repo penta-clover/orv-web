@@ -18,6 +18,8 @@ export default function Page() {
         onClickMenu={() => {}}
       />
 
+      <div className="h-[16px]" />
+
       <Headline />
 
       <div className="h-[40px]" />
@@ -40,11 +42,20 @@ export default function Page() {
 
       <div className="h-[32px]" />
 
-      <div className="text-head3 text-grayscale-white w-full pl-[16px]">아직 고민된다면?</div>
+      <div className="text-head3 text-grayscale-white w-full pl-[16px]">
+        아직 고민된다면?
+      </div>
 
       <div className="h-[16px]" />
 
-      <button className="w-[calc(100%-32px)] h-[56px] text-head3 text-grayscale-800 bg-main-lilac50 rounded-[12px] transition-all active:scale-95">오브의 첫 탄생 영상 보러가기</button>
+      <button
+        className="w-[calc(100%-32px)] h-[56px] text-head3 text-grayscale-800 bg-main-lilac50 rounded-[12px] transition-all active:scale-95"
+        onClick={() => {
+          router.push("/landing/v2/story");
+        }}
+      >
+        오브의 첫 탄생 영상 보러가기
+      </button>
 
       <div className="h-[32px]" />
     </div>
@@ -145,27 +156,26 @@ function PackageTicket() {
   );
 }
 
-
 function getFAQData() {
   const faqData = [
-      {
-        question: "1회권이 아닌 이유는 무엇인가요?",
-        answer: "예시 답변: 1회권이 아닌 이유에 대한 자세한 설명...",
-      },
-      {
-        question: "인터뷰 주제는 몇 개로 구성되어 있나요?",
-        answer:
-          "예시 답변: 인터뷰 주제는 총 몇 개이며 어떤 내용들로 구성되어 있는지...",
-      },
-      {
-        question: "오브 프로세스가 어떻게 되나요?",
-        answer: "예시 답변: 오브 프로세스(OB Process)에 대한 상세한 진행 절차...",
-      },
-      {
-        question: "오브 프로세스가 어떻게 되나요? (중복)",
-        answer: "예시 답변: 동일 질문에 대한 예시 답변...",
-      },
-    ];
+    {
+      question: "1회권이 아닌 이유는 무엇인가요?",
+      answer: "예시 답변: 1회권이 아닌 이유에 대한 자세한 설명...",
+    },
+    {
+      question: "인터뷰 주제는 몇 개로 구성되어 있나요?",
+      answer:
+        "예시 답변: 인터뷰 주제는 총 몇 개이며 어떤 내용들로 구성되어 있는지...",
+    },
+    {
+      question: "오브 프로세스가 어떻게 되나요?",
+      answer: "예시 답변: 오브 프로세스(OB Process)에 대한 상세한 진행 절차...",
+    },
+    {
+      question: "오브 프로세스가 어떻게 되나요? (중복)",
+      answer: "예시 답변: 동일 질문에 대한 예시 답변...",
+    },
+  ];
 
-    return faqData;
+  return faqData;
 }

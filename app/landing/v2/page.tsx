@@ -145,7 +145,7 @@ export default function Page() {
 
       <div className="h-[36px]" />
 
-      <CTA text="얼리버드 혜택 받고 시작하기" onClick={() => {}} />
+      <CTA text="얼리버드 혜택 받고 시작하기" onClick={() => {router.push("/landing/v2/pricing")}} />
 
       <div className="h-[100px]" />
 
@@ -193,7 +193,12 @@ export default function Page() {
 
       <div className="h-[36px]" />
 
-      <CTA text="오브 브랜드 스토리 보러가기" onClick={() => {}} />
+      <CTA
+        text="오브 브랜드 스토리 보러가기"
+        onClick={() => {
+          router.push("/landing/v2/story");
+        }}
+      />
 
       <div className="h-[100px]" />
 
