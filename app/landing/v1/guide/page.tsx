@@ -6,10 +6,8 @@ import "@/app/components/blackBody.css";
 import CircleNumber from "./circleNumber";
 import Line from "./line";
 import { motion } from "framer-motion";
-import ChannelTalkButton from "../components/channelTalkButton";
 
 import Image from "next/image";
-import FAQ from "../components/faq";
 
 // 애니메이션 Variants 설정
 const stepVariants = {
@@ -75,8 +73,6 @@ export default function Page() {
       </div>
 
       <div className="h-[32px]" />
-
-      <FAQ faqData={getFAQData()} />
 
       <div className="h-[76px]" />
     </div>
@@ -187,28 +183,4 @@ function GuideLine() {
       </motion.div>
     </div>
   );
-}
-
-function getFAQData() {
-  const faqData = [
-    {
-      question: "1회권이 아닌 이유는 무엇인가요?",
-      answer: "예시 답변: 1회권이 아닌 이유에 대한 자세한 설명...",
-    },
-    {
-      question: "인터뷰 주제는 몇 개로 구성되어 있나요?",
-      answer:
-        "예시 답변: 인터뷰 주제는 총 몇 개이며 어떤 내용들로 구성되어 있는지...",
-    },
-    {
-      question: "오브 프로세스가 어떻게 되나요?",
-      answer: "예시 답변: 오브 프로세스(OB Process)에 대한 상세한 진행 절차...",
-    },
-    {
-      question: "오브 프로세스가 어떻게 되나요? (중복)",
-      answer: "예시 답변: 동일 질문에 대한 예시 답변...",
-    },
-  ];
-
-  return faqData;
 }
