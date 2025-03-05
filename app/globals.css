@@ -8,10 +8,6 @@ body {
   user-select: none;
 }
 
-.windows-adjust {
-  letter-spacing: -0.08em;
-}
-
 .hide-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
 }
