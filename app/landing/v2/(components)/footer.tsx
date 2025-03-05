@@ -7,7 +7,7 @@ export default function Footer() {
     "https://cac.notion.site/1a3bfb0d0b4e80d4bdd4d08fc30ccc96?pvs=73";
 
   return (
-    <div className="flex flex-row justify-center items-start w-full h-[185px] pt-[22.25px] bg-grayscale-900">
+    <div className="flex flex-row justify-center items-start w-full h-[65px] pt-[22.25px] bg-grayscale-900">
       <div className="flex flex-row items-center font-medium text-[11px] leading-[22px] text-grayscale-500">
         <div
           onClick={() => {
