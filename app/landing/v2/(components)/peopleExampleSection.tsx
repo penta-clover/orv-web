@@ -68,14 +68,14 @@ export default function PeopleExampleSection(props: { referralCode?: string }) {
           {filteredImages.map((image, index) => (
             <CarouselItem
               key={index}
-              className="w-[256px] h-[152px] p-0 mx-[4px] basis-auto"
+              className="w-[270.2px] h-[152px] p-0 mx-[4px] basis-auto"
             >
               <Image
                 src={image.src}
-                width={256}
+                width={270.2}
                 height={152}
                 alt="card"
-                className="rounded w-[256px] h-[152px]"
+                className="rounded w-[270.2px] h-[152px]"
               />
             </CarouselItem>
           ))}
