@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import ActionBar from "./actionBar";
 import "@/app/components/blackBody.css";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useEarlybirdRepository } from "@/providers/EarlybirdRepositoryContext";
 
 import Image from "next/image";
@@ -17,11 +17,6 @@ import ChannelTalkButton from "@/app/components/channelTalkButton";
 
 export default function Page() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-
-  // query parameter로부터 productName과 price를 읽어옴
-  const productName = searchParams.get("productName") || "";
-  const productPrice = Number(searchParams.get("price")) || 0;
 
   return (
     <div className="flex flex-col items-center w-full min-h-[calc(100dvh)]">
@@ -29,18 +24,25 @@ export default function Page() {
 
       <div className="h-[24px]" />
 
-      <CarouselContainer
-        productName={productName}
-        productPrice={productPrice}
-      />
+      <Suspense>
+        <CarouselContainer
+        // productName={productName}
+        // productPrice={productPrice}
+        />
+      </Suspense>
     </div>
   );
 }
 
 function CarouselContainer(props: {
-  productName: string;
-  productPrice: number;
+  // productName: string;
+  // productPrice: number;
 }) {
+  const searchParams = useSearchParams();
+  // query parameter로부터 productName과 price를 읽어옴
+  const productName = searchParams.get("productName") || "";
+  const productPrice = Number(searchParams.get("price")) || 0;
+
   const router = useRouter();
   const [emblaApi, setEmblaApi] = useState<CarouselApi | null>(null);
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
@@ -95,8 +97,8 @@ function CarouselContainer(props: {
           {inProgressIndex >= 1 && (
             <CarouselItem>
               <Step2
-                productName={props.productName}
-                productPrice={props.productPrice}
+                productName={productName}
+                productPrice={productPrice}
                 onComplete={() => {
                   setInProgressIndex((prev) => Math.max(2, prev));
                   setTimeout(() => {
@@ -108,7 +110,7 @@ function CarouselContainer(props: {
           )}
           {inProgressIndex >= 2 && (
             <CarouselItem>
-              <Step3 onClickBackHome={() => router.push("/")}/>
+              <Step3 onClickBackHome={() => router.push("/")} />
             </CarouselItem>
           )}
         </CarouselContent>
@@ -317,8 +319,8 @@ function Step2(props: {
           >
             <CircleToggle isActive={selectedMethod === "toss"} />
             <span className="text-body2 text-grayscale-100">Toss</span>
-            <span className="text-caption1 text-grayscale-white bg-[#1F4EF5] rounded-[11px] px-[12px] py-[2px]">
-              원클릭 송금이 가능해요
+            <span className="text-caption1 text-grayscale-white bg-grayscale-700 rounded-[11px] px-[12px] py-[2px]">
+              모바일에서만 가능해요
             </span>
           </div>
         </div>
@@ -330,8 +332,8 @@ function Step2(props: {
           >
             <CircleToggle isActive={selectedMethod === "kakao"} />
             <span className="text-body2 text-grayscale-100">카카오</span>
-            <span className="text-caption1 text-grayscale-800 bg-[#FAE100] rounded-[11px] px-[12px] py-[2px]">
-              원클릭 송금이 가능해요
+            <span className="text-caption1 text-grayscale-white bg-grayscale-700 rounded-[11px] px-[12px] py-[2px]">
+              모바일에서만 가능해요
             </span>
           </div>
         </div>
@@ -423,11 +425,7 @@ function Step2(props: {
   );
 }
 
-function Step3(
-  props: {
-    onClickBackHome: () => void;
-  }
-) {
+function Step3(props: { onClickBackHome: () => void }) {
   return (
     <Card>
       <div className="text-head3 text-grayscale-100 mb-[8px]">
