@@ -86,7 +86,7 @@ export default {
   		},
   		fontFamily: {
   			pretendard: [
-  				'Pretendard',
+  				'Pretendard Variable',
   				'sans-serif'
   			],
   			onglyph: [
