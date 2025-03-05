@@ -7,8 +7,18 @@ export default function UiPreviewSection() {
       </div>
 
       <div className="h-[24px]" />
-
-      <div className="h-[219px] w-full bg-grayscale-200"></div>
+      
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        className="w-full block z-10"
+      >
+        <source src="/videos/landing-v2-sub.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
 
       <div className="h-[18px]" />
 
