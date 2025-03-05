@@ -51,7 +51,7 @@ export default function Page() {
       <div className="h-[36px]" />
 
       <div className="w-full pl-[16px]">
-        <ChannelTalkButton text="1:1 문의" className="w-[51px] h-[38px]" />
+        <ChannelTalkButton text="1:1 문의" className="h-[38px]" />
       </div>
 
       <div className="h-[32px]" />

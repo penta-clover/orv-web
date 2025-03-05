@@ -31,10 +31,6 @@ export default function RootLayout({
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
         />
-      </head>
-      <body className={`antialiased hide-scrollbar safe-area font-pretendard`}>
-        <Analytics />
-        <SpeedInsights />
 
         <link
           rel="stylesheet"
@@ -42,6 +38,10 @@ export default function RootLayout({
           crossOrigin="anonymous"
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
         />
+      </head>
+      <body className={`antialiased hide-scrollbar safe-area font-pretendard`}>
+        <Analytics />
+        <SpeedInsights />
 
         <Providers>{children}</Providers>
       </body>
