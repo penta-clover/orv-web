@@ -95,12 +95,12 @@ function Headline() {
 
 function OneTimeTicket(props: { onClickBuyTicket: () => void }) {
   return (
-    <div className="flex flex-col w-[315px] bg-grayscale-white rounded-[8px] p-[18px]">
+    <div className="flex flex-col w-[calc(100%-60px)] min-w-[315px] mx-[30px] bg-grayscale-white rounded-[8px] p-[18px]">
       <span className="text-head3 text-grayscale-black mb-[2px]">
         &lt;삶과 나&gt; 인터뷰 1회 이용권
       </span>
       <span className="text-body3 text-grayscale-500 mb-[16px]">
-        커피 한 잔의 가격으로 인터뷰를 경험해볼 수 있어요
+        커피 한잔의 가격으로 인터뷰를 경험해볼 수 있어요
       </span>
       <span className="bg-grayscale-100 w-full h-[1px] mb-[12px]" />
 
@@ -130,7 +130,7 @@ function OneTimeTicket(props: { onClickBuyTicket: () => void }) {
 
 function PackageTicket(props: { onClickBuyTicket: () => void }) {
   return (
-    <div className="flex flex-col w-[315px] bg-grayscale-white rounded-[8px] p-[18px]">
+    <div className="flex flex-col w-[calc(100%-60px)] min-w-[315px] mx-[30px] bg-grayscale-white rounded-[8px] p-[18px]">
       <div className="flex flex-row gap-[4px] mb-[12px]">
         <span className="flex items-center justify-center w-[39px] h-[24px] bg-system-info text-grayscale-white rounded-[4px] text-body3">
           추천
