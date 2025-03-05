@@ -6,7 +6,6 @@ import * as ChannelService from "@channel.io/channel-web-sdk-loader";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Providers from "./providers";
 import Analytics from "./analytics";
-import Script from "next/script";
 
 export default function RootLayout({
   children,
@@ -28,6 +27,10 @@ export default function RootLayout({
         />
         <meta property="og:image" content="/images/orv-og-thumbnail.jpeg" />
         <meta property="og:url" content="www.orv.im" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        />
       </head>
       <body className={`antialiased hide-scrollbar safe-area font-pretendard`}>
         <Analytics />

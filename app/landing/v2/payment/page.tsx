@@ -295,9 +295,7 @@ function Step2(props: {
           navigator.userAgent
         );
       if (!isMobile) {
-        alert(
-          "선택하신 결제 수단은 모바일에서만 이용할 수 있습니다"
-        );
+        alert("선택하신 결제 수단은 모바일에서만 이용할 수 있습니다");
         return;
       }
       // go to toss
@@ -315,9 +313,7 @@ function Step2(props: {
           navigator.userAgent
         );
       if (!isMobile) {
-        alert(
-          "선택하신 결제 수단은 모바일에서만 이용할 수 있습니다"
-        );
+        alert("선택하신 결제 수단은 모바일에서만 이용할 수 있습니다");
         return;
       }
       // go to kakao
@@ -336,7 +332,7 @@ function Step2(props: {
       copyText("카카오뱅크(최현준) 3333-32-8277762");
       props.onComplete();
     },
-  }
+  };
 
   return (
     <Card>
@@ -433,9 +429,7 @@ function Step2(props: {
             ? "bg-main-lilac50 text-grayscale-800"
             : "bg-grayscale-800 text-grayscale-500"
         }`}
-        onClick={
-          payActions[selectedMethod ?? "none"]
-        }
+        onClick={payActions[selectedMethod ?? "none"]}
       >
         {
           {
