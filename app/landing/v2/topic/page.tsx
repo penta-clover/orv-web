@@ -79,23 +79,23 @@ function PeopleExample(props: { referralCode?: string }) {
   const images: { referral: string; src: string }[] = [
     {
       referral: "JH",
-      src: "/images/landing-demo-jh.jpg",
+      src: "/images/landing-topic-demo-js.jpg",
     },
     {
       referral: "HJ",
-      src: "/images/landing-demo-hj.jpg",
+      src: "/images/landing-topic-demo-jm.jpg",
     },
     {
       referral: "JM",
-      src: "/images/landing-demo-jm.jpg",
+      src: "/images/landing-topic-demo-hj.jpg",
     },
     {
       referral: "JS",
-      src: "/images/landing-demo-js.jpg",
+      src: "/images/landing-topic-demo-ga.jpg",
     },
     {
       referral: "GA",
-      src: "/images/landing-demo-ga.jpg",
+      src: "/images/landing-topic-demo-zz.jpg",
     },
   ];
 
