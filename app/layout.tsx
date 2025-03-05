@@ -6,6 +6,7 @@ import * as ChannelService from "@channel.io/channel-web-sdk-loader";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Providers from "./providers";
 import Analytics from "./analytics";
+import { useEffect } from "react";
 
 export default function RootLayout({
   children,
@@ -13,6 +14,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   ChannelService.loadScript();
+
+  useEffect(() => {
+    const isWindows = navigator.appVersion.indexOf("Win") !== -1;
+    if (isWindows) {
+      document.body.classList.add("windows-adjust");
+    }
+  }, []);
 
   return (
     <html lang="ko">
