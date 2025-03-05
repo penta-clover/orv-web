@@ -104,9 +104,6 @@ function FirstQuestion() {
             opts={{
               width: "100%",
               height: "100%",
-              playerVars: {
-                autoplay: 1,
-              },
             }}
             onReady={onReady}
             className="w-full h-full"
