@@ -286,6 +286,58 @@ function Step2(props: {
     }, 5000);
   };
 
+  const payActions = {
+    none: () => {},
+    toss: () => {
+      // 모바일 환경 체크
+      const isMobile =
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent
+        );
+      if (!isMobile) {
+        alert(
+          "선택하신 결제 수단은 모바일에서만 이용할 수 있습니다"
+        );
+        return;
+      }
+      // go to toss
+      copyText("카카오뱅크(최현준) 3333-32-8277762");
+      window.location.href = `supertoss://send?amount=${props.productPrice}&bank=%EC%B9%B4%EC%B9%B4%EC%98%A4%EB%B1%85%ED%81%AC&accountNo=3333328277762&origin=qr`;
+
+      setTimeout(() => {
+        props.onComplete();
+      }, 1000);
+    },
+    kakao: () => {
+      // 모바일 환경 체크
+      const isMobile =
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent
+        );
+      if (!isMobile) {
+        alert(
+          "선택하신 결제 수단은 모바일에서만 이용할 수 있습니다"
+        );
+        return;
+      }
+      // go to kakao
+      copyText("카카오뱅크(최현준) 3333-32-8277762");
+      if (props.productPrice === 2200) {
+        window.location.href = `https://qr.kakaopay.com/FZNAxtaQD44c09796`;
+      } else {
+        window.location.href = `https://qr.kakaopay.com/FZNAxtaQDf3c05080`;
+      }
+
+      setTimeout(() => {
+        props.onComplete();
+      }, 1000);
+    },
+    directly: () => {
+      copyText("카카오뱅크(최현준) 3333-32-8277762");
+      props.onComplete();
+    },
+  }
+
   return (
     <Card>
       <div className="text-head3 text-grayscale-100 mb-[12px]">
@@ -382,34 +434,7 @@ function Step2(props: {
             : "bg-grayscale-800 text-grayscale-500"
         }`}
         onClick={
-          {
-            none: () => {},
-            toss: () => {
-              // go to toss
-              copyText("카카오뱅크(최현준) 3333-32-8277762");
-              window.location.href = `supertoss://send?amount=${props.productPrice}&bank=%EC%B9%B4%EC%B9%B4%EC%98%A4%EB%B1%85%ED%81%AC&accountNo=3333328277762&origin=qr`;
-
-              setTimeout(() => {
-                props.onComplete();
-              }, 1000);
-            },
-            kakao: () => {
-              // go to kakao
-              copyText("카카오뱅크(최현준) 3333-32-8277762");
-              if (props.productPrice === 2200) {
-                window.location.href = `https://qr.kakaopay.com/FZNAxtaQD44c09796`;
-              } else {
-                window.location.href = `https://qr.kakaopay.com/FZNAxtaQDf3c05080`;
-              }
-
-              setTimeout(() => {
-                props.onComplete();
-              }, 1000);
-            },
-            directly: () => {
-              props.onComplete();
-            },
-          }[selectedMethod ?? "none"]
+          payActions[selectedMethod ?? "none"]
         }
       >
         {

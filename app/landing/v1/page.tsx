@@ -33,7 +33,7 @@ export default function Page() {
       y_top: window.scrollY,
       y_bottom: window.scrollY + window.innerHeight,
     });
-    router.push("/landing/registration");
+    router.push("/landing/v1/registration");
   };
 
   // 레퍼럴 코드 쿠키에서 가져오기
@@ -141,7 +141,7 @@ export default function Page() {
           onEnded={handleVideoEnd}
           className="w-full block z-10"
         >
-          <source src="videos/landing-video.mp4" type="video/mp4" />
+          <source src="/videos/landing-video.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
 

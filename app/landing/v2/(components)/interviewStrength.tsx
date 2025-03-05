@@ -62,7 +62,6 @@ export default function InterviewStrength() {
               key={index}
               ref={(el) => {
                 itemRefs.current[index] = el;
-                console.log(itemRefs.current);
               }}
               className={`flex flex-col w-[307px] mx-[8px] h-[210px] py-[16px] px-[11px] rounded-[4px] bg-grayscale-white basis-auto transition-opacity ${
                 activeIndex === index ? "opacity-100" : "opacity-60"
