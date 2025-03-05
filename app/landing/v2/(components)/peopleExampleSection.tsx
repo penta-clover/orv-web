@@ -9,24 +9,32 @@ import Image from "next/image";
 export default function PeopleExampleSection(props: { referralCode?: string }) {
   const images: { referral: string; src: string }[] = [
     {
-      referral: "JH",
-      src: "/images/landing-demo-jh.jpg",
-    },
-    {
-      referral: "HJ",
-      src: "/images/landing-demo-hj.jpg",
+      referral: "JS",
+      src: "/images/landing-demo-js.jpg",
     },
     {
       referral: "JM",
       src: "/images/landing-demo-jm.jpg",
     },
     {
-      referral: "JS",
-      src: "/images/landing-demo-js.jpg",
+      referral: "HJ",
+      src: "/images/landing-demo-hj.jpg",
     },
     {
       referral: "GA",
       src: "/images/landing-demo-ga.jpg",
+    },
+    {
+      referral: "HS",
+      src: "/images/landing-demo-hs.jpg",
+    },
+    {
+      referral: "ZZ",
+      src: "/images/landing-demo-zz.jpg",
+    },
+    {
+      referral: "JH",
+      src: "/images/landing-demo-jh.jpg",
     },
   ];
 
