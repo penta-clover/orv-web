@@ -26,7 +26,7 @@ import { useSidebar } from "./sidebarContext";
 export default function Page() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const router = useRouter();
-  const [referral, setReferral] = useState("");
+  const [referralCode, setReferralCode] = useState("");
   const { isSidebarOpen, setIsSidebarOpen } = useSidebar()!;
 
   // 영상 재생 종료 시 화면 아래로 스크롤
@@ -65,7 +65,7 @@ export default function Page() {
     };
 
     const cookies = parseCookies();
-    setReferral(cookies["orv-landing-referral"] || "");
+    setReferralCode(cookies["orv-landing-referral"] || "");
   }, []);
 
   // Intersection Observer를 사용하여 영상이 화면에 보일 때 재생, 그렇지 않으면 일시정지
@@ -122,6 +122,21 @@ export default function Page() {
     return () => {
       video.removeEventListener("timeupdate", handleTimeUpdate);
     };
+  }, []);
+
+
+  // 레퍼럴 코드 쿠키에서 가져오기
+  useEffect(() => {
+    const parseCookies = () => {
+      return document.cookie.split("; ").reduce((cookies: any, cookieStr) => {
+        const [name, ...rest] = cookieStr.split("=");
+        cookies[name] = rest.join("=");
+        return cookies;
+      }, {});
+    };
+
+    const cookies = parseCookies();
+    setReferralCode(cookies["orv-landing-referral"] || "");
   }, []);
 
   return (
@@ -209,7 +224,7 @@ export default function Page() {
 
       <div className="h-[100px]" />
 
-      <PeopleExampleSection />
+      <PeopleExampleSection referralCode={referralCode} />
 
       <div className="h-[100px]" />
 

@@ -9,13 +9,28 @@ import ActionBar from "./actionBar";
 import "@/app/components/blackBody.css";
 import AutoScroll from "embla-carousel-auto-scroll";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSidebar } from "../sidebarContext";
 
 export default function Page() {
   const router = useRouter();
   const { setIsSidebarOpen } = useSidebar()!;
+  const [referralCode, setReferralCode] = useState("");
+
+  // 레퍼럴 코드 쿠키에서 가져오기
+  useEffect(() => {
+    const parseCookies = () => {
+      return document.cookie.split("; ").reduce((cookies: any, cookieStr) => {
+        const [name, ...rest] = cookieStr.split("=");
+        cookies[name] = rest.join("=");
+        return cookies;
+      }, {});
+    };
+
+    const cookies = parseCookies();
+    setReferralCode(cookies["orv-landing-referral"] || "");
+  }, []);
 
   return (
     <div>
@@ -31,7 +46,7 @@ export default function Page() {
 
         <div className="h-[24px]" />
 
-        <PeopleExample />
+        <PeopleExample referralCode={referralCode} />
 
         <div className="h-[48px]" />
 
@@ -78,23 +93,23 @@ function Headline() {
 function PeopleExample(props: { referralCode?: string }) {
   const images: { referral: string; src: string }[] = [
     {
-      referral: "JH",
+      referral: "JS",
       src: "/images/landing-topic-demo-js.jpg",
     },
     {
-      referral: "HJ",
+      referral: "JM",
       src: "/images/landing-topic-demo-jm.jpg",
     },
     {
-      referral: "JM",
+      referral: "HJ",
       src: "/images/landing-topic-demo-hj.jpg",
     },
     {
-      referral: "JS",
+      referral: "GA",
       src: "/images/landing-topic-demo-ga.jpg",
     },
     {
-      referral: "GA",
+      referral: "ZZ",
       src: "/images/landing-topic-demo-zz.jpg",
     },
   ];
