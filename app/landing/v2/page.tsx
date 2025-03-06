@@ -32,7 +32,7 @@ export default function Page() {
   // 영상 재생 종료 시 화면 아래로 스크롤
   const handleVideoEnd = () => {
     if (window.scrollY < 30) {
-      window.scrollTo({ top: window.innerHeight - 40, behavior: "smooth" });
+      window.scrollTo({ top: window.innerHeight - 96, behavior: "smooth" });
     }
   };
 
