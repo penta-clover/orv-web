@@ -125,7 +125,6 @@ export default function Page() {
     };
   }, []);
 
-
   // 레퍼럴 코드 쿠키에서 가져오기
   useEffect(() => {
     const parseCookies = () => {
@@ -180,6 +179,7 @@ export default function Page() {
       <CTA
         text="얼리버드 혜택 받고 시작하기"
         onClick={() => {
+          track("click_start_earlybird");
           router.push("/landing/v2/pricing");
         }}
       />
@@ -196,7 +196,10 @@ export default function Page() {
 
       <CTA
         text="주제 미리보기"
-        onClick={() => router.push("/landing/v2/topic")}
+        onClick={() => {
+          track("click_preview_topic");
+          router.push("/landing/v2/topic");
+        }}
       />
 
       <div className="h-[100px]" />
@@ -211,7 +214,10 @@ export default function Page() {
 
       <CTA
         text="오브 사용법 알아보기"
-        onClick={() => router.push("/landing/v2/guide")}
+        onClick={() => {
+          track("click_guide_landing");
+          router.push("/landing/v2/guide");
+        }}
       />
 
       <div className="h-[136px]" />
@@ -223,6 +229,7 @@ export default function Page() {
       <CTA
         text="티켓별 가격 알아보기"
         onClick={() => {
+          track("click_ticket_pricing");
           router.push("/landing/v2/pricing");
         }}
       />
@@ -240,6 +247,7 @@ export default function Page() {
       <CTA
         text="오브 브랜드 스토리 보러가기"
         onClick={() => {
+          track("click_brand_story");
           router.push("/landing/v2/story");
         }}
       />
@@ -254,7 +262,10 @@ export default function Page() {
 
       <CTA
         text="커피 한 잔 가격으로 오브 시작하기"
-        onClick={() => router.push("/landing/v2/pricing")}
+        onClick={() => {
+          track("click_start_orv")
+          router.push("/landing/v2/pricing");
+        }}
         className="w-full h-[56px] mx-[16px] text-head3"
       />
 

@@ -14,6 +14,7 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import ChannelTalkButton from "@/app/components/channelTalkButton";
+import { track } from "@/app/amplitude";
 
 export default function Page() {
   const router = useRouter();
@@ -83,6 +84,7 @@ function CarouselContainer(props: {
           <CarouselItem>
             <Step1
               onComplete={() => {
+                track("click_apply_reservation");
                 setInProgressIndex((prev) => Math.max(1, prev));
                 setTimeout(() => {
                   emblaApi?.scrollNext();
@@ -100,6 +102,7 @@ function CarouselContainer(props: {
                 productName={productName}
                 productPrice={productPrice}
                 onComplete={() => {
+                  track("click_complete_deposit");
                   setInProgressIndex((prev) => Math.max(2, prev));
                   setTimeout(() => {
                     emblaApi?.scrollNext();
@@ -110,7 +113,12 @@ function CarouselContainer(props: {
           )}
           {inProgressIndex >= 2 && (
             <CarouselItem>
-              <Step3 onClickBackHome={() => router.push("/")} />
+              <Step3
+                onClickBackHome={() => {
+                  track("click_introduction_landing");
+                  router.push("/");
+                }}
+              />
             </CarouselItem>
           )}
         </CarouselContent>

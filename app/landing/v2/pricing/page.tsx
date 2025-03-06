@@ -7,6 +7,7 @@ import "@/app/components/blackBody.css";
 import FAQ from "@/app/components/faq";
 import ChannelTalkButton from "@/app/components/channelTalkButton";
 import { useSidebar } from "../sidebarContext";
+import { track } from "@/app/amplitude";
 
 export default function Page() {
   const router = useRouter();
@@ -28,6 +29,9 @@ export default function Page() {
 
       <OneTimeTicket
         onClickBuyTicket={() => {
+          track("click_buy_ticket", {
+            product_name: "<삶과 나> 인터뷰 1회 이용권",
+          });
           router.push(
             "/landing/v2/payment?productName=<삶과 나> 인터뷰 1회 이용권&price=2200"
           );
@@ -38,6 +42,9 @@ export default function Page() {
 
       <PackageTicket
         onClickBuyTicket={() => {
+          track("click_buy_ticket", {
+            product_name: "<삶과 나> 인터뷰 패키지 평생 이용권",
+          })
           router.push(
             "/landing/v2/payment?productName=<삶과 나> 인터뷰 패키지 평생 이용권&price=7800"
           );
@@ -65,6 +72,7 @@ export default function Page() {
       <button
         className="w-[calc(100%-32px)] h-[56px] text-head3 text-grayscale-800 bg-main-lilac50 rounded-[12px] transition-all active:scale-95"
         onClick={() => {
+          track("click_brand_story");
           router.push("/landing/v2/story");
         }}
       >

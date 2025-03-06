@@ -12,6 +12,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSidebar } from "../sidebarContext";
+import { track } from "@/app/amplitude";
 
 export default function Page() {
   const router = useRouter();
@@ -60,7 +61,10 @@ export default function Page() {
 
         <div
           className="flex flex-row justify-center items-center bg-gd rounded-[12px] h-[56px] w-[calc(100%-32px)] mx-[16px] text-head4 text-grayscale-800 active:scale-95 transition-all"
-          onClick={() => router.push("/landing/v2/pricing")}
+          onClick={() => {
+            track("click_start_earlybird");
+            router.push("/landing/v2/pricing");
+          }}
         >
           오브 얼리버드 신청하기
         </div>
@@ -69,7 +73,10 @@ export default function Page() {
 
         <div
           className="flex flex-row justify-center items-center bg-main-lilac50 rounded-[12px] h-[56px] w-[calc(100%-32px)] mx-[16px] text-head4 text-grayscale-800 active:scale-95 transition-all"
-          onClick={() => router.push("/landing/v2")}
+          onClick={() => {
+            track("click_introduction_landing")
+            router.push("/landing/v2");
+          }}
         >
           소개 페이지로 돌아가기
         </div>

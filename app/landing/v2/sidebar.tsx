@@ -4,6 +4,7 @@ import ChannelTalkButton from "@/app/components/channelTalkButton";
 import { useSidebar } from "./sidebarContext";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { track } from "@/app/amplitude";
 
 export default function Sidebar() {
   const router = useRouter();
@@ -46,6 +47,7 @@ export default function Sidebar() {
             <li
               className="h-[48px] text-head4 text-grayscale-300 py-[11px] px-[16px]"
               onClick={() => {
+                track("click_ticket_pricing");
                 router.push("/landing/v2/pricing");
                 setIsSidebarOpen(false);
               }}
@@ -55,6 +57,7 @@ export default function Sidebar() {
             <li
               className="h-[48px] text-head4 text-grayscale-300 py-[11px] px-[16px]"
               onClick={() => {
+                track("click_guide_landing");
                 router.push("/landing/v2/guide");
                 setIsSidebarOpen(false);
               }}
@@ -64,6 +67,7 @@ export default function Sidebar() {
             <li
               className="h-[48px] text-head4 text-grayscale-300 py-[11px] px-[16px]"
               onClick={() => {
+                track("click_preview_topic");
                 router.push("/landing/v2/topic");
                 setIsSidebarOpen(false);
               }}
@@ -73,6 +77,7 @@ export default function Sidebar() {
             <li
               className="h-[48px] text-head4 text-grayscale-300 py-[11px] px-[16px]"
               onClick={() => {
+                track("click_brand_story");
                 router.push("/landing/v2/story");
                 setIsSidebarOpen(false);
               }}
