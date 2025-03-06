@@ -16,6 +16,17 @@ export default {
         "pulse-fast": "pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "shake-0.2": "shake 0.2s ease-in-out",
+        "shake-0.3": "shake 0.3s ease-in-out",
+        "shake-0.4": "shake 0.4s ease-in-out",
+        "shake-0.5": "shake 0.5s ease-in-out",
+        "shake-0.6": "shake 0.6s ease-in-out",
+        "shake-0.7": "shake 0.7s ease-in-out",
+        "shake-0.8": "shake 0.8s ease-in-out",
+        "shake-0.9": "shake 0.9s ease-in-out",
+        "shake-1": "shake 1s ease-in-out",
+        "shake-1.2": "shake 1.2s ease-in-out",
+        "shake-2": "shake 2s ease-in-out",
       },
       colors: {
         background: "hsl(var(--background))",
@@ -202,6 +213,13 @@ export default {
           to: {
             height: "0",
           },
+        },
+
+        shake: {
+          "0%, 50%, 100%": { transform: "translateX(0) rotate(0deg)" },
+          "12.5%, 62.5%": { transform: "translateX(-6px) rotate(3deg)" },
+          "25%, 75%": { transform: "translateX(6px) rotate(-3deg)" },
+          "37.5%, 87.5%": { transform: "translateX(-6px) rotate(3deg)" },
         },
       },
     },
