@@ -151,7 +151,7 @@ function Step1(props: { onComplete: () => void }) {
       <input
         id="name"
         type="text"
-        placeholder="입금자명과 동일하게 입력해주세요."
+        placeholder="성함을 정확하게 입력해주세요."
         defaultValue=""
         suppressHydrationWarning
         className="bg-grayscale-700 rounded-[8px] h-[48px] text-white text-body3 px-[16px] py-[13px] border border-transparent placeholder-grayscale-500 placeholder-body3 focus:border-grayscale-200 focus:outline-none focus:ring-0"
