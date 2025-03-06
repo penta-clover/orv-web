@@ -154,7 +154,7 @@ function Step1(props: { onComplete: () => void }) {
         placeholder="성함을 정확하게 입력해주세요"
         defaultValue=""
         suppressHydrationWarning
-        className="bg-grayscale-700 rounded-[8px] h-[48px] text-white text-body3 px-[16px] py-[13px] border border-transparent placeholder-grayscale-500 placeholder-body3 focus:border-grayscale-200 focus:outline-none focus:ring-0"
+        className="bg-grayscale-700 rounded-[8px] h-[48px] text-white text-body3 text-[16px] px-[16px] py-[13px] border border-transparent placeholder-grayscale-500 placeholder-body3 focus:border-grayscale-200 focus:outline-none focus:ring-0"
         onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
           setName(e.target.value)
         }
@@ -171,7 +171,7 @@ function Step1(props: { onComplete: () => void }) {
         placeholder="01012345678"
         defaultValue=""
         suppressHydrationWarning
-        className="bg-grayscale-700 rounded-[8px] h-[48px] text-white text-body3 px-[16px] py-[13px] border border-transparent placeholder-grayscale-500 placeholder-body3 focus:border-grayscale-200 focus:outline-none focus:ring-0"
+        className="bg-grayscale-700 rounded-[8px] h-[48px] text-white text-body3 text-[16px] px-[16px] py-[13px] border border-transparent placeholder-grayscale-500 placeholder-body3 focus:border-grayscale-200 focus:outline-none focus:ring-0"
         onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
           setPhoneNumber(e.target.value)
         }
@@ -269,7 +269,7 @@ function Step2(props: {
   const copyTimeout = useRef<NodeJS.Timeout | null>(null);
   const [selectedMethod, setSelectedMethod] = useState<
     "toss" | "kakao" | "directly" | null
-  >(null);
+  >("kakao");
 
   const onClickCopy = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -363,10 +363,10 @@ function Step2(props: {
         <div className="flex flex-row items-start h-[26px]">
           <div
             className="flex flex-row items-center gap-[6px] "
-            onClick={() => setSelectedMethod("toss")}
+            onClick={() => setSelectedMethod("kakao")}
           >
-            <CircleToggle isActive={selectedMethod === "toss"} />
-            <span className="text-body2 text-grayscale-100">Toss</span>
+            <CircleToggle isActive={selectedMethod === "kakao"} />
+            <span className="text-body2 text-grayscale-100">카카오</span>
             <span className="text-caption1 text-grayscale-white bg-grayscale-700 rounded-[11px] px-[12px] py-[2px]">
               모바일에서만 가능해요
             </span>
@@ -376,10 +376,10 @@ function Step2(props: {
         <div className="flex flex-row items-start h-[26px]">
           <div
             className="flex flex-row items-center gap-[6px] "
-            onClick={() => setSelectedMethod("kakao")}
+            onClick={() => setSelectedMethod("toss")}
           >
-            <CircleToggle isActive={selectedMethod === "kakao"} />
-            <span className="text-body2 text-grayscale-100">카카오</span>
+            <CircleToggle isActive={selectedMethod === "toss"} />
+            <span className="text-body2 text-grayscale-100">토스</span>
             <span className="text-caption1 text-grayscale-white bg-grayscale-700 rounded-[11px] px-[12px] py-[2px]">
               모바일에서만 가능해요
             </span>
@@ -393,12 +393,10 @@ function Step2(props: {
           >
             <CircleToggle isActive={selectedMethod === "directly"} />
             <div className="flex flex-col text-body2 text-grayscale-100">
-              <span>직접 계좌이체</span>
+              <span>무통장 입금</span>
 
               <div
-                className={`flex flex-row items-center gap-[6px] active:scale-95 active:shadow-md transition-all rounded-[4px] pr-[4px] mt-[6px] ${
-                  selectedMethod === "directly" ? "" : "hidden"
-                }`}
+                className={`flex flex-row items-center gap-[6px] active:scale-95 active:shadow-md transition-all rounded-[4px] pr-[4px] mt-[6px]`}
                 onClick={onClickCopy}
               >
                 <div className="text-body2 text-grayscale-300">
@@ -409,9 +407,7 @@ function Step2(props: {
                 </div>
               </div>
               <div
-                className={`text-body2 text-grayscale-300 ${
-                  selectedMethod === "directly" ? "" : "hidden"
-                }`}
+                className={`text-body2 text-grayscale-300`}
               >
                 계좌로 입금해주세요.
               </div>
