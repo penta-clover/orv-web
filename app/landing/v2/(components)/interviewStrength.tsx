@@ -14,14 +14,16 @@ export default function InterviewStrength() {
   useEffect(() => {
     const observerOptions = {
       root: null,
-      rootMargin: '0px',
+      rootMargin: "0px",
       threshold: 0.6, // Increased threshold for better visibility detection
     };
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          const index = itemRefs.current.findIndex(ref => ref === entry.target);
+          const index = itemRefs.current.findIndex(
+            (ref) => ref === entry.target
+          );
           if (index !== -1) {
             setActiveIndex(index);
           }
@@ -106,20 +108,36 @@ function FiveStars() {
 function getReviews() {
   return [
     {
-      profile: "25세 / 취업준비생 / 최OO님",
+      profile: "25세 / 대학생 / 이OO님",
+      content: (
+        <div className="flex flex-col items-center">
+          <span className="font-semibold text-[14px] leading-[22px] text-grayscale-black">
+            내가 이렇게 밝게 웃고 있을 줄 몰랐어요.
+          </span>
+          <span className="text-body4 text-grayscale-600">
+            영상을 다시 보면서 어떤 순간에
+          </span>
+          <span className="text-body4 text-grayscale-600">
+            가장 즐거워하는지 스스로 알게 됐어요.
+          </span>
+        </div>
+      ),
+    },
+    {
+      profile: "26세 / 대학생 / 김OO님",
       content: (
         <div className="flex flex-col items-center">
           <span className="text-body4 text-grayscale-600">
-            반년 넘게 저를 괴롭혀온 고민을
+            나를 인터뷰하는 기회가 너무 특별했어요.
           </span>
           <span className="text-body4 text-grayscale-600">
-            오브에서 솔직하게 털어놓으며 생각이 정리됐어요
+            저는 뭔가 저도 저지만
           </span>
           <span className="font-semibold text-[14px] leading-[22px] text-grayscale-black">
-            고민만 되풀이하던 내용들을 말로 하고 나니
+            제 가족들 그리고 친구들의 모습도
           </span>
           <span className="font-semibold text-[14px] leading-[22px] text-grayscale-black">
-            자연스레 해결책이 보였어요
+            너무 궁금해졌어요
           </span>
         </div>
       ),
@@ -158,6 +176,61 @@ function getReviews() {
           </span>
           <span className="font-semibold text-[14px] leading-[22px] text-grayscale-black">
             다시 생각해볼 수 있어 좋았어요.
+          </span>
+        </div>
+      ),
+    },
+    {
+      profile: "31세 / 직장인 / 임OO님",
+      content: (
+        <div className="flex flex-col items-center">
+          <span className="text-body4 text-grayscale-600">
+            막막했던 고민을 이야기하면서
+          </span>
+          <span className="text-body4 text-grayscale-600">해답을 찾았어요</span>
+          <span className="font-semibold text-[14px] leading-[22px] text-grayscale-black">
+            알고보니 제 안에 이미
+          </span>
+          <span className="font-semibold text-[14px] leading-[22px] text-grayscale-black">
+            답이 있었다는 걸 깨달았어요.
+          </span>
+        </div>
+      ),
+    },
+    {
+      profile: "25세 / 취업준비생 / 최OO님",
+      content: (
+        <div className="flex flex-col items-center">
+          <span className="text-body4 text-grayscale-600">
+            반년 넘게 저를 괴롭혀온 고민을
+          </span>
+          <span className="text-body4 text-grayscale-600">
+            오브에서 솔직하게 털어놓으며 생각이 정리됐어요
+          </span>
+          <span className="font-semibold text-[14px] leading-[22px] text-grayscale-black">
+            고민만 되풀이하던 내용들을 말로 하고 나니
+          </span>
+          <span className="font-semibold text-[14px] leading-[22px] text-grayscale-black">
+            자연스레 해결책이 보였어요
+          </span>
+        </div>
+      ),
+    },
+    {
+      profile: "28세 / 취업준비생 / 신OO님",
+      content: (
+        <div className="flex flex-col items-center">
+          <span className="font-semibold text-[14px] leading-[22px] text-grayscale-black">
+            혼자였다면 계속
+          </span>
+          <span className="font-semibold text-[14px] leading-[22px] text-grayscale-black">
+            제자리걸음이었을 것 같아요.
+          </span>
+          <span className="text-body4 text-grayscale-600">
+            말하면서 진짜 내가 원했던 것이
+          </span>
+          <span className="text-body4 text-grayscale-600">
+            무엇인지를 깨달을 수 있었어요.
           </span>
         </div>
       ),

@@ -2,8 +2,8 @@ export default function BirthstorySection() {
   return (
     <div className="flex flex-col items-center w-full">
       <div className="text-head1 text-grayscale-white flex flex-col items-center">
-        <span>아직 고민된다면</span>
-        <span>꼭 알아야 할 오브 탄생 배경</span>
+        <span>더 이상 고민되지 않을 거예요</span>
+        <span>오브의 첫 시작을 알게 된다면</span>
       </div>
 
       <div className="h-[16px]" />

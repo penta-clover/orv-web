@@ -56,16 +56,12 @@ export default function Page() {
 
 function CoverImage() {
   return (
-    <div className="relative w-full h-[294px] overflow-hidden">
+    <div className="relative w-full h-auto aspect-[375/294] overflow-hidden">
       <Image
-        src="/images/writing-hand.png"
+        src="/images/writing-hand.jpg"
         fill
         alt="cover image"
-        style={{
-          objectFit: "cover",
-          objectPosition: "center",
-        }}
-        className="w-full h-full"
+        className="w-full h-auto"
       />
 
       <div className="absolute bottom-[27px] mx-[16px] text-head3 text-grayscale-200 break-words">
@@ -107,14 +103,6 @@ function FirstQuestion() {
             }}
             onReady={onReady}
             className="w-full h-full"
-          />
-          <Image
-            src={"/images/billie-interview-thumbnail.png"}
-            fill
-            alt="Billie interview thumbnail"
-            className="w-full h-full"
-            hidden={isPlaying}
-            onClick={() => setIsPlaying(true)}
           />
         </div>
       </div>

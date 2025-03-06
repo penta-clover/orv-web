@@ -143,10 +143,7 @@ function PackageTicket(props: { onClickBuyTicket: () => void }) {
         &lt;삶과 나&gt; 인터뷰 패키지 평생 이용권
       </span>
       <span className="text-body3 text-grayscale-500">
-        생각이 많은 날이면 언제든
-      </span>
-      <span className="text-body3 text-grayscale-500 mb-[16px]">
-        오브에 들러 털어놓을 수 있어요
+        생각이 많은 날이라면 언제든 와서 털어놓으세요
       </span>
 
       <span className="bg-grayscale-100 w-full h-[1px] mb-[12px]" />

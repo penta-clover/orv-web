@@ -6,7 +6,6 @@ import "@/app/components/blackBody.css";
 import CircleNumber from "./circleNumber";
 import Line from "./line";
 import { AnimatePresence, motion } from "framer-motion";
-import ChannelTalkButton from "../../../components/channelTalkButton";
 
 import Image from "next/image";
 import FAQ from "../../../components/faq";
@@ -27,24 +26,84 @@ export default function Page() {
   const router = useRouter();
   const { setIsSidebarOpen } = useSidebar()!;
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [referralCode, setReferralCode] = useState("");
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % filteredImages.length);
     }, 2000); // 1초마다 이미지 변경
     return () => clearInterval(interval);
+  }, [referralCode]);
+
+  // 레퍼럴 코드 쿠키에서 가져오기
+  useEffect(() => {
+    const parseCookies = () => {
+      return document.cookie.split("; ").reduce((cookies: any, cookieStr) => {
+        const [name, ...rest] = cookieStr.split("=");
+        cookies[name] = rest.join("=");
+        return cookies;
+      }, {});
+    };
+
+    const cookies = parseCookies();
+    setReferralCode(cookies["orv-landing-referral"] || "");
   }, []);
 
   const images = [
     {
+      referral: "GA",
       src: "/images/landing-demo-ga.jpg",
       alt: "데모 이미지",
+      className: "object-cover rounded-[8px]",
     },
     {
+      referral: "GA",
       src: "/images/guide-qr-example.png", // QR 이미지 파일 경로로 변경하세요.
       alt: "QR 이미지",
+      className: "object-contain p-[35px]",
+    },
+    {
+      referral: "JS",
+      src: "/images/landing-demo-js.jpg",
+      alt: "데모 이미지",
+      className: "object-cover rounded-[8px]",
+    },
+    {
+      referral: "JS",
+      src: "/images/guide-qr-example.png", // QR 이미지 파일 경로로 변경하세요.
+      alt: "QR 이미지",
+      className: "object-contain p-[35px]",
+    },
+    {
+      referral: "JM",
+      src: "/images/landing-demo-jm.jpg",
+      alt: "데모 이미지",
+      className: "object-cover rounded-[8px]",
+    },
+    {
+      referral: "JM",
+      src: "/images/guide-qr-example.png", // QR 이미지 파일 경로로 변경하세요.
+      alt: "QR 이미지",
+      className: "object-contain p-[35px]",
+    },
+    {
+      referral: "HS",
+      src: "/images/landing-demo-hs.jpg",
+      alt: "데모 이미지",
+      className: "object-cover rounded-[8px]",
+    },
+    {
+      referral: "HS",
+      src: "/images/guide-qr-example.png", // QR 이미지 파일 경로로 변경하세요.
+      alt: "QR 이미지",
+      className: "object-contain p-[35px]",
     },
   ];
+
+  // props로 주어진 referral code와 동일한 referral을 가진 이미지 제외
+  const filteredImages = images.filter(
+    (image) => image.referral !== referralCode
+  );
 
   return (
     <div className="flex flex-col min-h-[calc(100dvh)] w-full">
@@ -62,26 +121,19 @@ export default function Page() {
         <div className="relative w-[270.2px] h-[152px]">
           <AnimatePresence mode="wait">
             <motion.div
-              key={images[currentIndex].src}
+              key={filteredImages[currentIndex].src}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
               className="absolute top-0 left-0 w-full h-full"
             >
-              {
-                currentIndex === 0 ? <Image
-                  src={images[currentIndex].src}
-                  alt={images[currentIndex].alt}
-                  fill
-                  className="object-cover rounded-[8px]"
-                />
-                : <Image
-                  src={images[currentIndex].src}
-                  alt={images[currentIndex].alt}
-                  fill
-                  className="object-contain p-[15px]"  />
-              }
+              <Image
+                src={filteredImages[currentIndex].src}
+                alt={filteredImages[currentIndex].alt}
+                fill
+                className={filteredImages[currentIndex].className}
+              />
             </motion.div>
           </AnimatePresence>
         </div>
