@@ -292,6 +292,7 @@ function Step2(props: {
 
   const onClickCopy = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
+    track("click_copy_accountnumber");
     copyText("카카오뱅크(최현준) 3333-32-8277762");
     setIsCopied(true);
 
