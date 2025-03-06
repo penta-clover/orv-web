@@ -201,7 +201,7 @@ export default function Page() {
       <div className="h-[36px]" />
 
       <CTA
-        text="티켓 가격 알아보기"
+        text="티켓별 가격 알아보기"
         onClick={() => {
           router.push("/landing/v2/pricing");
         }}
@@ -233,8 +233,8 @@ export default function Page() {
       <div className="h-[56px]" />
 
       <CTA
-        text="오브 체험판에서 대답해보기"
-        onClick={() => {}}
+        text="커피 한 잔 가격으로 오브 시작하기"
+        onClick={() => router.push("/landing/v2/pricing")}
         className="w-full h-[56px] mx-[16px] text-head3"
       />
 

@@ -10,12 +10,20 @@ import { useEffect, useMemo, useRef } from "react";
 export default function PeopleExampleSection(props: { referralCode?: string }) {
   const images: { referral: string; src: string }[] = [
     {
-      referral: "JS",
-      src: "/images/landing-demo-js.jpg",
+      referral: "HS",
+      src: "/images/landing-demo-hs.jpg",
     },
     {
       referral: "JM",
       src: "/images/landing-demo-jm.jpg",
+    },
+    {
+      referral: "JS",
+      src: "/images/landing-demo-js.jpg",
+    },
+    {
+      referral: "ZZ",
+      src: "/images/landing-demo-zz.jpg",
     },
     {
       referral: "HJ",
@@ -24,14 +32,6 @@ export default function PeopleExampleSection(props: { referralCode?: string }) {
     {
       referral: "GA",
       src: "/images/landing-demo-ga.jpg",
-    },
-    {
-      referral: "HS",
-      src: "/images/landing-demo-hs.jpg",
-    },
-    {
-      referral: "ZZ",
-      src: "/images/landing-demo-zz.jpg",
     },
     {
       referral: "JH",
