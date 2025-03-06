@@ -57,7 +57,7 @@ export default function Page() {
       <div className="h-[32px]" />
 
       <div className="text-head3 text-grayscale-white w-full pl-[16px]">
-        아직 고민된다면?
+      아직 고민중인 당신이 꼭 봐야할 것👇
       </div>
 
       <div className="h-[16px]" />
@@ -68,7 +68,7 @@ export default function Page() {
           router.push("/landing/v2/story");
         }}
       >
-        오브의 첫 탄생 영상 보러가기
+        오브의 탄생 배경, 지금 확인하기
       </button>
 
       <div className="h-[32px]" />
@@ -80,11 +80,11 @@ function Headline() {
   return (
     <div className="flex flex-col items-center w-full">
       <div className="text-head1 text-grayscale-white mb-[16px]">
-        오브에서 인터뷰를 경험해보세요
+        오브에서만 경험할 수 있어요
       </div>
 
       <div className="text-body2 text-grayscale-400">
-        나 스스로를 알아보는 일, 혼자라면 하지 않을 거예요
+        나 스스로를 알아보는 일, <span className="text-grayscale-white">혼자라면 하지 않을 거예요</span>
       </div>
       <div className="text-body2 text-grayscale-400">
         오브와 그 시작을 함께 해요
@@ -119,10 +119,10 @@ function OneTimeTicket(props: { onClickBuyTicket: () => void }) {
       </div>
 
       <div className="flex flex-col text-body4 text-grayscale-500">
-        <span>&nbsp;&middot; 15가지 주제 중 택 1</span>
+        <span>&nbsp;&middot; 20가지 주제 중 택 1</span>
         <span>&nbsp;&middot; 4가지 카메라 필터</span>
-        <span>&nbsp;&middot; 인터뷰 마무리 즉시 인코딩</span>
-        <span>&nbsp;&middot; 제한 없는 인터뷰 시간</span>
+        <span>&nbsp;&middot; 제한 없는 인터뷰 진행시간</span>
+        <span>&nbsp;&middot; 인터뷰 녹화 영상 및 Recap</span>
       </div>
     </div>
   );
@@ -163,11 +163,10 @@ function PackageTicket(props: { onClickBuyTicket: () => void }) {
       </div>
 
       <div className="flex flex-col text-body4 text-grayscale-500">
-        <span>&nbsp;&middot; 15가지 주제 평생 소장 및 이용</span>
+        <span>&nbsp;&middot; 20가지 주제 평생 소장 및 이용</span>
         <span>&nbsp;&middot; 4가지 카메라 필터</span>
-        <span>&nbsp;&middot; 인터뷰 마무리 즉시 인코딩</span>
-        <span>&nbsp;&middot; 녹화 영상 다운로드</span>
-        <span>&nbsp;&middot; 제한 없는 인터뷰 시간</span>
+        <span>&nbsp;&middot; 제한 없는 인터뷰 진행시간</span>
+        <span>&nbsp;&middot; 인터뷰 녹화 영상 및 Recap</span>
       </div>
     </div>
   );

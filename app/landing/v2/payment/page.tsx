@@ -154,7 +154,7 @@ function Step1(props: { onComplete: () => void }) {
         placeholder="성함을 정확하게 입력해주세요"
         defaultValue=""
         suppressHydrationWarning
-        className="bg-grayscale-700 rounded-[8px] h-[48px] text-white text-body3 text-[16px] px-[16px] py-[13px] border border-transparent placeholder-grayscale-500 placeholder-body3 focus:border-grayscale-200 focus:outline-none focus:ring-0"
+        className="bg-grayscale-700 rounded-[8px] h-[48px] text-white text-body3 !text-[16px] px-[16px] py-[13px] border border-transparent placeholder-grayscale-500 placeholder-body3 focus:border-grayscale-200 focus:outline-none focus:ring-0"
         onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
           setName(e.target.value)
         }
@@ -171,7 +171,7 @@ function Step1(props: { onComplete: () => void }) {
         placeholder="01012345678"
         defaultValue=""
         suppressHydrationWarning
-        className="bg-grayscale-700 rounded-[8px] h-[48px] text-white text-body3 text-[16px] px-[16px] py-[13px] border border-transparent placeholder-grayscale-500 placeholder-body3 focus:border-grayscale-200 focus:outline-none focus:ring-0"
+        className="bg-grayscale-700 rounded-[8px] h-[48px] text-white text-body3 !text-[16px] px-[16px] py-[13px] border border-transparent placeholder-grayscale-500 placeholder-body3 focus:border-grayscale-200 focus:outline-none focus:ring-0"
         onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
           setPhoneNumber(e.target.value)
         }
@@ -267,9 +267,20 @@ function Step2(props: {
 }) {
   const [isCopied, setIsCopied] = useState(false);
   const copyTimeout = useRef<NodeJS.Timeout | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
   const [selectedMethod, setSelectedMethod] = useState<
     "toss" | "kakao" | "directly" | null
   >("kakao");
+
+  useEffect(() => {
+    // 모바일 환경 체크
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      );
+
+    setIsMobile(isMobile);
+  }, []);
 
   const onClickCopy = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -289,11 +300,6 @@ function Step2(props: {
   const payActions = {
     none: () => {},
     toss: () => {
-      // 모바일 환경 체크
-      const isMobile =
-        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-          navigator.userAgent
-        );
       if (!isMobile) {
         alert("선택하신 결제 수단은 모바일에서만 이용할 수 있습니다");
         return;
@@ -307,11 +313,6 @@ function Step2(props: {
       }, 1000);
     },
     kakao: () => {
-      // 모바일 환경 체크
-      const isMobile =
-        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-          navigator.userAgent
-        );
       if (!isMobile) {
         alert("선택하신 결제 수단은 모바일에서만 이용할 수 있습니다");
         return;
@@ -368,7 +369,7 @@ function Step2(props: {
             <CircleToggle isActive={selectedMethod === "kakao"} />
             <span className="text-body2 text-grayscale-100">카카오</span>
             <span className="text-caption1 text-grayscale-white bg-grayscale-700 rounded-[11px] px-[12px] py-[2px]">
-              모바일에서만 가능해요
+              {isMobile ? "원클릭으로 쉽게 송금하기" : "모바일에서만 가능해요"}
             </span>
           </div>
         </div>
@@ -381,7 +382,7 @@ function Step2(props: {
             <CircleToggle isActive={selectedMethod === "toss"} />
             <span className="text-body2 text-grayscale-100">토스</span>
             <span className="text-caption1 text-grayscale-white bg-grayscale-700 rounded-[11px] px-[12px] py-[2px]">
-              모바일에서만 가능해요
+              {isMobile ? "원클릭으로 쉽게 송금하기" : "모바일에서만 가능해요"}
             </span>
           </div>
         </div>
@@ -406,9 +407,7 @@ function Step2(props: {
                   {isCopied ? "완료" : "복사"}
                 </div>
               </div>
-              <div
-                className={`text-body2 text-grayscale-300`}
-              >
+              <div className={`text-body2 text-grayscale-300`}>
                 계좌로 입금해주세요.
               </div>
             </div>

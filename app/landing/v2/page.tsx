@@ -22,6 +22,7 @@ import PeopleExampleSection from "./(components)/peopleExampleSection";
 import BirthstorySection from "./(components)/birthstorySection";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "./sidebarContext";
+import QRSection from "./(components)/qrSection";
 
 export default function Page() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -182,6 +183,10 @@ export default function Page() {
           router.push("/landing/v2/pricing");
         }}
       />
+
+      <div className="h-[100px]" />
+
+      <QRSection referralCode={referralCode} />
 
       <div className="h-[100px]" />
 
