@@ -31,8 +31,8 @@ export default function Page() {
 
   // 영상 재생 종료 시 화면 아래로 스크롤
   const handleVideoEnd = () => {
-    if (window.scrollY < 50) {
-      window.scrollTo({ top: window.innerHeight, behavior: "smooth" });
+    if (window.scrollY < 30) {
+      window.scrollTo({ top: window.innerHeight - 40, behavior: "smooth" });
     }
   };
 
@@ -126,7 +126,7 @@ export default function Page() {
 
   return (
     <div className="relative bg-dark">
-      <div className="absolute top-0 w-full z-30">
+      <div className="fixed top-0 left-0 right-0 max-w-[450px] mx-auto z-30 bg-dark">
         <ActionBar
           onClickMenu={() => {
             setIsSidebarOpen(true);

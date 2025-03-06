@@ -18,8 +18,8 @@ export default function Sidebar() {
         onClick={() => setIsSidebarOpen(false)}
       />
       <div
-        className={`absolute top-0 right-0 h-full w-[287px] z-40 flex flex-col bg-grayscale-900 transition-transform duration-300 
-      ${isSidebarOpen ? "translate-x-0" : "translate-x-full"}`}
+        className={`fixed top-0 right-0 h-[100vh] w-[287px] z-40 bg-grayscale-900 transition-transform duration-300 
+      ${isSidebarOpen ? "translate-x-0 w-450:right-[calc((100vw-450px)/2)]" : "translate-x-full"}`}
       >
         <div className="flex flex-row justify-between items-center">
           <Image
