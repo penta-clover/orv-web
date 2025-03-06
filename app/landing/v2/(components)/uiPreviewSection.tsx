@@ -7,7 +7,7 @@ export default function UiPreviewSection() {
       </div>
 
       <div className="h-[24px]" />
-      
+
       <video
         autoPlay
         muted
@@ -22,8 +22,8 @@ export default function UiPreviewSection() {
 
       <div className="h-[18px]" />
 
-      <div className="text-caption2 text-grayscale-500">
-        나만의 공간에서 노트북을 펴고 화면에 보여지는 질문에 대답해요
+      <div className="text-body4 text-grayscale-500">
+        나만의 공간에서 노트북을 펴고 화면의 질문에 대답해요
       </div>
     </div>
   );
