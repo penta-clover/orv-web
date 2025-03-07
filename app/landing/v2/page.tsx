@@ -23,6 +23,7 @@ import BirthstorySection from "./(components)/birthstorySection";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "./sidebarContext";
 import QRSection from "./(components)/qrSection";
+import GiftSection from "./(components)/giftSection";
 
 export default function Page() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -236,6 +237,10 @@ export default function Page() {
 
       <div className="h-[100px]" />
 
+      <GiftSection />
+
+      <div className="h-[100px]" />
+
       <PeopleExampleSection referralCode={referralCode} />
 
       <div className="h-[100px]" />
@@ -263,7 +268,7 @@ export default function Page() {
       <CTA
         text="커피 한 잔 가격으로 오브 시작하기"
         onClick={() => {
-          track("click_start_orv")
+          track("click_start_orv");
           router.push("/landing/v2/pricing");
         }}
         className="w-full h-[56px] mx-[16px] text-head3"
