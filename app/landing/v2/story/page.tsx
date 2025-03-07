@@ -28,10 +28,6 @@ export default function Page() {
 
       <FirstQuestion />
 
-      <div className="h-[48px]" />
-
-      <SecondQuestion />
-
       <div className="h-[72px]" />
 
       <div
@@ -139,6 +135,12 @@ function FirstQuestion() {
             대신해주지 않아요. 그래서 나한테 질문을 던지는 인터뷰 포맷으로
             사람들이 스스로를 마주하는 것을 도와주려고요! 오브는 그렇게
             시작되었답니다ㅎㅎ
+          </div>
+
+          <div className="text-body2 text-grayscale-400 break-words">
+            오브를 꼭 추천 드려요. 이번 기회를 놓치면 스스로를 알아볼 기회는
+            아마 영영 없을 거거든요. 지금 눈 딱 감고 한번 나 스스로를 인터뷰
+            해보세요! 기다리고 있을게요ㅎㅎ
           </div>
         </div>
       </div>
