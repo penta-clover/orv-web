@@ -68,7 +68,7 @@ export default function Page() {
             product_name: "<삶과 나> 인터뷰 이용권 선물하기"
           });
           router.push(
-            "/landing/v2/payment?productName=<삶과 나> 인터뷰 이용권 선물하기&price=2200"
+            "/landing/v2/payment?productName=<삶과 나> 인터뷰 이용권 선물하기&price=2800"
           );
         }}
       />
@@ -307,9 +307,9 @@ function GiftTicket(props: { onClickBuyTicket: () => void }) {
 
       <div className="flex justify-between items-center mb-[16px]">
         <span className="text-system-warning text-head4 line-through">
-          정가 3,300원
+          정가 3,800원
         </span>
-        <span className="text-head1">2,200원</span>
+        <span className="text-head1">2,800원</span>
       </div>
 
       <div
@@ -320,7 +320,8 @@ function GiftTicket(props: { onClickBuyTicket: () => void }) {
       </div>
 
       <div className="flex flex-col text-body4 text-grayscale-500">
-        <span>&nbsp;&middot; 1회 이용권과 동일</span>
+        <span>&nbsp;&middot; 1회 이용권의 모든 기능 포함</span>
+        <span>&nbsp;&middot; 원하는 커스텀 질문 추가</span>
         <span>&nbsp;&middot; 직접 보낼 수 있는 선물 링크</span>
       </div>
     </div>
