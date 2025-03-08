@@ -24,7 +24,7 @@ export default function HeaderSection(props: {
         onEnded={props.handleVideoEnd}
         className="w-full block z-10"
       >
-        <source src="/videos/landing-v2-main.mp4" type="video/mp4" />
+        <source src="https://d3bdjeyz3ry3pi.cloudfront.net/static/videos/landing-v2-main.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 
