@@ -14,8 +14,8 @@ export default function SelfAwarenessSection() {
         <span>잘 모르겠다는 이유로 그냥 넘기진 않으셨나요?</span>
       </div>
       <div className="h-[24px]" />
-      <Image
-        src={"/images/question-burble.png"}
+      <Image unoptimized 
+        src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/question-burble.png"
         width={287}
         height={214}
         alt="question burble"

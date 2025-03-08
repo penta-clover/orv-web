@@ -9,8 +9,8 @@ export default function WhyOrv() {
 
       <div className="h-[16px]" />
 
-      <Image
-        src={"/images/counseling.png"}
+      <Image unoptimized 
+        src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/counseling.png"
         width={330.53}
         height={159}
         alt="counseling"
@@ -32,8 +32,8 @@ export default function WhyOrv() {
 
       <div className="h-[48px]" />
 
-      <Image
-        src={"/images/design-thinking.png"}
+      <Image unoptimized 
+        src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/design-thinking.png"
         width={330.53}
         height={159}
         alt="design-thinking"

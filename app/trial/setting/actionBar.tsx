@@ -6,7 +6,7 @@ export default function ActionBar(props: {
 }) {
   return (
     <div className="flex flex-row items-center justify-between h-[56px] px-[16px]">
-      <Image
+      <Image unoptimized 
         src="/icons/logo.svg"
         width={42}
         height={20}

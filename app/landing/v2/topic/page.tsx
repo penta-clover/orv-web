@@ -101,23 +101,23 @@ function PeopleExample(props: { referralCode?: string }) {
   const images: { referral: string; src: string }[] = [
     {
       referral: "JS",
-      src: "/images/landing-topic-demo-js.jpg",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-topic-demo-js.jpg",
     },
     {
       referral: "JM",
-      src: "/images/landing-topic-demo-jm.jpg",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-topic-demo-jm.jpg",
     },
     {
       referral: "HJ",
-      src: "/images/landing-topic-demo-hj.jpg",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-topic-demo-hj.jpg",
     },
     {
       referral: "GA",
-      src: "/images/landing-topic-demo-ga.jpg",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-topic-demo-ga.jpg",
     },
     {
       referral: "ZZ",
-      src: "/images/landing-topic-demo-zz.jpg",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-topic-demo-zz.jpg",
     },
   ];
 
@@ -145,7 +145,7 @@ function PeopleExample(props: { referralCode?: string }) {
             key={index}
             className="w-[270.2px] h-[152px] p-0 mx-[4px] basis-auto"
           >
-            <Image
+            <Image unoptimized 
               src={image.src}
               width={270.2}
               height={152}

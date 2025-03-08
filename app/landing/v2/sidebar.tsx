@@ -23,14 +23,14 @@ export default function Sidebar() {
       ${isSidebarOpen ? "translate-x-0 w-450:right-[calc((100vw-450px)/2)]" : "translate-x-full"}`}
       >
         <div className="flex flex-row justify-between items-center">
-          <Image
+          <Image unoptimized 
             src="/icons/logo.svg"
             width={42}
             height={20}
             alt="logo"
             className="px-[16px] py-[18px] w-[74px] h-[56px]"
           />
-          <Image
+          <Image unoptimized 
             src="/icons/x.svg"
             width={32}
             height={32}

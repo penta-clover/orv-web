@@ -9,8 +9,8 @@ export default function GiftSection() {
         인터뷰 티켓 선물하기
       </div>
 
-      <Image
-        src="/images/gift-open.jpg"
+      <Image unoptimized 
+        src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/gift-open.jpg"
         alt="gift-open"
         width={278}
         height={95}

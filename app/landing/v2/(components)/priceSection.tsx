@@ -10,8 +10,8 @@ export default function PriceSection() {
 
       <div className="h-[24px]" />
 
-      <Image
-        src={"/images/landing-one-time-ticket.png"}
+      <Image unoptimized 
+        src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-one-time-ticket.png"
         width={315}
         height={238}
         alt="one-time-ticket"

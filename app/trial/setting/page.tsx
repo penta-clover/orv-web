@@ -87,8 +87,8 @@ export default function Page() {
             style={{ filter: filter || "none" }}
           >
             <div className="absolute inset-0 z-10">
-              <Image
-                src="/images/studio-lighting.png"
+              <Image unoptimized 
+                src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/studio-lighting.png"
                 fill
                 alt="studio-lighting"
               />

@@ -214,7 +214,7 @@ function Step1(props: { onComplete: () => void }) {
             );
           }}
         >
-          <Image
+          <Image unoptimized 
             src="/icons/right-arrow.svg"
             alt="right-arrow"
             width={6}
@@ -253,7 +253,7 @@ function Step1(props: { onComplete: () => void }) {
           }`}
         >
           {isLoading ? (
-            <Image
+            <Image unoptimized 
               src="/icons/rolling-spinner.gif"
               width={20}
               height={20}

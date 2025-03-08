@@ -60,8 +60,8 @@ export default function Page() {
 function CoverImage() {
   return (
     <div className="relative w-full h-auto aspect-[375/294] overflow-hidden">
-      <Image
-        src="/images/writing-hand.jpg"
+      <Image unoptimized 
+        src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/writing-hand.jpg"
         fill
         alt="cover image"
         className="w-full h-auto"

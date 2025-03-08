@@ -3,7 +3,7 @@ import Image from "next/image";
 export default function MirrorSection() {
   return (
     <div className="flex flex-col items-center h-[543px]">
-      <Image
+      <Image unoptimized 
         src="/icons/logo-mirror.svg"
         width={54}
         height={16.62}
@@ -24,7 +24,7 @@ export default function MirrorSection() {
       </div>
 
       <div className="relative h-[223px] w-full flex justify-center overflow-x-hidden">
-        <Image
+        <Image unoptimized 
           src="/icons/mirror-frame.svg"
           width={483.2}
           height={168.81}
@@ -32,8 +32,8 @@ export default function MirrorSection() {
           className="absolute top-[38px]"
           style={{ maxWidth: "none" }}
         />
-        <Image
-          src="/images/interviewee-mirror.png"
+        <Image unoptimized 
+          src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/interviewee-mirror.png"
           width={209}
           height={223}
           alt="profile mirror"

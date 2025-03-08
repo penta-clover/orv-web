@@ -7,10 +7,10 @@ import Image from "next/image";
 
 export default function HowSection() {
   const images = [
-    "/images/interview-how-1.jpg",
-    "/images/interview-how-2.jpg",
-    "/images/interview-how-3.jpg",
-    "/images/interview-how-4.jpg",
+    "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/interview-how-1.jpg",
+    "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/interview-how-2.jpg",
+    "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/interview-how-3.jpg",
+    "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/interview-how-4.jpg",
   ];
   return (
     <div className="flex flex-col items-center w-full">
@@ -31,7 +31,7 @@ export default function HowSection() {
                 key={index}
                 className={`w-[302.14px] h-[170px] p-0 ml-[16px] basis-auto ${index === 3 ? "mr-[16px]": ""}`}
               >
-                <Image
+                <Image unoptimized 
                   src={image}
                   width={302.14}
                   height={170}

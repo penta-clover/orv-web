@@ -10,7 +10,7 @@ export default function ActionBar(props: {
   const router = useRouter();
   return (
     <div className="flex flex-row items-center justify-between h-[56px] px-[16px]">
-      <Image
+      <Image unoptimized 
         src="/icons/logo.svg"
         width={42}
         height={20}
@@ -25,7 +25,7 @@ export default function ActionBar(props: {
           사용 가이드
         </div>
         <div className="w-[1.5px] h-[12px]">
-          <Image
+          <Image unoptimized 
             src="/icons/vertical-separator.svg"
             width={1.5}
             height={12}

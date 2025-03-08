@@ -10,23 +10,23 @@ export default function VideoCarousel(props: { referralCode?: string }) {
   const images: { referral: string; src: string }[] = [
     {
       referral: "JH",
-      src: "/images/landing-demo-jh.jpg",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-demo-jh.jpg",
     },
     {
       referral: "HJ",
-      src: "/images/landing-demo-hj.jpg",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-demo-hj.jpg",
     },
     {
       referral: "JM",
-      src: "/images/landing-demo-jm.jpg",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-demo-jm.jpg",
     },
     {
       referral: "JS",
-      src: "/images/landing-demo-js.jpg",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-demo-js.jpg",
     },
     {
       referral: "GA",
-      src: "/images/landing-demo-ga.jpg",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-demo-ga.jpg",
     },
   ];
 
@@ -54,7 +54,7 @@ export default function VideoCarousel(props: { referralCode?: string }) {
               key={index}
               className="w-[256px] h-[152px] p-0 mx-[4px] basis-auto"
             >
-              <Image
+              <Image unoptimized 
                 src={image.src}
                 width={256}
                 height={152}

@@ -25,7 +25,7 @@ export default function RootLayout({
           property="og:description"
           content="나를 마주할 기회를 선물하는 곳"
         />
-        <meta property="og:image" content="/images/orv-og-thumbnail.jpeg" />
+        <meta property="og:image" content="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/orv-og-thumbnail.jpeg" />
         <meta property="og:url" content="www.orv.im" />
         <meta
           name="viewport"

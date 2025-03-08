@@ -54,49 +54,49 @@ export default function Page() {
   const images = [
     {
       referral: "GA",
-      src: "/images/landing-demo-ga.jpg",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-demo-ga.jpg",
       alt: "데모 이미지",
       className: "object-cover rounded-[8px]",
     },
     {
       referral: "GA",
-      src: "/images/guide-qr-example.png", // QR 이미지 파일 경로로 변경하세요.
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/guide-qr-example.png", // QR 이미지 파일 경로로 변경하세요.
       alt: "QR 이미지",
       className: "object-contain p-[35px]",
     },
     {
       referral: "JS",
-      src: "/images/landing-demo-js.jpg",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-demo-js.jpg",
       alt: "데모 이미지",
       className: "object-cover rounded-[8px]",
     },
     {
       referral: "JS",
-      src: "/images/guide-qr-example.png", // QR 이미지 파일 경로로 변경하세요.
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/guide-qr-example.png", // QR 이미지 파일 경로로 변경하세요.
       alt: "QR 이미지",
       className: "object-contain p-[35px]",
     },
     {
       referral: "JM",
-      src: "/images/landing-demo-jm.jpg",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-demo-jm.jpg",
       alt: "데모 이미지",
       className: "object-cover rounded-[8px]",
     },
     {
       referral: "JM",
-      src: "/images/guide-qr-example.png", // QR 이미지 파일 경로로 변경하세요.
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/guide-qr-example.png", // QR 이미지 파일 경로로 변경하세요.
       alt: "QR 이미지",
       className: "object-contain p-[35px]",
     },
     {
       referral: "HS",
-      src: "/images/landing-demo-hs.jpg",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-demo-hs.jpg",
       alt: "데모 이미지",
       className: "object-cover rounded-[8px]",
     },
     {
       referral: "HS",
-      src: "/images/guide-qr-example.png", // QR 이미지 파일 경로로 변경하세요.
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/guide-qr-example.png", // QR 이미지 파일 경로로 변경하세요.
       alt: "QR 이미지",
       className: "object-contain p-[35px]",
     },
@@ -130,7 +130,7 @@ export default function Page() {
               transition={{ duration: 0.5 }}
               className="absolute top-0 left-0 w-full h-full"
             >
-              <Image
+              <Image unoptimized 
                 src={filteredImages[currentIndex].src}
                 alt={filteredImages[currentIndex].alt}
                 fill

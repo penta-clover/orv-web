@@ -154,7 +154,7 @@ export default function Page() {
         <HeaderSection videoRef={videoRef} handleVideoEnd={handleVideoEnd} />
 
         <div className="absolute bottom-[60px] flex justify-center">
-          <Image
+          <Image unoptimized 
             src="/icons/down-arrow.svg"
             width={20}
             height={34}

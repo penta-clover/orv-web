@@ -35,8 +35,8 @@ export default function Page() {
       <div className="h-[16px]" />
 
       <div className="flex flex-col items-center gap-[16px]">
-        <Image
-          src="/images/landing-demo-ga.jpg"
+        <Image unoptimized 
+          src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-demo-ga.jpg"
           width={256}
           height={152}
           alt="오브 사용 사례 이미지"

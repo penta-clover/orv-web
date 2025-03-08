@@ -39,15 +39,15 @@ export default function ProjectorSection() {
       <div className="h-[24px]" />
       <div className="relative flex flex-col items-center justify-start overflow-x-hidden overflow-y-visible h-[550px] w-full">
         <div className="relative flex flex-col items-center">
-          <Image
-            src="/images/film.svg"
+          <Image unoptimized 
+            src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/film.svg"
             alt="film"
             width={376}
             height={237}
             className="w-auto h-auto"
           />
           <div className="absolute top-[38px] left-[31px] z-10 flex flex-row items-center gap-[7px]">
-            <Image
+            <Image unoptimized 
               src="/icons/error-circle.svg"
               alt="error"
               width={12.48}
@@ -77,15 +77,15 @@ export default function ProjectorSection() {
                 animation: "spin 4s linear infinite",
               }}
             >
-              <Image src="/images/reel.png" alt="reel" width={81} height={81} />
+              <Image unoptimized  src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/reel.png" alt="reel" width={81} height={81} />
             </div>
 
             <div
               className="absolute top-[0px] right-[-8px] overflow-x-hidden overflow-y-visible z-5"
               style={{ width: "calc(100%)", height: "220px" }}
             >
-              <Image
-                src="/images/line.png"
+              <Image unoptimized 
+                src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/line.png"
                 alt="line"
                 fill
                 style={{ width: "100%", height: "100%" }}
@@ -104,8 +104,8 @@ export default function ProjectorSection() {
               hasStarted ? "blink-animation" : ""
             }`}
           >
-            <Image
-              src={"/images/projector-beam.svg"}
+            <Image unoptimized 
+              src={"https://d3bdjeyz3ry3pi.cloudfront.net/static/images/projector-beam.svg"}
               alt="beam"
               width={0}
               height={0}

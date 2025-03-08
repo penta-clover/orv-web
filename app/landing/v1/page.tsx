@@ -122,8 +122,8 @@ export default function Page() {
       </div>
       <div className="relative w-full h-[calc(100vh)] flex justify-center items-center">
         <div className="absolute top-[52px] w-full">
-          <Image
-            src="/images/dark-wave.png"
+          <Image unoptimized 
+            src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/dark-wave.png"
             width={375}
             height={222}
             alt="dark wave"
@@ -146,8 +146,8 @@ export default function Page() {
         </video>
 
         <div className="absolute bottom-[135px] w-full transform scale-[-1]">
-          <Image
-            src="/images/dark-wave.png"
+          <Image unoptimized 
+            src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/dark-wave.png"
             width={375}
             height={222}
             alt="dark wave"

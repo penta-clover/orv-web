@@ -54,8 +54,8 @@ export default function QuestionExample() {
   return (
     <div className="flex flex-col items-center w-full h-auto">
       <div className="relative w-full flex justify-center">
-        <Image
-          src={"/images/question-board.png"}
+        <Image unoptimized 
+          src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/question-board.png"
           width={0}
           height={0}
           sizes="100vw"

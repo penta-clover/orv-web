@@ -11,35 +11,35 @@ export default function PeopleExampleSection(props: { referralCode?: string }) {
   const images: { referral: string; src: string }[] = [
     {
       referral: "HS",
-      src: "/images/landing-demo-hs.jpg",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-demo-hs.jpg",
     },
     {
       referral: "JM",
-      src: "/images/landing-demo-jm.jpg",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-demo-jm.jpg",
     },
     {
       referral: "JS",
-      src: "/images/landing-demo-js.jpg",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-demo-js.jpg",
     },
     {
       referral: "ZZ",
-      src: "/images/landing-demo-zz.jpg",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-demo-zz.jpg",
     },
     {
       referral: "HJ",
-      src: "/images/landing-demo-hj.jpg",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-demo-hj.jpg",
     },
     {
       referral: "GA",
-      src: "/images/landing-demo-ga.jpg",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-demo-ga.jpg",
     },
     {
       referral: "JH",
-      src: "/images/landing-demo-jh.jpg",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-demo-jh.jpg",
     },
     {
       referral: "last",
-      src: "/images/landing-demo-last.jpg",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-demo-last.jpg",
     },
   ];
 
@@ -114,7 +114,7 @@ export default function PeopleExampleSection(props: { referralCode?: string }) {
                 index === 0 ? "ml-[24px]" : ""
               }`}
             >
-              <Image
+              <Image unoptimized 
                 src={image.src}
                 width={270.2}
                 height={152}

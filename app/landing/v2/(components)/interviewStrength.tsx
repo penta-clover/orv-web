@@ -75,7 +75,7 @@ export default function InterviewStrength() {
                 {content}
               </div>
               <div className="flex flex-row items-center justify-center">
-                <Image
+                <Image unoptimized 
                   src={"/icons/profile-image-blue.svg"}
                   width={18}
                   height={18}
@@ -96,11 +96,11 @@ export default function InterviewStrength() {
 function FiveStars() {
   return (
     <div className="flex flex-row w-full gap-[2px] justify-center">
-      <Image src={"/icons/star.svg"} width={20} height={20} alt="star" />
-      <Image src={"/icons/star.svg"} width={20} height={20} alt="star" />
-      <Image src={"/icons/star.svg"} width={20} height={20} alt="star" />
-      <Image src={"/icons/star.svg"} width={20} height={20} alt="star" />
-      <Image src={"/icons/star.svg"} width={20} height={20} alt="star" />
+      <Image unoptimized  src={"/icons/star.svg"} width={20} height={20} alt="star" />
+      <Image unoptimized  src={"/icons/star.svg"} width={20} height={20} alt="star" />
+      <Image unoptimized  src={"/icons/star.svg"} width={20} height={20} alt="star" />
+      <Image unoptimized  src={"/icons/star.svg"} width={20} height={20} alt="star" />
+      <Image unoptimized  src={"/icons/star.svg"} width={20} height={20} alt="star" />
     </div>
   );
 }

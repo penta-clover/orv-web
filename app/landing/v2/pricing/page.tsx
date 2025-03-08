@@ -182,9 +182,9 @@ function Headline() {
       >
         <CarouselContent className="flex">
           {[
-            "/images/gift-banner-item-1.jpg",
-            "/images/gift-banner-item-2.jpg",
-            "/images/gift-banner-item-3.jpg",
+            "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/gift-banner-item-1.jpg",
+            "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/gift-banner-item-2.jpg",
+            "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/gift-banner-item-3.jpg",
           ].map((image, index) => (
             <CarouselItem
               key={index}
@@ -194,7 +194,7 @@ function Headline() {
               className={`w-[278.39px] h-[95.5px] p-0 ml-[25px] basis-auto rounded-[8px]
                 ${activeIndex === index ? "opacity-100" : "opacity-60"}`}
             >
-              <Image
+              <Image unoptimized 
                 src={image}
                 width={278.39}
                 height={95.5}
