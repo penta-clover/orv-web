@@ -25,14 +25,14 @@ export default function Page() {
   const [inProgressIndex, setInProgressIndex] = useState(0);
 
   return (
-    <div className="flex flex-col items-center justify-center h-[calc(100dvh)]">
+    <div className="flex flex-col items-center justify-center">
       <ActionBar
         title="알림 예약하기"
         onClickBack={() => router.back()}
         onClickMenu={() => setIsSidebarOpen(true)}
       />
 
-      <div className="flex flex-col grow items-center justify-center w-full h-full gap-[16px] text-center">
+      <div className="flex flex-col items-center justify-center w-full h-[228px] gap-[16px] mt-[40px] mb-[40px] text-center">
         <div className="text-head0 text-grayscale-white">
           아래 내용을 꼭 확인해주세요
         </div>
