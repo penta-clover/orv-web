@@ -34,7 +34,7 @@ export default function Page() {
 
       <div className="flex flex-col grow items-center justify-center w-full h-full gap-[16px] text-center">
         <div className="text-head0 text-grayscale-white">
-          아래 내용을 꼭 확인해주세요.
+          아래 내용을 꼭 확인해주세요
         </div>
         <div className="text-body2 text-grayscale-300">
           현재 많은 사용자 분들이 동시에 몰리고 있습니다.

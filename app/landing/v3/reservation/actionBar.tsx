@@ -24,13 +24,6 @@ export default function ActionBar(props: {
       </div>
 
       <div className="h-[56px] w-[64px] flex items-center justify-center">
-        <Image unoptimized 
-          src="/icons/hamburger.svg"
-          width={32}
-          height={32}
-          alt="left arrow"
-          onClick={() => props.onClickMenu()}
-        />
       </div>
     </div>
   );
