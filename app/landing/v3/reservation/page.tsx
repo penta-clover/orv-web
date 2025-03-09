@@ -25,7 +25,7 @@ export default function Page() {
   const [inProgressIndex, setInProgressIndex] = useState(0);
 
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center min-h-[calc(100dvh)]">
       <ActionBar
         title="알림 예약하기"
         onClickBack={() => router.back()}
