@@ -25,7 +25,7 @@ export default function Page() {
   const [inProgressIndex, setInProgressIndex] = useState(0);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[calc(100dvh)]">
+    <div className="flex flex-col items-center min-h-[calc(100dvh)]">
       <ActionBar
         title="알림 예약하기"
         onClickBack={() => router.back()}
@@ -90,7 +90,6 @@ export default function Page() {
 }
 
 function Step1(props: { onComplete: () => void }) {
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isAgreed, setIsAgreed] = useState(false);
@@ -101,23 +100,6 @@ function Step1(props: { onComplete: () => void }) {
       <div className="text-head3 text-grayscale-100 mb-[4px]">
         이메일 남기기
       </div>
-
-      <div className="text-caption1 text-grayscale-500 mb-[2px] h-[22px]">
-        성함
-      </div>
-      <input
-        id="name"
-        type="text"
-        placeholder="본명을 입력해주세요"
-        defaultValue=""
-        suppressHydrationWarning
-        className="bg-grayscale-700 rounded-[8px] h-[48px] text-white text-body3 !text-[16px] px-[16px] py-[13px] border border-transparent placeholder-grayscale-500 placeholder-body3 focus:border-grayscale-200 focus:outline-none focus:ring-0"
-        onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setName(e.target.value)
-        }
-      />
-
-      <div className="h-[12px]"></div>
 
       <div className="text-caption1 text-grayscale-500 mb-[2px] h-[22px]">
         이메일
@@ -193,11 +175,11 @@ function Step1(props: { onComplete: () => void }) {
             alert("신청 중 오류가 발생했습니다. 다시 시도해주세요.");
           }
         }}
-        disabled={!name || !email || !isAgreed || isLoading}
+        disabled={!email || !isAgreed || isLoading}
       >
         <div
           className={`flex flex-col justify-center items-center w-full h-[48px] rounded-[12px] text-head4 active:scale-95 transition-all ${
-            name && email && isAgreed
+            email && isAgreed
               ? "bg-main-lilac50 text-grayscale-800"
               : "bg-grayscale-800 text-grayscale-500"
           }`}
