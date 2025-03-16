@@ -16,7 +16,7 @@ export default function Page() {
 
   const onNextButtonClick = () => {
     if (ready) {
-      router.push("/trial/setting/step2");
+      router.push("/trial/setting/step3");
     } else {
       //TODO: 체크박스 누르라고 하기
     }
@@ -38,20 +38,9 @@ export default function Page() {
           onClick={() => setIsModalOpen(true)}
           className="absolute top-0 right-0 px-[16px] py-[12px] w-[64px] h-[56px] focus:outline-none cursor-pointer"
         />
-        <StatusBar currentStep={1} />
+        <StatusBar currentStep={2} />
         <hr className="border-grayscale-700 border-[0.5px] w-full" />
-        <div className="flex flex-row gap-[30px] px-[20px]">
-          <ImageCard
-            src="/images/setting-place-guide-1.jpg"
-            alt="place example 1"
-            text="인터뷰는 나를 마주하는 시간입니다.\n이를 방해 받지 않기 위해\n혼자만의 조용한 공간을 마련해주세요!\n내 방 혹은 조용한 공간, 나만의 아지트 어디든 좋아요."
-          />
-          <ImageCard
-            src="/images/setting-place-guide-2.jpg"
-            alt="place example 2"
-            text="아로마, 인센스 스틱이나 내가 제일 좋아하는 잠옷, 쿠션 등과 함께 해도 좋아요. 심리적으로 가장 편한 상황을 조성해서 스스로에게 몰입할 수 있는 환경을 만들어주세요."
-          />
-        </div>
+        {/* TODO */}
         <label
           htmlFor="ready"
           className="flex flex-row items-center h-[24px] gap-[6px] text-body2 text-grayscale-white"
@@ -63,21 +52,18 @@ export default function Page() {
             className="appearance-none w-[16px] h-[16px] mx-[4px] bg-[url('/icons/checkbox-unchecked.svg')] checked:bg-[url('/icons/checkbox-checked.svg')] transition-all"
             onChange={(e) => setReady(e.target.checked)}
           />
-          혼자만의 환경을 준비했어요
+          마이크 테스트를 완료했어요
         </label>
         <PrevButton
           className="absolute bottom-[24px] left-[28px]"
           onClick={() => router.back()}
           useKeyboardShortcut
         />
-        <div className="absolute bottom-[24px] right-[28px] flex flex-col items-end gap-[10px]">
-          <TipBox
-            tag="Tip!"
-            text="마우스 클릭 혹은 방향키 좌우동작을\n통해 조작하세요!"
-            tagColor="text-main-lilac50"
-          />
-          <NextButton onClick={onNextButtonClick} useKeyboardShortcut />
-        </div>
+        <NextButton
+          className="absolute bottom-[24px] right-[28px]"
+          onClick={() => onNextButtonClick}
+          useKeyboardShortcut
+        />
       </div>
     </ExitInterviewModal>
   );

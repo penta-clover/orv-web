@@ -19,7 +19,7 @@ export default function TipBox(props: {
           {tag}
         </div>
         <div className="text-grayscale-50 whitespace-pre-wrap">
-          {text.replace("\\n", "\n")}
+          {text.replaceAll("\\n", "\n")}
         </div>
       </div>
       <Image

@@ -27,8 +27,8 @@ export default function Modal(props: {
     <div>
       <div
         className={cn(
-          isOpen ? "opacity-100 z-10" : "opacity-0 -z-10",
-          "absolute top-0 left-0 w-full h-full bg-black/70 flex justify-center items-center transition-opacity"
+          isOpen ? "opacity-100 visible" : "opacity-0 invisible",
+          "absolute top-0 left-0 w-full h-full z-50 bg-black/70 flex justify-center items-center transition-opacity"
         )}
         onClick={() => setIsOpen(false)}
       >
@@ -37,8 +37,8 @@ export default function Modal(props: {
           onClick={(e) => e.stopPropagation()}
         >
           <div className="text-head3 text-grayscale-50">{title}</div>
-          <div className="text-body2 text-grayscale-300 text-center">
-            {description.replace("\\n", "\n")}
+          <div className="text-body2 text-grayscale-300 text-center whitespace-pre-wrap">
+            {description.replaceAll("\\n", "\n")}
           </div>
           <div className="flex gap-[10px] mt-[18px]">
             <button
