@@ -1,13 +1,13 @@
 "use client";
 import "@/app/components/blackBody.css";
 import Image from "next/image";
-import TipBox from "../../(components)/tipBox";
 import NextButton from "../../(components)/nextButton";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ExitInterviewModal from "../../(components)/exitInterviewModal";
 import PrevButton from "../../(components)/prevButton";
 import StatusBar from "../../(components)/statusBar";
+import MicIndicator from "./micIndicator";
 
 export default function Page() {
   const router = useRouter();
@@ -40,7 +40,40 @@ export default function Page() {
         />
         <StatusBar currentStep={2} />
         <hr className="border-grayscale-700 border-[0.5px] w-full" />
-        {/* TODO */}
+        <div>
+          <div className="flex flex-row px-[16px]">
+            <Image
+              unoptimized
+              src="/images/airpods.svg"
+              width={120}
+              height={150}
+              alt="earphone"
+              className="mx-[10vw] md:mx-[100px]"
+            />
+            <div className="w-[100%] md:w-[480px] p-[36px] bg-grayscale-800 text-body2 text-grayscale-300 rounded-[12px]">
+              블루투스 이어폰을 끼는 것을 추천 드려요! 인터뷰를 진행하며 조용한
+              노래가 나와요. 이어폰이 없으시다면 노트북의 마이크 부분이 너무
+              멀리 떨어지지 않게 잘 조정해주세요
+            </div>
+          </div>
+          <div className="flex flex-row px-[16px] my-[26px] gap-[40px]">
+            <div className="w-[100%] md:w-[450px] p-[36px] bg-grayscale-800 text-body2 text-grayscale-300 rounded-[12px] flex flex-col gap-[54px]">
+              <span>
+                마이크 테스트를 할 때 옆의{" "}
+                <span className="text-system-info">파란 선</span>을 넘는지
+                확인해주세요. 다음 내용을 읽으며 테스트해주세요. “오늘의 나를
+                기록하기”
+              </span>
+              <span>
+                아무 말도 하지 않을 때{" "}
+                <span className="text-system-error">빨간 선</span>을 넘지 않는지
+                확인해주세요. 만약 빨간 선을 넘는다면 조금 더 조용한 환경을
+                추천드려요.
+              </span>
+            </div>
+            <MicIndicator width={310} height={230} />
+          </div>
+        </div>
         <label
           htmlFor="ready"
           className="flex flex-row items-center h-[24px] gap-[6px] text-body2 text-grayscale-white"
@@ -61,28 +94,10 @@ export default function Page() {
         />
         <NextButton
           className="absolute bottom-[24px] right-[28px]"
-          onClick={() => onNextButtonClick}
+          onClick={onNextButtonClick}
           useKeyboardShortcut
         />
       </div>
     </ExitInterviewModal>
-  );
-}
-
-function ImageCard(props: { src: string; alt: string; text: string }) {
-  const { src, alt, text } = props;
-  return (
-    <div className="w-[100%] md:w-[400px] p-[16px] bg-grayscale-800 rounded-[12px] flex flex-col items-center gap-[14px]">
-      <Image
-        src={src}
-        alt={alt}
-        width={425}
-        height={320}
-        className="rounded-[8px]"
-      />
-      <div className="w-[100%] text-body2 text-grayscale-300 whitespace-pre-wrap">
-        {text.replaceAll("\\n", "\n")}
-      </div>
-    </div>
   );
 }
