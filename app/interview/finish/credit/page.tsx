@@ -1,17 +1,29 @@
 "use client";
 
 import "@/app/components/blackBody.css";
+import "./credit.css";
+
 import { useRouter, useSearchParams } from "next/navigation";
 import { useArchiveRepository } from "@/providers/ArchiveRepositoryContext";
 import { useEffect, useRef, useState } from "react";
+import { useMemberRepository } from "@/providers/MemberRepositoryContext";
+import { MyInfo } from "@/domain/model/MyInfo";
 
 export default function Page() {
   const searchParams = useSearchParams();
   const localVideoUrl = searchParams.get("videoUrl")!;
   const storyboardId = searchParams.get("storyboardId")!;
-  const archiveRepository = useArchiveRepository();
-  const [videoId, setVideoId] = useState<string | null>(null);
+  const totalInterviewTime = searchParams.get("totalInterviewTime")!;
+  const topic = searchParams.get("topic")!;
+
   const router = useRouter();
+
+  const [videoId, setVideoId] = useState<string | null>(null);
+  const [nickname, setNickname] = useState<string>("");
+  const videoPlayerRef = useRef<HTMLVideoElement>(null);
+
+  const archiveRepository = useArchiveRepository();
+  const memberRepository = useMemberRepository();
 
   // 중복 실행을 방지하기 위한 ref
   const didUploadRef = useRef(false);
@@ -38,9 +50,47 @@ export default function Page() {
     fetchAndUpload();
   }, []);
 
+  useEffect(() => {
+    memberRepository
+      .getMyInfo()
+      .then((myInfo: MyInfo) => setNickname(myInfo.nickname));
+  }, []);
+
+  // video playbackRate 5배속 설정
+  useEffect(() => {
+    if (videoPlayerRef.current) {
+      videoPlayerRef.current.playbackRate = 5;
+    }
+  }, []);
+
   return (
-    <div>
-      <p>비디오 업로드 진행 중...</p>
+    <div className="relative">
+      
+        <video
+          ref={videoPlayerRef}
+          src={localVideoUrl}
+          autoPlay
+          loop
+          muted
+          style={{
+            position: "fixed",
+            bottom: "48px",
+            left: "48px",
+            width: "600px",
+            height: "320px",
+            objectFit: "cover",
+            zIndex: 1,
+          }}
+        />
+
+      <div className="absolute top-0 left-0 creditsAnimation flex flex-col items-center h-[100dvh] overflow-hidden w-[100dvw]">
+        <Roster
+          myNickname={nickname}
+          totalInterviewTime={Number(totalInterviewTime)}
+          topic={topic}
+        />
+      </div>
+
       <button
         className="bg-main-lilac50 p-2 rounded-[12px]"
         onClick={() =>
@@ -51,4 +101,77 @@ export default function Page() {
       </button>
     </div>
   );
+}
+
+function Roster(props: {
+  myNickname: string;
+  totalInterviewTime: number;
+  topic: string;
+}) {
+  const [formattedDate, setFormattedDate] = useState("");
+
+  useEffect(() => {
+    const now = new Date();
+
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1; // 0부터 시작하므로 +1
+    const date = now.getDate();
+    let hours = now.getHours();
+    const minutes = now.getMinutes();
+
+    const period = hours < 12 ? "오전" : "오후";
+    hours = hours % 12;
+    hours = hours ? hours : 12; // 0이면 12로 표시
+
+    // 분이 한 자리이면 0을 붙임
+    const paddedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+
+    const formatted = `${year}년 ${month}월 ${date}일 ${period} ${hours}시 ${paddedMinutes}분`;
+    setFormattedDate(formatted);
+  }, []);
+
+  return (
+    <div className="flex flex-col items-center text-head1 text-main-lilac50 w-[700px]">
+      <span className="mb-[65px]">The End</span>
+      <div className="flex flex-row gap-[32px] mb-[16px] w-full">
+        <span className="w-[calc(50%-16px)] text-right">주인공</span>
+        <span className="w-[calc(50%-16px)]">{props.myNickname}</span>
+      </div>
+      <div className="flex flex-row gap-[32px] mb-[16px] w-full">
+        <span className="w-[calc(50%-16px)] text-right">감독</span>
+        <span className="w-[calc(50%-16px)]">{props.myNickname}</span>
+      </div>
+      <div className="flex flex-row gap-[32px] mb-[16px] w-full">
+        <span className="w-[calc(50%-16px)] text-right">각본가</span>
+        <span className="w-[calc(50%-16px)]">{props.myNickname}</span>
+      </div>
+      <div className="flex flex-row gap-[32px] mb-[16px] w-full">
+        <span className="w-[calc(50%-16px)] text-right">제작사</span>
+        <span className="w-[calc(50%-16px)]">오브</span>
+      </div>
+      <div className="flex flex-row gap-[32px] mb-[16px] w-full">
+        <span className="w-[calc(50%-16px)] text-right">주제</span>
+        <span className="w-[calc(50%-16px)]">{props.topic}</span>
+      </div>
+      <div className="flex flex-row gap-[32px] mb-[16px] w-full">
+        <span className="w-[calc(50%-16px)] text-right">날짜</span>
+        <span className="w-[calc(50%-16px)]">{formattedDate}</span>
+      </div>
+      <div className="flex flex-row gap-[32px] mb-[16px] w-full">
+        <span className="w-[calc(50%-16px)] text-right">상영시간</span>
+        <span className="w-[calc(50%-16px)]">
+          {formatTime(props.totalInterviewTime)}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function formatTime(totalSeconds: number): string {
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  if (minutes === 0) {
+    return `${seconds}초`;
+  }
+  return `${minutes}분 ${seconds}초`;
 }
