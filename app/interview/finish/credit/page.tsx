@@ -2,6 +2,7 @@
 
 import "@/app/components/blackBody.css";
 import "./credit.css";
+import YouTube from "react-youtube";
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useArchiveRepository } from "@/providers/ArchiveRepositoryContext";
@@ -25,12 +26,11 @@ export default function Page() {
   const archiveRepository = useArchiveRepository();
   const memberRepository = useMemberRepository();
 
-  // 중복 실행을 방지하기 위한 ref
+  // 중복 실행 방지
   const didUploadRef = useRef(false);
   useEffect(() => {
     if (!localVideoUrl) return;
     if (didUploadRef.current) return;
-
     didUploadRef.current = true;
 
     async function fetchAndUpload() {
@@ -46,7 +46,6 @@ export default function Page() {
         console.error("비디오 업로드 중 에러 발생:", error);
       }
     }
-
     fetchAndUpload();
   }, []);
 
@@ -56,33 +55,62 @@ export default function Page() {
       .then((myInfo: MyInfo) => setNickname(myInfo.nickname));
   }, []);
 
-  // video playbackRate 5배속 설정
+  // blob 영상 5배속 설정
   useEffect(() => {
     if (videoPlayerRef.current) {
-      videoPlayerRef.current.playbackRate = 5;
+      videoPlayerRef.current.playbackRate = 2;
     }
   }, []);
 
   return (
     <div className="relative">
-      
-        <video
-          ref={videoPlayerRef}
-          src={localVideoUrl}
-          autoPlay
-          loop
-          muted
-          style={{
-            position: "fixed",
-            bottom: "48px",
-            left: "48px",
-            width: "600px",
-            height: "320px",
-            objectFit: "cover",
-            zIndex: 1,
+      {/* 왼쪽 하단 blob 영상 */}
+      <video
+        ref={videoPlayerRef}
+        src={localVideoUrl}
+        autoPlay
+        loop
+        muted
+        style={{
+          position: "fixed",
+          bottom: "48px",
+          left: "48px",
+          width: "450px",
+          height: "240px",
+          objectFit: "cover",
+          zIndex: 1,
+        }}
+      />
+
+      {/* 우측 하단 react-youtube 플레이어 */}
+      <div
+        style={{
+          position: "fixed",
+          bottom: "16px",
+          right: "16px",
+          zIndex: 2,
+          textAlign: "center",
+        }}
+      >
+        <YouTube
+          videoId="muTUmQnqGDY"
+          opts={{
+            width: "200",
+            height: "112",
+            playerVars: {
+              autoplay: 1,
+              controls: 1,
+              modestbranding: 1,
+              rel: 0,
+            },
           }}
         />
+        <div className="text-body4 text-grayscale-200 w-full">
+          DANIEL - 은방울
+        </div>
+      </div>
 
+      {/* 크레딧 애니메이션 영역 */}
       <div className="absolute top-0 left-0 creditsAnimation flex flex-col items-center h-[100dvh] overflow-hidden w-[100dvw]">
         <Roster
           myNickname={nickname}
@@ -92,7 +120,7 @@ export default function Page() {
       </div>
 
       <button
-        className="bg-main-lilac50 p-2 rounded-[12px]"
+        className="absolute text-main-lilac50 p-2 right-0"
         onClick={() =>
           router.replace(`/interview/finish/naming?videoId=${videoId}`)
         }

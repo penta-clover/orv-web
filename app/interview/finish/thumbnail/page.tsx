@@ -5,15 +5,27 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useArchiveRepository } from "@/providers/ArchiveRepositoryContext";
 import { useEffect, useImperativeHandle, useRef, useState } from "react";
 import { VideoMetadata } from "@/domain/model/VideoMetadata";
+import { useMemberRepository } from "@/providers/MemberRepositoryContext";
+import { MyInfo } from "@/domain/model/MyInfo";
+import Image from "next/image";
 
 export default function Page() {
   const searchParams = useSearchParams();
   const videoId = searchParams.get("videoId");
-  const archiveRepository = useArchiveRepository();
   const [progress, setProgress] = useState<string>("ready");
   const videoRef = useRef<HTMLVideoElement>(null);
   const [capturedImage, setCapturedImage] = useState<Blob | null>(null);
+  const [nickname, setNickname] = useState<string>("");
   const router = useRouter();
+
+  const memberRepository = useMemberRepository();
+  const archiveRepository = useArchiveRepository();
+
+  useEffect(() => {
+    memberRepository
+      .getMyInfo()
+      .then((myInfo: MyInfo) => setNickname(myInfo.nickname));
+  }, []);
 
   return (
     <div className="flex flex-col items-center h-[100dvh]">
@@ -27,7 +39,7 @@ export default function Page() {
         <div className="text-grayscale-500 text-center font-medium text-[24px] leading-[36px]">
           인터뷰 썸네일 그리고 인터뷰 Recap에 들어가는 사진이에요.
           <br />
-          아래 버튼을 누르면 _ _님의 모습이 화면에 나오고 5초 뒤에 사진이
+          아래 버튼을 누르면 {nickname}님의 모습이 화면에 나오고 5초 뒤에 사진이
           찍혀요.
         </div>
 
@@ -90,8 +102,11 @@ export default function Page() {
                 archiveRepository
                   .updateThumbnail(videoId, capturedImage)
                   .then(async () => {
-                    const videoMetadata: VideoMetadata = await archiveRepository.getVideo(videoId);
-                    router.replace(`/interview/finish/download?videoUrl=${videoMetadata.videoUrl}`);
+                    const videoMetadata: VideoMetadata =
+                      await archiveRepository.getVideo(videoId);
+                    router.replace(
+                      `/interview/finish/download?videoUrl=${videoMetadata.videoUrl}`
+                    );
                   })
                   .catch((error: any) => {
                     console.error("썸네일 업데이트 실패:", error);
@@ -103,6 +118,24 @@ export default function Page() {
           )}
         </div>
       </div>
+
+      {progress === "ready" || progress === "complete" ? (
+        <div
+          className="absolute flex flex-row justify-center items-center left-[48px] bottom-[48px] w-[139px] h-[56px] bg-main-lilac50 rounded-[12px] transition-allactive:scale-95"
+          onClick={() => router.back()}
+        >
+          <Image
+            unoptimized
+            src="/icons/left-arrow-black.svg"
+            width={24}
+            height={24}
+            alt="left arrow"
+          />
+          <span className="text-head3 text-grayscale-800">이전으로</span>
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

@@ -4,6 +4,7 @@ import "@/app/components/blackBody.css";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import QRCodeComponent from "./qrCodeComponent";
+import Image from "next/image";
 
 export default function Page() {
   const searchParams = useSearchParams();
@@ -38,12 +39,19 @@ export default function Page() {
         <div className="h-[120px]" />
 
         <button
-          className="w-[190px] h-[56px] rounded-[12px] text-head3 active:scale-95 bg-main-lilac50 text-grayscale-800 bg-grayscale-800 text-grayscale-500"
+          className="flex items-center gap-[5px] justify-center w-[190px] h-[56px] rounded-[12px] active:scale-95 bg-main-lilac50 bg-grayscale-800"
           onClick={() => {
-            router.replace("/");
+            router.push("/");
           }}
         >
-          홈으로 돌아가기
+          <Image
+            unoptimized
+            src="/icons/complete_check.svg"
+            width={24}
+            height={24}
+            alt="left arrow"
+          />
+          <span className="text-head3 text-grayscale-800">홈으로 돌아가기</span>
         </button>
       </div>
     </div>

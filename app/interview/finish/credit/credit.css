@@ -16,5 +16,5 @@
   position: absolute;
   bottom: 0;
   width: 100%;
-  animation: creditsScroll 20s linear forwards; /* 20초 동안 실행, 필요에 따라 조절 */
+  animation: creditsScroll 30s linear forwards; /* 20초 동안 실행, 필요에 따라 조절 */
 }
