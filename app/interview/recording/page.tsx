@@ -3,9 +3,11 @@
 import "@/app/components/blackBody.css";
 import { CameraComponent } from "./cameraComponent";
 import { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Page() {
+  const searchParams = useSearchParams();
+  const storyboardId = searchParams.get("storyboardId")!;
   const [recording, setRecording] = useState<boolean>(false);
   const [recordedChunks, setRecordedChunks] = useState<Blob[]>([]);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -49,8 +51,7 @@ export default function Page() {
     if (recordedChunks.length === 0) return;
     const blob = new Blob(recordedChunks, { type: "video/webm" });
     const url = URL.createObjectURL(blob);
-    alert(url);
-    router.replace(`/interview/finish/credit?videoUrl=${url}`)
+    router.replace(`/interview/finish/credit?videoUrl=${url}&storyboardId=${storyboardId}`)
     // const a = document.createElement("a");
     // a.style.display = "none";
     // a.href = url;

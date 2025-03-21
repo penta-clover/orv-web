@@ -1,21 +1,32 @@
 "use client";
 
 import "@/app/components/blackBody.css";
+import { MyInfo } from "@/domain/model/MyInfo";
 import { useArchiveRepository } from "@/providers/ArchiveRepositoryContext";
+import { useMemberRepository } from "@/providers/MemberRepositoryContext";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Page() {
   const searchParams = useSearchParams();
   const videoId = searchParams.get("videoId");
-  const archiveRepository = useArchiveRepository();
   const [name, setName] = useState<string>("");
+  const [nickname, setNickname] = useState<string>("");
   const [isButtonActive, setIsButtonActive] = useState<boolean>(false);
   const router = useRouter();
+
+  const archiveRepository = useArchiveRepository();
+  const memberRepository = useMemberRepository();
 
   useEffect(() => {
     setIsButtonActive(name.trim() !== "" && name.length < 255);
   }, [name]);
+
+  useEffect(() => {
+    memberRepository
+      .getMyInfo()
+      .then((myInfo: MyInfo) => setNickname(myInfo.nickname));
+  });
 
   const updateName = async (name: string) => {
     if (!videoId) {
@@ -31,7 +42,7 @@ export default function Page() {
     <div className="flex flex-col h-[100dvh]">
       <div className="flex flex-col grow items-center justify-center pb-[182px]">
         <div className="text-white font-semibold text-[40px] leading-[44px]">
-          오늘 _ _님의 인터뷰 제목을 정해주세요
+          오늘 {nickname}님의 인터뷰 제목을 정해주세요
         </div>
 
         <div className="h-[44px]" />

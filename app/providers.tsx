@@ -3,6 +3,7 @@ import { ArchiveRepositoryProvider } from "@/providers/ArchiveRepositoryContext"
 import { AuthRepositoryProvider } from "@/providers/AuthRepositoryContext";
 import { EarlybirdRepositoryProvider } from "@/providers/EarlybirdRepositoryContext";
 import { FirebaseProvider } from "@/providers/FirebaseContext";
+import { MemberRepositoryProvider } from "@/providers/MemberRepositoryContext";
 import { StorageProvider } from "@/providers/StorageContext";
 import { ReactNode } from "react";
 
@@ -14,7 +15,9 @@ export default function Providers({ children }: { children: ReactNode }) {
           <AuthRepositoryProvider>
             <EarlybirdRepositoryProvider>
               <ArchiveRepositoryProvider>
-              {children}
+                <MemberRepositoryProvider>
+                  {children}
+                </MemberRepositoryProvider>
               </ArchiveRepositoryProvider>
             </EarlybirdRepositoryProvider>
           </AuthRepositoryProvider>

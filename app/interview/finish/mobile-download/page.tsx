@@ -2,8 +2,6 @@
 
 import "@/app/components/blackBody.css";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
-import QRCodeComponent from "./qrCodeComponent";
 
 export default function Page() {
   const searchParams = useSearchParams();
@@ -24,16 +22,12 @@ export default function Page() {
         <div className="text-white font-semibold text-[40px] leading-[64px] text-center">
           {formattedDate} 오늘은 여기까지
           <br />
-          아래 QR을 통해 영상을 받으면 됩니다.
+          아래에서 영상을 받으시면 됩니다.
         </div>
 
         <div className="h-[84px]" />
 
-        <div>
-          <QRCodeComponent
-            url={`https://www.orv.im/interview/finish/mobile-download?videoUrl=${videoUrl}`}
-          />
-        </div>
+        <video src={videoUrl} controls autoPlay muted/>
 
         <div className="h-[120px]" />
 
