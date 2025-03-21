@@ -8,8 +8,15 @@ import { useState } from "react";
 import ExitInterviewModal from "../../(components)/exitInterviewModal";
 import PrevButton from "../../(components)/prevButton";
 import StatusBar from "../../(components)/statusBar";
+import { Suspense } from "react";
 
 export default function Page() {
+  <Suspense>
+    <Body />
+  </Suspense>;
+}
+
+function Body() {
   const searchParams = useSearchParams();
   const storyboardId = searchParams.get("storyboardId")!;
 

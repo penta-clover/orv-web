@@ -8,8 +8,15 @@ import ExitInterviewModal from "../../(components)/exitInterviewModal";
 import PrevButton from "../../(components)/prevButton";
 import StatusBar from "../../(components)/statusBar";
 import MicIndicator from "./micIndicator";
+import { Suspense } from "react";
 
 export default function Page() {
+  <Suspense>
+    <Body />
+  </Suspense>;
+}
+
+function Body() {
   const searchParams = useSearchParams();
   const storyboardId = searchParams.get("storyboardId")!;
 

@@ -3,7 +3,7 @@ import "@/app/components/blackBody.css";
 import Image from "next/image";
 import NextButton from "../../(components)/nextButton";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useRef, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 import ExitInterviewModal from "../../(components)/exitInterviewModal";
 import PrevButton from "../../(components)/prevButton";
 import StatusBar from "../../(components)/statusBar";
@@ -12,6 +12,12 @@ import TipBox from "../../(components)/tipBox";
 import { cn } from "@/lib/utils";
 
 export default function Page() {
+  <Suspense>
+    <Body />
+  </Suspense>;
+}
+
+function Body() {
   const searchParams = useSearchParams();
   const storyboardId = searchParams.get("storyboardId")!;
   const aspect = searchParams.get("aspect")!;

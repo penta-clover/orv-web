@@ -5,10 +5,16 @@ import Image from "next/image";
 import TipBox from "../(components)/tipBox";
 import NextButton from "../(components)/nextButton";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import ExitInterviewModal from "../(components)/exitInterviewModal";
 
 export default function Page() {
+  <Suspense>
+    <Body />
+  </Suspense>;
+}
+
+function Body() {
   const searchParams = useSearchParams();
   const storyboardId = searchParams.get("storyboardId")!;
 
