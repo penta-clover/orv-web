@@ -2,7 +2,7 @@
 import "@/app/components/blackBody.css";
 import Image from "next/image";
 import NextButton from "../../(components)/nextButton";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import ExitInterviewModal from "../../(components)/exitInterviewModal";
 import PrevButton from "../../(components)/prevButton";
@@ -10,13 +10,16 @@ import StatusBar from "../../(components)/statusBar";
 import MicIndicator from "./micIndicator";
 
 export default function Page() {
+  const searchParams = useSearchParams();
+  const storyboardId = searchParams.get("storyboardId")!;
+
   const router = useRouter();
   const [ready, setReady] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const onNextButtonClick = () => {
     if (ready) {
-      router.push("/trial/setting/step3");
+      router.push(`/interview/setting/step3?storyboardId=${storyboardId}`);
     } else {
       //TODO: 체크박스 누르라고 하기
     }
@@ -28,7 +31,7 @@ export default function Page() {
       setIsOpen={setIsModalOpen}
       onExitInterview={() => router.push("/")}
     >
-      <div className="relative w-full h-[100svh] flex flex-col items-center justify-center gap-[42px]">
+      <div className="relative w-full h-[100svh] flex flex-col items-center justify-start gap-[42px] mt-[70px]">
         <Image
           unoptimized
           src="/icons/x.svg"
@@ -36,7 +39,7 @@ export default function Page() {
           height={32}
           alt="close"
           onClick={() => setIsModalOpen(true)}
-          className="absolute top-0 right-0 px-[16px] py-[12px] w-[64px] h-[56px] focus:outline-none cursor-pointer"
+          className="fixed top-[10px] right-[10px] px-[16px] py-[12px] w-[64px] h-[56px] focus:outline-none cursor-pointer"
         />
         <StatusBar currentStep={2} />
         <hr className="border-grayscale-700 border-[0.5px] w-full" />
@@ -88,12 +91,12 @@ export default function Page() {
           마이크 테스트를 완료했어요
         </label>
         <PrevButton
-          className="absolute bottom-[24px] left-[28px]"
+          className="fixed bottom-[45px] left-[45px]"
           onClick={() => router.back()}
           useKeyboardShortcut
         />
         <NextButton
-          className="absolute bottom-[24px] right-[28px]"
+          className="fixed bottom-[45px] right-[45px]"
           onClick={onNextButtonClick}
           useKeyboardShortcut
         />

@@ -1,7 +1,7 @@
 "use client";
 
 import "@/app/components/blackBody.css";
-import { CameraComponent } from "./cameraComponent";
+import { CameraComponent } from "../(components)/cameraComponent";
 import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -12,7 +12,7 @@ export default function Page() {
   const [recordedChunks, setRecordedChunks] = useState<Blob[]>([]);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const router = useRouter()
+  const router = useRouter();
 
   const startTimeRef = useRef<number>(0);
 
@@ -20,7 +20,6 @@ export default function Page() {
     // 컴포넌트가 마운트될 때 인터뷰 시작 시간 기록
     startTimeRef.current = Date.now();
   }, []);
-
 
   // 녹화 시작 함수
   const startRecording = () => {
@@ -61,9 +60,13 @@ export default function Page() {
     const url = URL.createObjectURL(blob);
 
     // 인터뷰 전체 시간 계산 (초 단위)
-    const totalInterviewTime = Math.floor((Date.now() - startTimeRef.current) / 1000);
+    const totalInterviewTime = Math.floor(
+      (Date.now() - startTimeRef.current) / 1000
+    );
 
-    router.replace(`/interview/finish/credit?videoUrl=${url}&storyboardId=${storyboardId}&totalInterviewTime=${totalInterviewTime}`);
+    router.replace(
+      `/interview/finish/credit?videoUrl=${url}&storyboardId=${storyboardId}&totalInterviewTime=${totalInterviewTime}`
+    );
 
     setRecordedChunks([]); // 다운로드 후 초기화
   };

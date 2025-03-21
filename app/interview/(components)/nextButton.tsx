@@ -29,7 +29,7 @@ export default function NextButton(props: {
     <button
       className={cn(
         className,
-        "px-[20px] py-[11px] bg-main-lilac50 text-head4 rounded-[10px] transition-all active:scale-95 flex flex-row items-center gap-[10px]"
+        "pl-[24px] pr-[19px] py-[11px] bg-main-lilac50 text-head3 rounded-[10px] transition-all active:scale-95 flex flex-row items-center gap-[5px]"
       )}
       onClick={onClick}
     >
@@ -38,8 +38,8 @@ export default function NextButton(props: {
         unoptimized
         src="/icons/right-arrow-black.svg"
         alt="right-arrow"
-        width={8}
-        height={13}
+        width={24}
+        height={24}
       />
     </button>
   );
