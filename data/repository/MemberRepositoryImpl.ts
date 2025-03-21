@@ -12,7 +12,7 @@ export class MemberRepositoryImpl implements MemberRepository {
       Authorization: `Bearer ${this.storage.getAuthToken()}`,
     });
 
-    if (result.statusCode != "200" || result.data === null) {
+    if (result.statusCode !== "200" || result.data === null) {
       throw new Error(result.message);
     }
 
