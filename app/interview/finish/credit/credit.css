@@ -1,0 +1,20 @@
+@keyframes creditsScroll {
+  0% {
+    transform: translateY(100vh); /* 화면 아래에서 시작 */
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh); /* 완전히 위로 이동 */
+    opacity: 1;
+  }
+}
+
+.creditsAnimation {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  animation: creditsScroll 30s linear forwards; /* 20초 동안 실행, 필요에 따라 조절 */
+}
