@@ -1,7 +1,7 @@
 import { ApiResult } from "./ApiResult";
 
 export class Api {
-  static baseUrl: string = "https://api.orv.im/api/v0";
+  static baseUrl: string = `${process.env.NEXT_PUBLIC_API_SERVER_BASE_URL}/api/v0`;
 
   async get<T>(path: string, headers: HeadersInit = {}): Promise<ApiResult<T>> {
     const response = await fetch(`${Api.baseUrl}${path}`, {
