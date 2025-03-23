@@ -1,11 +1,9 @@
 "use client";
 import "@/app/components/blackBody.css";
 import Image from "next/image";
-import NextButton from "../../../(components)/nextButton";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useRef, useState } from "react";
 import ExitInterviewModal from "../../../(components)/exitInterviewModal";
-import PrevButton from "../../../(components)/prevButton";
 import StatusBar from "../../../(components)/statusBar";
 import { CameraComponent } from "@/app/interview/(components)/cameraComponent";
 import { Suspense } from "react";
@@ -25,10 +23,10 @@ function Body() {
 
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const onNextButtonClick = () =>
-    router.push(
+    router.replace(
       `/interview/setting/step4?storyboardId=${storyboardId}&aspect=${aspect}`
     );
 
@@ -36,7 +34,7 @@ function Body() {
     <ExitInterviewModal
       isOpen={isModalOpen}
       setIsOpen={setIsModalOpen}
-      onExitInterview={() => router.push("/")}
+      onExitInterview={() => router.replace("/")}
     >
       <div className="relative w-full h-[100svh] flex flex-col items-center justify-start gap-[42px] mt-[70px]">
         <Image
@@ -52,7 +50,7 @@ function Body() {
         <hr className="border-grayscale-700 border-[0.5px] w-full" />
         <div className="relative flex justify-center items-center h-[476px] w-[1094px] bg-grayscale-900 rounded-[12px] overflow-hidden">
           <div className="w-full h-full" style={{ transform: "scaleX(-1)" }}>
-            <CameraComponent ref={videoRef} />
+            <CameraComponent ref={canvasRef} />
           </div>
           <div className="absolute bottom-[32px] left-[32px] text-white">
             <div className="text-head3">질문 순서표시</div>

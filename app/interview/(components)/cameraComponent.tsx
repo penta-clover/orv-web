@@ -8,16 +8,15 @@ interface CameraComponentProps {
 
 // CameraComponent를 forwardRef로 감싸서 외부에서 video 엘리먼트를 참조할 수 있도록 합니다.
 export const CameraComponent = React.forwardRef<
-  HTMLVideoElement,
+  HTMLCanvasElement,
   CameraComponentProps
 >((props, ref) => {
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameRef = useRef<number | undefined>(undefined);
   const currentFilterRef = useRef<Filter | undefined>(props.filter);
-  const frameRate = 24;
 
-  useImperativeHandle(ref, () => localVideoRef.current as HTMLVideoElement);
+  useImperativeHandle(ref, () => canvasRef.current as HTMLCanvasElement);
 
   // filter가 변경될 때마다 ref 업데이트
   useEffect(() => {
@@ -30,7 +29,9 @@ export const CameraComponent = React.forwardRef<
         try {
           const stream = await navigator.mediaDevices.getUserMedia({
             video: {
-              frameRate: { ideal: frameRate },
+              // HD 해상도 적용
+              width: { ideal: 1280 },
+              height: { ideal: 720 },
             },
             audio: true,
           });
@@ -58,6 +59,9 @@ export const CameraComponent = React.forwardRef<
     const ctx = canvas?.getContext("2d", { willReadFrequently: true });
 
     if (!video || !canvas || !ctx) return;
+
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
 
     const drawFrame = () => {
       if (video.readyState === video.HAVE_ENOUGH_DATA) {

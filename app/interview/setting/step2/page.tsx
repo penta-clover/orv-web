@@ -28,7 +28,7 @@ function Body() {
 
   const onNextButtonClick = () => {
     if (ready) {
-      router.push(`/interview/setting/step3?storyboardId=${storyboardId}`);
+      router.replace(`/interview/setting/step3?storyboardId=${storyboardId}`);
     } else {
       //TODO: 체크박스 누르라고 하기
     }
@@ -38,7 +38,7 @@ function Body() {
     <ExitInterviewModal
       isOpen={isModalOpen}
       setIsOpen={setIsModalOpen}
-      onExitInterview={() => router.push("/")}
+      onExitInterview={() => router.replace("/")}
     >
       <div className="relative w-full h-[100svh] flex flex-col items-center justify-start gap-[42px] mt-[70px]">
         <Image
@@ -101,7 +101,11 @@ function Body() {
         </label>
         <PrevButton
           className="fixed bottom-[45px] left-[45px]"
-          onClick={() => router.back()}
+          onClick={() =>
+            router.replace(
+              `/interview/setting/step1?storyboardId=${storyboardId}`
+            )
+          }
           useKeyboardShortcut
         />
         <NextButton

@@ -36,7 +36,7 @@ function Body() {
     <ExitInterviewModal
       isOpen={isModalOpen}
       setIsOpen={setIsModalOpen}
-      onExitInterview={() => router.push("/")}
+      onExitInterview={() => router.replace("/")}
     >
       <div className="relative w-full h-[100svh] flex flex-col items-center justify-center gap-[36px]">
         <Image

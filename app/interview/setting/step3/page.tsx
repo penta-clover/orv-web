@@ -25,14 +25,14 @@ function Body() {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedAspect, setSelectedAspect] = useState<Aspect>("frontal");
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const onAspectClick = (aspect: Aspect) => {
     setSelectedAspect(aspect);
   };
 
   const onNextButtonClick = () =>
-    router.push(
+    router.replace(
       `/interview/setting/step3/preview?storyboardId=${storyboardId}&aspect=${selectedAspect}`
     );
 
@@ -40,7 +40,7 @@ function Body() {
     <ExitInterviewModal
       isOpen={isModalOpen}
       setIsOpen={setIsModalOpen}
-      onExitInterview={() => router.push("/")}
+      onExitInterview={() => router.replace("/")}
     >
       <div className="relative w-full h-[100svh] flex flex-col items-center justify-start gap-[42px] mt-[70px]">
         <Image
@@ -72,7 +72,7 @@ function Body() {
               draggable={false}
             />
             <div className="absolute top-0 left-0 w-full h-full">
-              <CameraComponent ref={videoRef} />
+              <CameraComponent ref={canvasRef} />
             </div>
           </AspectPreview>
           <AspectPreview
@@ -89,7 +89,7 @@ function Body() {
               draggable={false}
             />
             <div className="absolute top-0 left-0 w-full h-full">
-              <CameraComponent ref={videoRef} />
+              <CameraComponent ref={canvasRef} />
             </div>
           </AspectPreview>
           <AspectPreview
@@ -106,7 +106,7 @@ function Body() {
               draggable={false}
             />
             <div className="absolute top-0 left-0 w-full h-full">
-              <CameraComponent ref={videoRef} />
+              <CameraComponent ref={canvasRef} />
             </div>
           </AspectPreview>
           <AspectPreview
@@ -125,7 +125,11 @@ function Body() {
         </div>
         <PrevButton
           className="fixed bottom-[45px] left-[45px]"
-          onClick={() => router.back()}
+          onClick={() =>
+            router.replace(
+              `/interview/setting/step2?storyboardId=${storyboardId}`
+            )
+          }
           useKeyboardShortcut
         />
         <NextButton
