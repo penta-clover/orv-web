@@ -7,6 +7,16 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import ExitInterviewModal from "../(components)/exitInterviewModal";
+import { useStoryboardRepository } from "@/providers/StoryboardRepositoryContext";
+import TipBox from "../(components)/tipBox";
+import NextButton from "../(components)/nextButton";
+
+interface QuestionContent {
+  number: number;
+  question: string;
+  hint: string;
+  nextSceneId: string;
+}
 
 export default function Page() {
   return (
@@ -25,17 +35,43 @@ function Body() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [recording, setRecording] = useState<boolean>(false);
   const [recordedChunks, setRecordedChunks] = useState<Blob[]>([]);
+  const [questionContent, setQuestionContent] = useState<
+    QuestionContent | undefined
+  >(undefined);
+
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const startTimeRef = useRef<number>(0);
   const router = useRouter();
 
-  const startTimeRef = useRef<number>(0);
+  const storyboardRepository = useStoryboardRepository();
   const RECORDING_FPS = 24; // 녹화 프레임 레이트 설정
 
   useEffect(() => {
+    storyboardRepository.getStoryboardInfo(storyboardId).then((storyboard) => {
+      storyboardRepository
+        .getSceneInfo(storyboard.startSceneId)
+        .then((scene) => {
+          loadQuestion(scene.id, 1);
+        });
+    });
+
     // 컴포넌트가 마운트될 때 인터뷰 시작 시간 기록
     startTimeRef.current = Date.now();
+    startRecording(); // 녹화 시작
   }, []);
+
+  // 질문 불러오기
+  const loadQuestion = (sceneId: string, number: number) => {
+    storyboardRepository.getSceneInfo(sceneId).then((scene) => {
+      if (scene.sceneType !== "END") {
+        setQuestionContent({ ...scene.content, number: number });
+      } else {
+        stopRecording();
+        downloadRecording();
+      }
+    });
+  };
 
   // 녹화 시작 함수
   const startRecording = () => {
@@ -114,61 +150,42 @@ function Body() {
           onClick={() => setIsModalOpen(true)}
           className="fixed top-[10px] right-[10px] px-[16px] py-[12px] w-[64px] h-[56px] focus:outline-none cursor-pointer"
         />
-        <div className="relative flex justify-center items-center w-[95vw] lg:w-[1200px] bg-grayscale-900 rounded-[12px] overflow-hidden">
+        <div className="relative flex justify-center items-center w-[90vw] lg:w-[1200px] bg-grayscale-900 rounded-[12px] overflow-hidden">
           <div
             className={cn(aspect === "none" && "hidden", "w-full h-full")}
             style={{ transform: "scaleX(-1)" }}
           >
             <CameraComponent ref={canvasRef} filter={filter} />
           </div>
+          <div className="absolute bottom-[32px] left-[32px] text-white">
+            <div className="text-head3">{questionContent?.number}번째 질문</div>
+            <div className="text-head2 leading-1 mt-[8px]">
+              {questionContent?.question}
+              <br />
+              {questionContent?.hint}
+            </div>
+          </div>
         </div>
-        <div className="absolute bottom-20 left-4 flex gap-2">
-          {!recording ? (
-            <button
-              className="bg-green-500 text-white rounded px-4 py-2"
-              onClick={startRecording}
-            >
-              녹화 시작
-            </button>
-          ) : (
-            <button
-              className="bg-red-500 text-white rounded px-4 py-2"
-              onClick={stopRecording}
-            >
-              녹화 중지
-            </button>
-          )}
-          <button
-            className="bg-blue-500 text-white rounded px-4 py-2"
-            onClick={downloadRecording}
-            disabled={recordedChunks.length === 0}
-          >
-            파일 다운로드
-          </button>
-        </div>
-        <div className="absolute bottom-20 left-4 flex gap-2">
-          {!recording ? (
-            <button
-              className="bg-green-500 text-white rounded px-4 py-2"
-              onClick={startRecording}
-            >
-              녹화 시작
-            </button>
-          ) : (
-            <button
-              className="bg-red-500 text-white rounded px-4 py-2"
-              onClick={stopRecording}
-            >
-              녹화 중지
-            </button>
-          )}
-          <button
-            className="bg-blue-500 text-white rounded px-4 py-2"
-            onClick={downloadRecording}
-            disabled={recordedChunks.length === 0}
-          >
-            파일 다운로드
-          </button>
+        <div className="fixed bottom-[45px] right-[45px] flex flex-col items-end gap-[10px]">
+          <TipBox
+            tag="Tip!"
+            text="마우스 클릭 혹은 방향키 좌우동작을\n통해 조작하세요!"
+            tagColor="text-main-lilac50"
+          />
+          <NextButton
+            onClick={() => {
+              if (questionContent?.nextSceneId) {
+                loadQuestion(
+                  questionContent!.nextSceneId,
+                  questionContent!.number + 1
+                );
+              } else {
+                stopRecording();
+                downloadRecording();
+              }
+            }}
+            useKeyboardShortcut
+          />
         </div>
       </div>
     </ExitInterviewModal>
