@@ -2,11 +2,17 @@
 
 import "@/app/components/blackBody.css";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import QRCodeComponent from "./qrCodeComponent";
 import Image from "next/image";
 
 export default function Page() {
+  return <Suspense>
+    <Body />
+  </Suspense>
+}
+
+function Body() {
   const searchParams = useSearchParams();
   const videoUrl = searchParams.get("videoUrl")!;
   const router = useRouter();

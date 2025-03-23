@@ -5,9 +5,15 @@ import { MyInfo } from "@/domain/model/MyInfo";
 import { useArchiveRepository } from "@/providers/ArchiveRepositoryContext";
 import { useMemberRepository } from "@/providers/MemberRepositoryContext";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 export default function Page() {
+  return <Suspense>
+    <Body />
+  </Suspense>
+}
+
+function Body() {
   const searchParams = useSearchParams();
   const videoId = searchParams.get("videoId");
   const [name, setName] = useState<string>("");

@@ -3,13 +3,19 @@
 import "@/app/components/blackBody.css";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useArchiveRepository } from "@/providers/ArchiveRepositoryContext";
-import { useEffect, useImperativeHandle, useRef, useState } from "react";
+import { Suspense, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { VideoMetadata } from "@/domain/model/VideoMetadata";
 import { useMemberRepository } from "@/providers/MemberRepositoryContext";
 import { MyInfo } from "@/domain/model/MyInfo";
 import Image from "next/image";
 
 export default function Page() {
+  return <Suspense>
+    <Body />
+  </Suspense>
+}
+
+function Body() {
   const searchParams = useSearchParams();
   const videoId = searchParams.get("videoId");
   const [progress, setProgress] = useState<string>("ready");

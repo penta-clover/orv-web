@@ -2,8 +2,15 @@
 
 import "@/app/components/blackBody.css";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 export default function Page() {
+  return <Suspense>
+    <Body />
+  </Suspense>
+}
+
+function Body() {
   const searchParams = useSearchParams();
   const videoUrl = searchParams.get("videoUrl")!;
   const router = useRouter();

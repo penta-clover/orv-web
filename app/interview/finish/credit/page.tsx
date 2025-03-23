@@ -6,11 +6,17 @@ import YouTube from "react-youtube";
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useArchiveRepository } from "@/providers/ArchiveRepositoryContext";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useMemberRepository } from "@/providers/MemberRepositoryContext";
 import { MyInfo } from "@/domain/model/MyInfo";
 
 export default function Page() {
+  return <Suspense>
+    <Body />
+  </Suspense>
+}
+
+function Body() {
   const searchParams = useSearchParams();
   const localVideoUrl = searchParams.get("videoUrl")!;
   const storyboardId = searchParams.get("storyboardId")!;

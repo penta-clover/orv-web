@@ -2,10 +2,17 @@
 
 import "@/app/components/blackBody.css";
 import { CameraComponent } from "../(components)/cameraComponent";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
+
 export default function Page() {
+  return <Suspense>
+    <Body />
+  </Suspense>
+}
+
+function Body() {
   const searchParams = useSearchParams();
   const storyboardId = searchParams.get("storyboardId")!;
   const [recording, setRecording] = useState<boolean>(false);
