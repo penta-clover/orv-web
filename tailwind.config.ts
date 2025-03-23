@@ -27,6 +27,7 @@ export default {
         "shake-1": "shake 1s ease-in-out",
         "shake-1.2": "shake 1.2s ease-in-out",
         "shake-2": "shake 2s ease-in-out",
+        updown: "updown 2s ease-in-out infinite",
       },
       colors: {
         background: "hsl(var(--background))",
@@ -149,6 +150,13 @@ export default {
             fontWeight: "600",
           },
         ],
+        body0: [
+          "20px",
+          {
+            lineHeight: "150%",
+            fontWeight: "500",
+          },
+        ],
         body1: [
           "18px",
           {
@@ -220,6 +228,9 @@ export default {
           "12.5%, 62.5%": { transform: "translateX(-6px) rotate(3deg)" },
           "25%, 75%": { transform: "translateX(6px) rotate(-3deg)" },
           "37.5%, 87.5%": { transform: "translateX(-6px) rotate(3deg)" },
+        },
+        updown: {
+          "50%": { transform: "translateY(-3px)" },
         },
       },
     },

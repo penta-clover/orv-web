@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import "@/app/components/blackBody.css";
 import { CameraComponent } from "./cameraComponent";
-import ActionBar from "./actionBar";
+import ActionBar from "../interview/setting/actionBar";
 
 export default function Page() {
   const [currentQuestionIdx, setCurrentQuestionIdx] = useState<number>(0);
@@ -87,14 +87,15 @@ export default function Page() {
             style={{ filter: filter || "none" }}
           >
             <div className="absolute inset-0 z-10">
-              <Image unoptimized 
+              <Image
+                unoptimized
                 src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/studio-lighting.png"
                 fill
                 alt="studio-lighting"
               />
             </div>
             <div style={{ transform: "scaleX(-1)" }}>
-            <CameraComponent ref={videoRef} />
+              <CameraComponent ref={videoRef} />
             </div>
           </div>
           <div className="absolute top-[0] z-50 w-full h-full flex flex-col justify-end items-start">
