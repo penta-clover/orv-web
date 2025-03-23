@@ -12,9 +12,11 @@ import TipBox from "../../(components)/tipBox";
 import { cn } from "@/lib/utils";
 
 export default function Page() {
-  <Suspense>
-    <Body />
-  </Suspense>;
+  return (
+    <Suspense>
+      <Body />
+    </Suspense>
+  );
 }
 
 function Body() {
@@ -24,7 +26,7 @@ function Body() {
 
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [filter, setFilter] = useState<string>("default");
+  const [filter, setFilter] = useState<Filter>("default");
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const onNextButtonClick = () =>
@@ -51,9 +53,9 @@ function Body() {
         <StatusBar currentStep={4} />
         <hr className="border-grayscale-700 border-[0.5px] w-full" />
         <div className="flex flex-col gap-[20px]">
-          <div className="relative flex justify-center items-center h-[430px] w-[1094px] bg-grayscale-900 rounded-[12px] overflow-hidden">
+          <div className="relative flex justify-center items-center h-[430px] w-[95vw] lg:w-[1094px] bg-grayscale-900 rounded-[12px] overflow-hidden">
             <div className="w-full h-full" style={{ transform: "scaleX(-1)" }}>
-              <CameraComponent ref={videoRef} />
+              <CameraComponent ref={videoRef} filter={filter} />
             </div>
             <div className="absolute top-[16px] left-[16px] text-head4 text-white">
               필터 미리보기

@@ -11,9 +11,11 @@ import StatusBar from "../../(components)/statusBar";
 import { Suspense } from "react";
 
 export default function Page() {
-  <Suspense>
-    <Body />
-  </Suspense>;
+  return (
+    <Suspense>
+      <Body />
+    </Suspense>
+  );
 }
 
 function Body() {

@@ -11,9 +11,11 @@ import MicIndicator from "./micIndicator";
 import { Suspense } from "react";
 
 export default function Page() {
-  <Suspense>
-    <Body />
-  </Suspense>;
+  return (
+    <Suspense>
+      <Body />
+    </Suspense>
+  );
 }
 
 function Body() {
@@ -71,8 +73,8 @@ function Body() {
               <span>
                 마이크 테스트를 할 때 옆의{" "}
                 <span className="text-system-info">파란 선</span>을 넘는지
-                확인해주세요. 다음 내용을 읽으며 테스트해주세요. “오늘의 나를
-                기록하기”
+                확인해주세요. 다음 내용을 읽으며 테스트해주세요. "오늘의 나를
+                기록하기"
               </span>
               <span>
                 아무 말도 하지 않을 때{" "}

@@ -11,9 +11,11 @@ import { CameraComponent } from "../../(components)/cameraComponent";
 import { cn } from "@/lib/utils";
 
 export default function Page() {
-  <Suspense>
-    <Body />
-  </Suspense>;
+  return (
+    <Suspense>
+      <Body />
+    </Suspense>
+  );
 }
 
 function Body() {
@@ -22,10 +24,10 @@ function Body() {
 
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [selectedAspect, setSelectedAspect] = useState<string>("frontal");
+  const [selectedAspect, setSelectedAspect] = useState<Aspect>("frontal");
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const onAspectClick = (aspect: string) => {
+  const onAspectClick = (aspect: Aspect) => {
     setSelectedAspect(aspect);
   };
 

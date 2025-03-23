@@ -11,9 +11,11 @@ import { CameraComponent } from "@/app/interview/(components)/cameraComponent";
 import { Suspense } from "react";
 
 export default function Page() {
-  <Suspense>
-    <Body />
-  </Suspense>;
+  return (
+    <Suspense>
+      <Body />
+    </Suspense>
+  );
 }
 
 function Body() {
@@ -55,9 +57,9 @@ function Body() {
           <div className="absolute bottom-[32px] left-[32px] text-white">
             <div className="text-head3">질문 순서표시</div>
             <div className="text-head2 leading-1 mt-[8px]">
-              “여기는 질문 내용이 들어갈 곳입니다. 이런 식으로 나와요”
+              "여기는 질문 내용이 들어갈 곳입니다. 이런 식으로 나와요"
               <br />
-              “여기는 질문에 대한 추가 질문 및 힌트가 있을 곳 입니다”
+              "여기는 질문에 대한 추가 질문 및 힌트가 있을 곳 입니다"
             </div>
           </div>
         </div>

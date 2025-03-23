@@ -9,9 +9,11 @@ import { Suspense, useState } from "react";
 import ExitInterviewModal from "../(components)/exitInterviewModal";
 
 export default function Page() {
-  <Suspense>
-    <Body />
-  </Suspense>;
+  return (
+    <Suspense>
+      <Body />
+    </Suspense>
+  );
 }
 
 function Body() {
