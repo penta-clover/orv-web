@@ -40,7 +40,7 @@ function Body() {
       setIsOpen={setIsModalOpen}
       onExitInterview={() => router.replace("/")}
     >
-      <div className="relative w-full h-[100svh] flex flex-col items-center justify-start gap-[42px] mt-[70px]">
+      <div className="relative w-full h-[100%] flex flex-col items-center justify-start gap-[42px] mt-[70px]">
         <Image
           unoptimized
           src="/icons/x.svg"

@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import ExitInterviewModal from "../../(components)/exitInterviewModal";
 import { cn } from "@/lib/utils";
+import { useStoryboardRepository } from "@/providers/StoryboardRepositoryContext";
 
 export default function Page() {
   return (
@@ -22,14 +23,20 @@ function Body() {
 
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [title, setTitle] = useState<string>("");
+
+  const storyboardRepository = useStoryboardRepository();
 
   useEffect(() => {
-    setTimeout(() => {
-      router.replace(
-        `/interview/recording?storyboardId=${storyboardId}&aspect=${aspect}&filter=${filter}`
-      );
-    }, 3000);
-  });
+    storyboardRepository.getStoryboardInfo(storyboardId).then((storyboard) => {
+      setTitle(storyboard.title);
+      setTimeout(() => {
+        router.replace(
+          `/interview/recording?storyboardId=${storyboardId}&aspect=${aspect}&filter=${filter}`
+        );
+      }, 5000);
+    });
+  }, [storyboardId]);
 
   return (
     <ExitInterviewModal
@@ -37,7 +44,7 @@ function Body() {
       setIsOpen={setIsModalOpen}
       onExitInterview={() => router.replace("/")}
     >
-      <div className="relative w-full h-[100svh] flex flex-col items-center justify-start gap-[42px] mt-[70px]">
+      <div className="relative w-full h-[100%] flex flex-col items-center justify-start gap-[42px] mt-[70px]">
         <Image
           unoptimized
           src="/icons/x.svg"
@@ -52,8 +59,9 @@ function Body() {
             안녕하세요 나를 마주하는 시간, 오브입니다.
             <br />
             <br />
-            오늘 인터뷰의 주제는 “OO”입니다. 오늘 함께 하는 시간동안 꼭 스스로를
-            알아가는 것이 아니더라도
+            오늘 인터뷰의 주제는 “{title}”입니다.
+            <br />
+            오늘 함께 하는 시간동안 꼭 스스로를 알아가는 것이 아니더라도
             <br />
             마음 편하고 즐거운 시간을 보내시면 좋겠습니다.
             <br />

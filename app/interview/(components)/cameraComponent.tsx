@@ -4,6 +4,8 @@ import React, { useEffect, useImperativeHandle, useRef } from "react";
 
 interface CameraComponentProps {
   filter?: Filter;
+  afterDraw?: (ctx: CanvasRenderingContext2D) => void;
+  test?: string;
 }
 
 // CameraComponent를 forwardRef로 감싸서 외부에서 video 엘리먼트를 참조할 수 있도록 합니다.
@@ -15,14 +17,22 @@ export const CameraComponent = React.forwardRef<
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameRef = useRef<number | undefined>(undefined);
   const currentFilterRef = useRef<Filter | undefined>(props.filter);
+  const afterDrawRef = useRef<
+    ((ctx: CanvasRenderingContext2D) => void) | undefined
+  >(props.afterDraw); // 일단 ref로 하니까 되긴 하는데, 저장하는 양이 커서 좀 더 좋은 방법 찾아야 함
 
   useImperativeHandle(ref, () => canvasRef.current as HTMLCanvasElement);
 
-  // filter가 변경될 때마다 ref 업데이트
+  // 값 변경시마다 ref 업데이트
   useEffect(() => {
     currentFilterRef.current = props.filter;
   }, [props.filter]);
 
+  useEffect(() => {
+    afterDrawRef.current = props.afterDraw;
+  }, [props.afterDraw]);
+
+  // 카메라 설정
   useEffect(() => {
     if (typeof window !== "undefined" && navigator.mediaDevices) {
       const enableCamera = async () => {
@@ -45,14 +55,9 @@ export const CameraComponent = React.forwardRef<
 
       enableCamera();
     }
-
-    return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
-    };
   }, []);
 
+  // 캔버스 설정
   useEffect(() => {
     const video = localVideoRef.current;
     const canvas = canvasRef.current;
@@ -67,12 +72,10 @@ export const CameraComponent = React.forwardRef<
       if (video.readyState === video.HAVE_ENOUGH_DATA) {
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
+
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-        // 현재 filter 값 사용
         const currentFilter = currentFilterRef.current;
-
-        // 이미지 데이터 가져오기
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const data = imageData.data;
 
@@ -83,6 +86,7 @@ export const CameraComponent = React.forwardRef<
             const g = data[i + 1];
             const b = data[i + 2];
 
+            // 얘 밖으로 빼니까 확실히 딜레이가 느껴져서, 더럽지만 여기다가 작성함..
             switch (currentFilter) {
               case "grayscale":
                 const gray = (r + g + b) / 3;
@@ -112,8 +116,19 @@ export const CameraComponent = React.forwardRef<
           }
         }
 
-        // 수정된 이미지 데이터를 canvas에 그리기
-        ctx.putImageData(imageData, 0, 0);
+        // 좌우 반전 적용... 인데 더 나은 방법 없을까 ㅠㅠ
+        createImageBitmap(imageData).then((imageBitmap) => {
+          console.log(ctx);
+          ctx.scale(-1, 1);
+          ctx.translate(-canvas.width, 0);
+          ctx.drawImage(imageBitmap, 0, 0);
+
+          if (afterDrawRef.current) {
+            ctx.scale(-1, 1);
+            ctx.translate(-canvas.width, 0);
+            afterDrawRef.current(ctx);
+          }
+        });
       }
 
       animationFrameRef.current = requestAnimationFrame(drawFrame);
@@ -123,7 +138,13 @@ export const CameraComponent = React.forwardRef<
     video.onloadedmetadata = () => {
       drawFrame();
     };
-  }, []); // props.filter 의존성 제거
+
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="relative w-full h-full">

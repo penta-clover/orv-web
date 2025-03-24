@@ -40,7 +40,7 @@ function Body() {
       setIsOpen={setIsModalOpen}
       onExitInterview={() => router.replace("/")}
     >
-      <div className="relative w-full h-[100svh] flex flex-col items-center justify-start gap-[42px] mt-[70px]">
+      <div className="relative w-full h-[100%] flex flex-col items-center justify-start gap-[42px] mt-[70px]">
         <Image
           unoptimized
           src="/icons/x.svg"
@@ -54,7 +54,7 @@ function Body() {
         <hr className="border-grayscale-700 border-[0.5px] w-full" />
         <div className="flex flex-col gap-[20px]">
           <div className="relative flex justify-center items-center h-[430px] w-[95vw] lg:w-[1094px] bg-grayscale-900 rounded-[12px] overflow-hidden">
-            <div className="w-full h-full" style={{ transform: "scaleX(-1)" }}>
+            <div className="w-full h-full">
               <CameraComponent ref={canvasRef} filter={filter} />
             </div>
             <div className="absolute top-[16px] left-[16px] text-head4 text-white">

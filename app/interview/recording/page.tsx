@@ -33,6 +33,7 @@ function Body() {
   const filter = searchParams.get("filter")! as Filter;
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [showTip, setShowTip] = useState<boolean>(true);
   const [recording, setRecording] = useState<boolean>(false);
   const [recordedChunks, setRecordedChunks] = useState<Blob[]>([]);
   const [questionContent, setQuestionContent] = useState<
@@ -140,7 +141,7 @@ function Body() {
       setIsOpen={setIsModalOpen}
       onExitInterview={() => router.replace("/")}
     >
-      <div className="relative w-full h-[100svh] flex flex-col items-center justify-start gap-[42px] mt-[70px]">
+      <div className="relative w-full h-[100%] flex flex-col items-center justify-start gap-[42px] mt-[70px]">
         <Image
           unoptimized
           src="/icons/x.svg"
@@ -151,27 +152,39 @@ function Body() {
           className="fixed top-[10px] right-[10px] px-[16px] py-[12px] w-[64px] h-[56px] focus:outline-none cursor-pointer"
         />
         <div className="relative flex justify-center items-center w-[90vw] lg:w-[1200px] bg-grayscale-900 rounded-[12px] overflow-hidden">
-          <div
-            className={cn(aspect === "none" && "hidden", "w-full h-full")}
-            style={{ transform: "scaleX(-1)" }}
-          >
-            <CameraComponent ref={canvasRef} filter={filter} />
-          </div>
-          <div className="absolute bottom-[32px] left-[32px] text-white">
-            <div className="text-head3">{questionContent?.number}번째 질문</div>
-            <div className="text-head2 leading-1 mt-[8px]">
-              {questionContent?.question}
-              <br />
-              {questionContent?.hint}
-            </div>
+          <div className={cn(aspect === "none" && "hidden", "w-full h-full")}>
+            <CameraComponent
+              ref={canvasRef}
+              filter={filter}
+              afterDraw={(ctx) => {
+                if (!canvasRef.current) return;
+                const x = 30;
+                const y = canvasRef.current!.height - 50;
+                const gap = 30;
+
+                ctx.font = "20px 'Pretendard-SemiBold'";
+                ctx.fillStyle = "white";
+                ctx.fillText(
+                  `${questionContent?.number ?? 0}번째 질문`,
+                  x,
+                  y - gap * 2
+                );
+
+                ctx.font = "22px 'Pretendard-SemiBold'";
+                ctx.fillText(questionContent?.question ?? "", x, y - gap);
+                ctx.fillText(questionContent?.hint ?? "", x, y);
+              }}
+            />
           </div>
         </div>
         <div className="fixed bottom-[45px] right-[45px] flex flex-col items-end gap-[10px]">
-          <TipBox
-            tag="Tip!"
-            text="마우스 클릭 혹은 방향키 좌우동작을\n통해 조작하세요!"
-            tagColor="text-main-lilac50"
-          />
+          {showTip && (
+            <TipBox
+              tag="Tip!"
+              text="마우스 클릭 혹은 방향키 좌우동작을\n통해 조작하세요!"
+              tagColor="text-main-lilac50"
+            />
+          )}
           <NextButton
             onClick={() => {
               if (questionContent?.nextSceneId) {
@@ -183,6 +196,7 @@ function Body() {
                 stopRecording();
                 downloadRecording();
               }
+              setShowTip(false);
             }}
             useKeyboardShortcut
           />

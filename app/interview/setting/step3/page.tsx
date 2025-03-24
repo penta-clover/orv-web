@@ -42,7 +42,7 @@ function Body() {
       setIsOpen={setIsModalOpen}
       onExitInterview={() => router.replace("/")}
     >
-      <div className="relative w-full h-[100svh] flex flex-col items-center justify-start gap-[42px] mt-[70px]">
+      <div className="relative w-full h-[100%] flex flex-col items-center justify-start gap-[42px] mt-[70px]">
         <Image
           unoptimized
           src="/icons/x.svg"
@@ -61,7 +61,6 @@ function Body() {
           <AspectPreview
             selected={selectedAspect === "frontal"}
             onClick={() => onAspectClick("frontal")}
-            inverse
           >
             <Image
               src="/images/pose-guide-frontal.png"
@@ -78,7 +77,6 @@ function Body() {
           <AspectPreview
             selected={selectedAspect === "whole"}
             onClick={() => onAspectClick("whole")}
-            inverse
           >
             <Image
               src="/images/pose-guide-whole.png"
@@ -95,7 +93,6 @@ function Body() {
           <AspectPreview
             selected={selectedAspect === "side"}
             onClick={() => onAspectClick("side")}
-            inverse
           >
             <Image
               src="/images/pose-guide-side.png"
@@ -146,17 +143,15 @@ function AspectPreview(props: {
   children: React.ReactNode;
   selected: boolean;
   onClick: () => void;
-  inverse?: boolean;
 }) {
-  const { children, selected, onClick, inverse = false } = props;
+  const { children, selected, onClick } = props;
 
   return (
     <div
       className={cn(
         selected ? "border-main-lilac50" : "border-transparent",
-        "rounded-[12px] overflow-hidden border-[2px] aspect-[16/9] cursor-pointer"
+        "rounded-[12px] overflow-hidden border-[2px] aspect-[16/9] cursor-pointer relative"
       )}
-      style={{ transform: inverse ? "scaleX(-1)" : "scaleX(1)" }}
       onClick={onClick}
     >
       {children}
