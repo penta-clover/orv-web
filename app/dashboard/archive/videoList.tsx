@@ -1,6 +1,4 @@
 import { Video } from "@/domain/model/Video";
-import { useArchiveRepository } from "@/providers/ArchiveRepositoryContext";
-import { useEffect, useState } from "react";
 import Image from "next/image";
 
 

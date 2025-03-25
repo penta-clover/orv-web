@@ -27,10 +27,12 @@ export default function Page() {
       alert("이미 다른 사람이 사용 중인 호칭입니다.");
       return;
     }
+
     if(!validationResult.isValid) {
       alert("호칭이 규칙에 맞지 않습니다.");
       return;
     }
+    
     setValidated(true);
   }
   

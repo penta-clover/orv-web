@@ -77,6 +77,7 @@ export const CameraComponent = React.forwardRef<
 
         const currentFilter = currentFilterRef.current;
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        ctx.filter
         const data = imageData.data;
 
         // 필터가 적용된 경우에만 픽셀 데이터 수정

@@ -13,7 +13,7 @@ export default function Home() {
     if (authToken) {
       redirect("/dashboard/home");
     } else {
-      redirect("/auth/login");
+      redirect("/auth/desktop");
     }
   }, []);
 

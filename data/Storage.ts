@@ -10,4 +10,9 @@ export class Storage {
     if (window === undefined) return;
     return window.localStorage.setItem("authToken", value);
   }
+
+  clearAuthToken() {
+    if (window === undefined) return;
+    return window.localStorage.removeItem("authToken");
+  }
 }

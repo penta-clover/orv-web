@@ -14,7 +14,7 @@ export default function Page() {
 
 function Body() {
   const searchParams = useSearchParams();
-  const videoUrl = searchParams.get("videoUrl")!;
+  const videoId = searchParams.get("videoId")!;
   const router = useRouter();
 
   const today = new Date();
@@ -38,7 +38,7 @@ function Body() {
 
         <div>
           <QRCodeComponent
-            url={`https://www.orv.im/interview/finish/mobile-download?videoUrl=${videoUrl}`}
+            url={`https://www.orv.im/interview/finish/mobile-download?videoId=${videoId}`}
           />
         </div>
 

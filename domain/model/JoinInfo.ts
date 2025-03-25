@@ -1,5 +1,5 @@
 export interface JoinInfo {
   nickname: string;
-  gender: string;
-  birthDay: string;
+  gender: string | null;
+  birthDay: string | null;
 }

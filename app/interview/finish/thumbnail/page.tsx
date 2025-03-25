@@ -111,7 +111,7 @@ function Body() {
                     const videoMetadata: VideoMetadata =
                       await archiveRepository.getVideo(videoId);
                     router.replace(
-                      `/interview/finish/download?videoUrl=${videoMetadata.videoUrl}`
+                      `/interview/finish/download?videoId=${videoMetadata.id}`
                     );
                   })
                   .catch((error: any) => {

@@ -2,11 +2,12 @@ import { Video } from "@/domain/model/Video";
 import { useArchiveRepository } from "@/providers/ArchiveRepositoryContext";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-
+import { useRouter } from "next/navigation";
 
 export default function VideoList() {
   const archiveRepository = useArchiveRepository();
   const [videos, setVideos] = useState<Video[] | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     archiveRepository
@@ -15,11 +16,13 @@ export default function VideoList() {
   }, []);
 
   if (videos === null) {
-    return <div className="flex flex-col">
-      <span className="text-head3 text-grayscale-100 ml-[40px] mb-[12px]">
-        최근
-      </span>
-    </div>
+    return (
+      <div className="flex flex-col">
+        <span className="text-head3 text-grayscale-100 ml-[40px] mb-[12px]">
+          최근
+        </span>
+      </div>
+    );
   }
 
   return (
@@ -56,6 +59,15 @@ export default function VideoList() {
             </div>
           </div>
         ))}
+        <VideoAdditionItem
+          onClick={() => {
+            router.push(
+              `/dashboard/topic?guide-popup=${
+                videos.length === 0 ? "first" : "default"
+              }`
+            );
+          }}
+        />
       </div>
     </div>
   );
@@ -67,4 +79,28 @@ function formatDate(input: string | Date) {
   const month = ("0" + (date.getMonth() + 1)).slice(-2);
   const day = ("0" + date.getDate()).slice(-2);
   return `${year}.${month}.${day}`;
+}
+
+function VideoAdditionItem({ onClick }: { onClick?: () => void }) {
+  return (
+    <div
+      key="video-addition-itme"
+      className="flex flex-col w-[320px] h-[236px]"
+    >
+      <div
+        className="relative w-[320px] h-[180px] mb-[8px] transition-all active:scale-95"
+        onClick={onClick}
+      >
+        <Image
+          unoptimized
+          src="/icons/video-addition-thumbnail.svg"
+          width={320}
+          height={180}
+          alt="video thumbnail"
+          className="w-full h-[180px] rounded-[8.32px]"
+          style={{ objectFit: "cover" }}
+        />
+      </div>
+    </div>
+  );
 }

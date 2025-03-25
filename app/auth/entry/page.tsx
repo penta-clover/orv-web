@@ -16,13 +16,13 @@ function Body() {
 
       const isNewUser = params.get("isNewUser") === "true";
       if (isNewUser) {
-        router.replace("/auth/join/step1");
+        router.replace("/auth/desktop/join");
       } else {
         router.replace("/");
       }
     } else {
       alert("잘못된 요청입니다.");
-      router.replace("/auth/login");
+      router.replace("/auth/desktop");
     }
   });
   

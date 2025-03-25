@@ -6,13 +6,17 @@ import { useMemberRepository } from "@/providers/MemberRepositoryContext";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import ChannelTalkButton from "../components/channelTalkButtonV2";
+import { useStorage } from "@/providers/StorageContext";
 
 export default function Sidebar() {
   const memberRepository: MemberRepository = useMemberRepository();
+  const storage = useStorage();
   const [myInfo, setMyInfo] = useState<MyInfo | null>(null);
-
+  const router = useRouter();
   const pathname = usePathname();
+
   const isActive = (href: string) => pathname.endsWith(`/${href}`);
 
   useEffect(() => {
@@ -48,7 +52,7 @@ export default function Sidebar() {
 
       <div className="flex flex-col gap-[8px] justify-center">
         <Link
-          className={`h-[46px] mx-[16px] px-[18px] py-[10px] rounded-[16px] flex flex-row items-center gap-[14px] transition-all hover:bg-grayscale-800 ${
+          className={`h-[46px] mx-[16px] px-[18px] py-[10px] rounded-[16px] flex flex-row items-center gap-[14px] transition-all hover:bg-grayscale-800 active:scale-95 ${
             isActive("home") ? "bg-grayscale-700" : ""
           }`}
           href={"home"}
@@ -72,7 +76,7 @@ export default function Sidebar() {
           </span>
         </Link>
         <Link
-          className={`h-[46px] mx-[16px] px-[18px] py-[10px] rounded-[16px] flex flex-row items-center gap-[14px] transition-all hover:bg-grayscale-800 ${
+          className={`h-[46px] mx-[16px] px-[18px] py-[10px] rounded-[16px] flex flex-row items-center gap-[14px] transition-all hover:bg-grayscale-800 active:scale-95 ${
             isActive("archive") ? "bg-grayscale-700" : ""
           }`}
           href={"archive"}
@@ -98,7 +102,7 @@ export default function Sidebar() {
           </span>
         </Link>
         <Link
-          className={`h-[46px] mx-[16px] px-[18px] py-[10px] rounded-[16px] flex flex-row items-center gap-[14px] transition-all hover:bg-grayscale-800 ${
+          className={`h-[46px] mx-[16px] px-[18px] py-[10px] rounded-[16px] flex flex-row items-center gap-[14px] transition-all hover:bg-grayscale-800 active:scale-95 ${
             isActive("topic") ? "bg-grayscale-700" : ""
           }`}
           href={"topic"}
@@ -122,7 +126,7 @@ export default function Sidebar() {
           </span>
         </Link>
         <Link
-          className={`h-[46px] mx-[16px] px-[18px] py-[10px] rounded-[16px] flex flex-row items-center gap-[14px] transition-all hover:bg-grayscale-800 ${
+          className={`h-[46px] mx-[16px] px-[18px] py-[10px] rounded-[16px] flex flex-row items-center gap-[14px] transition-all hover:bg-grayscale-800 active:scale-95 ${
             isActive("guide") ? "bg-grayscale-700" : ""
           }`}
           href={"guide"}
@@ -146,7 +150,7 @@ export default function Sidebar() {
           </span>
         </Link>
         <Link
-          className={`h-[46px] mx-[16px] px-[18px] py-[10px] rounded-[16px] flex flex-row items-center gap-[14px] transition-all hover:bg-grayscale-800 ${
+          className={`h-[46px] mx-[16px] px-[18px] py-[10px] rounded-[16px] flex flex-row items-center gap-[14px] transition-all hover:bg-grayscale-800 active:scale-95 ${
             isActive("faq") ? "bg-grayscale-700" : ""
           }`}
           href={"faq"}
@@ -169,6 +173,33 @@ export default function Sidebar() {
             자주 묻는 질문
           </span>
         </Link>
+      </div>
+
+      <div className="absolute bottom-[28px] flex flex-col gap-[8px] justify-center">
+        <ChannelTalkButton className="h-[46px] w-[208px] mx-[16px] px-[18px] py-[10px] rounded-[16px] flex flex-row items-center gap-[14px] no-underline transition-all hover:bg-grayscale-800 active:scale-95">
+          <Image
+            src="/icons/questionmark-grayscale-300.svg"
+            alt="guide book"
+            width={24}
+            height={24}
+          />
+          <span className={"text-head4 text-grayscale-300"}>1:1 문의</span>
+        </ChannelTalkButton>
+        <div
+          className="h-[46px] w-[208px] mx-[16px] px-[18px] py-[10px] rounded-[16px] flex flex-row items-center gap-[14px] transition-all hover:bg-grayscale-800 active:scale-95"
+          onClick={() => {
+            storage.clearAuthToken();
+            router.push("/");
+          }}
+        >
+          <Image
+            src="/icons/logout-grayscale-300.svg"
+            alt="bookmark"
+            width={24}
+            height={24}
+          />
+          <span className="text-head4 text-grayscale-300">로그아웃</span>
+        </div>
       </div>
     </div>
   );

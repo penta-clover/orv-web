@@ -2,9 +2,11 @@
 
 import "@/app/components/blackBody.css";
 import TopicList from "./topicList";
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { usePopup } from "../popup";
+import NewbiewGuidePopup from "../popup/newbieGuidePopup";
+import SelectGuidePopup from "../popup/selectGuidePopup";
 
 export default function Page() {
   return (
@@ -20,10 +22,31 @@ function Body() {
   const { showPopup, hidePopup } = usePopup();
 
   useEffect(() => {
-    if (guidePopupOption === "true") {
-      showPopup(<SelectGuidePopup />);
-    } else {
-      hidePopup();
+    if (guidePopupOption === "first") {
+      showPopup(
+        <NewbiewGuidePopup
+          onClickReservation={() => {
+            showPopup(
+              <FadeOutWrapper onFadeComplete={hidePopup}>
+                <SelectGuidePopup />
+              </FadeOutWrapper>
+            );
+          }}
+          onClickStart={() => {
+            showPopup(
+              <FadeOutWrapper onFadeComplete={hidePopup}>
+                <SelectGuidePopup />
+              </FadeOutWrapper>
+            );
+          }}
+        />
+      );
+    } else if (guidePopupOption === "default") {
+      showPopup(
+        <FadeOutWrapper onFadeComplete={hidePopup}>
+          <SelectGuidePopup />
+        </FadeOutWrapper>
+      );
     }
   }, [guidePopupOption, showPopup, hidePopup]);
 
@@ -40,16 +63,37 @@ function Body() {
   );
 }
 
+function FadeOutWrapper({
+  children,
+  onFadeComplete,
+}: {
+  children: React.ReactNode;
+  onFadeComplete?: () => void;
+}) {
+  const [fadeOut, setFadeOut] = useState(false);
 
-function SelectGuidePopup() {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setFadeOut(true);
+    }, 2500); // 2.5초 후 fade-out 시작
+
+    const completeTimer = setTimeout(() => {
+      if (onFadeComplete) onFadeComplete();
+    }, 3000); // 2.5초 후 시작해서 0.5초 fade-out 후
+
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(completeTimer);
+    };
+  }, [onFadeComplete]);
+
   return (
-    <div className="flex flex-col justify-center items-center gap-[8px] bg-grayscale-800 text-grayscale-200 w-[952px] max-w-[calc(90dvw)] h-[118px] p-[24px] rounded-[16px]">
-      <span className="text-grayscale-50 text-head1">
-        인터뷰 주제를 선택해주세요
-      </span>
-      <span className="text-grayscale-300 text-body2">
-        한번 선택한 주제는 도중에 바꿀 수 없어요
-      </span>
+    <div
+      className={`transition-opacity duration-500 ${
+        fadeOut ? "opacity-0" : "opacity-100"
+      }`}
+    >
+      {children}
     </div>
   );
 }
