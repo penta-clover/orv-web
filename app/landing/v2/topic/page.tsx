@@ -9,13 +9,29 @@ import ActionBar from "./actionBar";
 import "@/app/components/blackBody.css";
 import AutoScroll from "embla-carousel-auto-scroll";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSidebar } from "../sidebarContext";
+import { track } from "@/app/amplitude";
 
 export default function Page() {
   const router = useRouter();
   const { setIsSidebarOpen } = useSidebar()!;
+  const [referralCode, setReferralCode] = useState("");
+
+  // 레퍼럴 코드 쿠키에서 가져오기
+  useEffect(() => {
+    const parseCookies = () => {
+      return document.cookie.split("; ").reduce((cookies: any, cookieStr) => {
+        const [name, ...rest] = cookieStr.split("=");
+        cookies[name] = rest.join("=");
+        return cookies;
+      }, {});
+    };
+
+    const cookies = parseCookies();
+    setReferralCode(cookies["orv-landing-referral"] || "");
+  }, []);
 
   return (
     <div>
@@ -31,7 +47,7 @@ export default function Page() {
 
         <div className="h-[24px]" />
 
-        <PeopleExample />
+        <PeopleExample referralCode={referralCode} />
 
         <div className="h-[48px]" />
 
@@ -45,7 +61,10 @@ export default function Page() {
 
         <div
           className="flex flex-row justify-center items-center bg-gd rounded-[12px] h-[56px] w-[calc(100%-32px)] mx-[16px] text-head4 text-grayscale-800 active:scale-95 transition-all"
-          onClick={() => router.push("/landing/v2/pricing")}
+          onClick={() => {
+            track("click_start_earlybird");
+            router.push("/landing/v2/pricing");
+          }}
         >
           오브 얼리버드 신청하기
         </div>
@@ -54,7 +73,10 @@ export default function Page() {
 
         <div
           className="flex flex-row justify-center items-center bg-main-lilac50 rounded-[12px] h-[56px] w-[calc(100%-32px)] mx-[16px] text-head4 text-grayscale-800 active:scale-95 transition-all"
-          onClick={() => router.push("/landing/v2")}
+          onClick={() => {
+            track("click_introduction_landing")
+            router.push("/landing/v2");
+          }}
         >
           소개 페이지로 돌아가기
         </div>
@@ -78,24 +100,24 @@ function Headline() {
 function PeopleExample(props: { referralCode?: string }) {
   const images: { referral: string; src: string }[] = [
     {
-      referral: "JH",
-      src: "/images/landing-demo-jh.jpg",
-    },
-    {
-      referral: "HJ",
-      src: "/images/landing-demo-hj.jpg",
+      referral: "JS",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-topic-demo-js.jpg",
     },
     {
       referral: "JM",
-      src: "/images/landing-demo-jm.jpg",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-topic-demo-jm.jpg",
     },
     {
-      referral: "JS",
-      src: "/images/landing-demo-js.jpg",
+      referral: "HJ",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-topic-demo-hj.jpg",
     },
     {
       referral: "GA",
-      src: "/images/landing-demo-ga.jpg",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-topic-demo-ga.jpg",
+    },
+    {
+      referral: "ZZ",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-topic-demo-zz.jpg",
     },
   ];
 
@@ -121,14 +143,14 @@ function PeopleExample(props: { referralCode?: string }) {
         {filteredImages.map((image, index) => (
           <CarouselItem
             key={index}
-            className="w-[256px] h-[152px] p-0 mx-[4px] basis-auto"
+            className="w-[270.2px] h-[152px] p-0 mx-[4px] basis-auto"
           >
-            <Image
+            <Image unoptimized 
               src={image.src}
-              width={256}
+              width={270.2}
               height={152}
               alt="card"
-              className="rounded w-[256px] h-[152px]"
+              className="rounded w-[270.2px] h-[152px]"
             />
           </CarouselItem>
         ))}
@@ -152,7 +174,7 @@ function TopicPreview() {
         <>
           나는 어떤 사람으로 기억되고 싶나요?
           <br />
-          유언장에는 어떤 내용을 적을 것인가요?
+          유언장에는 어떤 내용을 적고 싶나요?
         </>
       ),
     },
@@ -160,14 +182,14 @@ function TopicPreview() {
       topic: "가치관",
       description: (
         <>
-          나에게 가장 소중한 가치는 무엇인가요?
+          나에게 가장 소중한 가치는 무엇인지 살펴보며
           <br />
           내가 진정 원하는 것이 무엇인지 알 수 있어요
         </>
       ),
       question: (
         <>
-          당신은 지금 어떤 고민을 갖고 계신가요?
+          현재 가장 큰 고민은 무엇인가요?
           <br />
           가장 자랑스러운 경험은 무엇인가요?
         </>
@@ -177,7 +199,7 @@ function TopicPreview() {
       topic: "감정",
       description: (
         <>
-          나는 언제 어떤 감정을 느끼고 있을까요?
+          나는 언제 어떤 감정을 느끼고 있는지,
           <br />
           내면의 솔직한 목소리에 귀기울여 보아요
         </>
@@ -201,9 +223,9 @@ function TopicPreview() {
       ),
       question: (
         <>
-          자신을 표현하는 한 단어는 무엇인가요?
+          나를 표현하는 한 단어는 무엇인가요?
           <br />
-          나는 다른 사람에게 어떻게 보여지나요?
+          나는 타인에게 어떻게 보여지나요?
         </>
       ),
     },

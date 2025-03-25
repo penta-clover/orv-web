@@ -216,8 +216,8 @@ function Step1(props: { onComplete: () => void }) {
         {isLoadingImage && (
           <div className="w-full h-full bg-grayscale-800 rounded-[8px] animate-pulse-fast" />
         )}
-        <Image
-          src="/images/coupon-daily.svg"
+        <Image unoptimized 
+          src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/coupon-daily.svg"
           alt="coupon-daily"
           fill
           style={{
@@ -330,7 +330,7 @@ function Step2(props: { onRegister: () => void }) {
             );
           }}
         >
-          <Image
+          <Image unoptimized 
             src="/icons/right-arrow.svg"
             alt="right-arrow"
             width={6}
@@ -369,7 +369,7 @@ function Step2(props: { onRegister: () => void }) {
           }`}
         >
           {isLoading ? (
-            <Image
+            <Image unoptimized 
               src="/icons/rolling-spinner.gif"
               width={20}
               height={20}

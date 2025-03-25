@@ -7,7 +7,7 @@ export default function FloatingButton(props: {
   const router = useRouter();
   return (
     <div className="flex flex-col items-center w-full px-[15px]">
-      <Image
+      <Image unoptimized 
         src={"/icons/down-arrow.svg"}
         width={14}
         height={26.09}

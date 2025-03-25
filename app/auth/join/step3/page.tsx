@@ -4,11 +4,13 @@ import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import JoinStep3Presentation, { POLICIES } from "./JoinStep3Presentation"; 
 import { useAuthRepository } from "@/providers/AuthRepositoryContext";
+import { useTermRepository } from "@/providers/TermRepositoryContext";
 
 function Body() {
 	const router = useRouter();
   const params = useSearchParams();
   const authRepository = useAuthRepository();
+  const termRepository = useTermRepository();
   const [checked, setChecked] = useState<string[]>([]);
   
   const essentialPolicies = ["age", "term", "privacy"];
@@ -39,8 +41,15 @@ function Body() {
       router.replace("/auth/login");
       return;
     }
-    
     await authRepository.join({nickname, gender, birthDay});
+  
+    await Promise.all([
+      termRepository.updateTermAgreement("term250301", checked.includes("term")),
+      termRepository.updateTermAgreement("privacy250301", checked.includes("privacy")),
+      termRepository.updateTermAgreement("alarm250301", checked.includes("alarm")),
+      termRepository.updateTermAgreement("enhance250301", checked.includes("enhance")),
+    ]);
+
     alert("회원 가입이 완료되었습니다.");
     router.push("/");
   };

@@ -4,6 +4,7 @@ import ChannelTalkButton from "@/app/components/channelTalkButton";
 import { useSidebar } from "./sidebarContext";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { track } from "@/app/amplitude";
 
 export default function Sidebar() {
   const router = useRouter();
@@ -18,18 +19,18 @@ export default function Sidebar() {
         onClick={() => setIsSidebarOpen(false)}
       />
       <div
-        className={`absolute top-0 right-0 h-full w-[287px] z-40 flex flex-col bg-grayscale-900 transition-transform duration-300 
-      ${isSidebarOpen ? "translate-x-0" : "translate-x-full"}`}
+        className={`fixed top-0 right-0 h-[100vh] w-[287px] z-40 bg-grayscale-900 transition-transform duration-300 
+      ${isSidebarOpen ? "translate-x-0 w-450:right-[calc((100vw-450px)/2)]" : "translate-x-full"}`}
       >
         <div className="flex flex-row justify-between items-center">
-          <Image
+          <Image unoptimized 
             src="/icons/logo.svg"
             width={42}
             height={20}
             alt="logo"
             className="px-[16px] py-[18px] w-[74px] h-[56px]"
           />
-          <Image
+          <Image unoptimized 
             src="/icons/x.svg"
             width={32}
             height={32}
@@ -46,6 +47,7 @@ export default function Sidebar() {
             <li
               className="h-[48px] text-head4 text-grayscale-300 py-[11px] px-[16px]"
               onClick={() => {
+                track("click_ticket_pricing");
                 router.push("/landing/v2/pricing");
                 setIsSidebarOpen(false);
               }}
@@ -55,6 +57,7 @@ export default function Sidebar() {
             <li
               className="h-[48px] text-head4 text-grayscale-300 py-[11px] px-[16px]"
               onClick={() => {
+                track("click_guide_landing");
                 router.push("/landing/v2/guide");
                 setIsSidebarOpen(false);
               }}
@@ -64,6 +67,7 @@ export default function Sidebar() {
             <li
               className="h-[48px] text-head4 text-grayscale-300 py-[11px] px-[16px]"
               onClick={() => {
+                track("click_preview_topic");
                 router.push("/landing/v2/topic");
                 setIsSidebarOpen(false);
               }}
@@ -73,6 +77,7 @@ export default function Sidebar() {
             <li
               className="h-[48px] text-head4 text-grayscale-300 py-[11px] px-[16px]"
               onClick={() => {
+                track("click_brand_story");
                 router.push("/landing/v2/story");
                 setIsSidebarOpen(false);
               }}

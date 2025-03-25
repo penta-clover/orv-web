@@ -10,9 +10,11 @@ export class AuthRepositoryImpl implements AuthRepository {
   
   async validateNickname(nickname: string): Promise<NicknameValidation> {
     const requestPath = `/auth/nicknames?nickname=${encodeURIComponent(nickname)}`;
-    const result = await this.api.get<NicknameValidation>(requestPath);
+    const result = await this.api.get<NicknameValidation>(requestPath, {
+      'Authorization': `Bearer ${this.storage.getAuthToken()}`
+    });
 
-    if (result.statusCode != 200) {
+    if (result.statusCode != '200') {
       throw new Error(result.message);
     }
     return result.data!;
@@ -23,7 +25,7 @@ export class AuthRepositoryImpl implements AuthRepository {
       'Authorization': `Bearer ${this.storage.getAuthToken()}`
     });
 
-    if (result.statusCode != 200) {
+    if (result.statusCode != '200') {
       throw new Error(result.message);
     }
     return result.data!;

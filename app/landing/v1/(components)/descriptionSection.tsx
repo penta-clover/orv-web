@@ -32,7 +32,7 @@ export default function DescriptionSection() {
 
   return (
     <div className="flex flex-col items-center">
-      <Image
+      <Image unoptimized 
         src="/icons/logo-mirror.svg"
         width={54}
         height={16.62}
@@ -124,7 +124,7 @@ export default function DescriptionSection() {
         지금 시작하세요
       </div>
 
-      <Image
+      <Image unoptimized 
         src="/icons/logo-mirror.svg"
         width={54}
         height={16.62}

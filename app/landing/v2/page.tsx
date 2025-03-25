@@ -22,17 +22,19 @@ import PeopleExampleSection from "./(components)/peopleExampleSection";
 import BirthstorySection from "./(components)/birthstorySection";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "./sidebarContext";
+import QRSection from "./(components)/qrSection";
+import GiftSection from "./(components)/giftSection";
 
 export default function Page() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const router = useRouter();
-  const [referral, setReferral] = useState("");
+  const [referralCode, setReferralCode] = useState("");
   const { isSidebarOpen, setIsSidebarOpen } = useSidebar()!;
 
   // 영상 재생 종료 시 화면 아래로 스크롤
   const handleVideoEnd = () => {
-    if (window.scrollY < 50) {
-      window.scrollTo({ top: window.innerHeight, behavior: "smooth" });
+    if (window.scrollY < 30) {
+      window.scrollTo({ top: window.innerHeight - 96, behavior: "smooth" });
     }
   };
 
@@ -65,7 +67,7 @@ export default function Page() {
     };
 
     const cookies = parseCookies();
-    setReferral(cookies["orv-landing-referral"] || "");
+    setReferralCode(cookies["orv-landing-referral"] || "");
   }, []);
 
   // Intersection Observer를 사용하여 영상이 화면에 보일 때 재생, 그렇지 않으면 일시정지
@@ -124,9 +126,23 @@ export default function Page() {
     };
   }, []);
 
+  // 레퍼럴 코드 쿠키에서 가져오기
+  useEffect(() => {
+    const parseCookies = () => {
+      return document.cookie.split("; ").reduce((cookies: any, cookieStr) => {
+        const [name, ...rest] = cookieStr.split("=");
+        cookies[name] = rest.join("=");
+        return cookies;
+      }, {});
+    };
+
+    const cookies = parseCookies();
+    setReferralCode(cookies["orv-landing-referral"] || "");
+  }, []);
+
   return (
     <div className="relative bg-dark">
-      <div className="absolute top-0 w-full z-30">
+      <div className="fixed top-0 left-0 right-0 max-w-[450px] mx-auto z-30 bg-dark">
         <ActionBar
           onClickMenu={() => {
             setIsSidebarOpen(true);
@@ -138,7 +154,7 @@ export default function Page() {
         <HeaderSection videoRef={videoRef} handleVideoEnd={handleVideoEnd} />
 
         <div className="absolute bottom-[60px] flex justify-center">
-          <Image
+          <Image unoptimized 
             src="/icons/down-arrow.svg"
             width={20}
             height={34}
@@ -164,9 +180,14 @@ export default function Page() {
       <CTA
         text="얼리버드 혜택 받고 시작하기"
         onClick={() => {
+          track("click_start_earlybird");
           router.push("/landing/v2/pricing");
         }}
       />
+
+      <div className="h-[100px]" />
+
+      <QRSection referralCode={referralCode} />
 
       <div className="h-[100px]" />
 
@@ -176,7 +197,10 @@ export default function Page() {
 
       <CTA
         text="주제 미리보기"
-        onClick={() => router.push("/landing/v2/topic")}
+        onClick={() => {
+          track("click_preview_topic");
+          router.push("/landing/v2/topic");
+        }}
       />
 
       <div className="h-[100px]" />
@@ -191,7 +215,10 @@ export default function Page() {
 
       <CTA
         text="오브 사용법 알아보기"
-        onClick={() => router.push("/landing/v2/guide")}
+        onClick={() => {
+          track("click_guide_landing");
+          router.push("/landing/v2/guide");
+        }}
       />
 
       <div className="h-[136px]" />
@@ -201,15 +228,20 @@ export default function Page() {
       <div className="h-[36px]" />
 
       <CTA
-        text="티켓 가격 알아보기"
+        text="티켓별 가격 알아보기"
         onClick={() => {
+          track("click_ticket_pricing");
           router.push("/landing/v2/pricing");
         }}
       />
 
       <div className="h-[100px]" />
 
-      <PeopleExampleSection />
+      <GiftSection />
+
+      <div className="h-[100px]" />
+
+      <PeopleExampleSection referralCode={referralCode} />
 
       <div className="h-[100px]" />
 
@@ -220,6 +252,7 @@ export default function Page() {
       <CTA
         text="오브 브랜드 스토리 보러가기"
         onClick={() => {
+          track("click_brand_story");
           router.push("/landing/v2/story");
         }}
       />
@@ -233,8 +266,11 @@ export default function Page() {
       <div className="h-[56px]" />
 
       <CTA
-        text="오브 체험판에서 대답해보기"
-        onClick={() => {}}
+        text="커피 한 잔 가격으로 오브 시작하기"
+        onClick={() => {
+          track("click_start_orv");
+          router.push("/landing/v2/pricing");
+        }}
         className="w-full h-[56px] mx-[16px] text-head3"
       />
 

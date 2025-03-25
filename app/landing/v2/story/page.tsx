@@ -8,6 +8,7 @@ import "@/app/components/blackBody.css";
 import { useEffect, useState } from "react";
 import YouTube, { YouTubeEvent, YouTubePlayer } from "react-youtube";
 import { useSidebar } from "../sidebarContext";
+import { track } from "@/app/amplitude";
 
 export default function Page() {
   const router = useRouter();
@@ -27,15 +28,14 @@ export default function Page() {
 
       <FirstQuestion />
 
-      <div className="h-[48px]" />
-
-      <SecondQuestion />
-
       <div className="h-[72px]" />
 
       <div
         className="flex flex-row justify-center items-center bg-gd rounded-[12px] h-[56px] w-[calc(100%-32px)] mx-[16px] text-head4 text-grayscale-800 active:scale-95 transition-all"
-        onClick={() => router.push("/landing/v2/pricing")}
+        onClick={() => {
+          track("click_start_earlybird");
+          router.push("/landing/v2/pricing");
+        }}
       >
         오브 얼리버드 신청하기
       </div>
@@ -44,7 +44,10 @@ export default function Page() {
 
       <div
         className="flex flex-row justify-center items-center bg-main-lilac50 rounded-[12px] h-[56px] w-[calc(100%-32px)] mx-[16px] text-head4 text-grayscale-800 active:scale-95 transition-all"
-        onClick={() => router.push("/landing/v2")}
+        onClick={() => {
+          track("click_introduction_landing");
+          router.push("/landing/v2");
+        }}
       >
         소개 페이지로 돌아가기
       </div>
@@ -56,16 +59,12 @@ export default function Page() {
 
 function CoverImage() {
   return (
-    <div className="relative w-full h-[294px] overflow-hidden">
-      <Image
-        src="/images/writing-hand.png"
+    <div className="relative w-full h-auto aspect-[375/294] overflow-hidden">
+      <Image unoptimized 
+        src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/writing-hand.jpg"
         fill
         alt="cover image"
-        style={{
-          objectFit: "cover",
-          objectPosition: "center",
-        }}
-        className="w-full h-full"
+        className="w-full h-auto"
       />
 
       <div className="absolute bottom-[27px] mx-[16px] text-head3 text-grayscale-200 break-words">
@@ -104,20 +103,9 @@ function FirstQuestion() {
             opts={{
               width: "100%",
               height: "100%",
-              playerVars: {
-                autoplay: 1,
-              },
             }}
             onReady={onReady}
             className="w-full h-full"
-          />
-          <Image
-            src={"/images/billie-interview-thumbnail.png"}
-            fill
-            alt="Billie interview thumbnail"
-            className="w-full h-full"
-            hidden={isPlaying}
-            onClick={() => setIsPlaying(true)}
           />
         </div>
       </div>
@@ -147,6 +135,12 @@ function FirstQuestion() {
             대신해주지 않아요. 그래서 나한테 질문을 던지는 인터뷰 포맷으로
             사람들이 스스로를 마주하는 것을 도와주려고요! 오브는 그렇게
             시작되었답니다ㅎㅎ
+          </div>
+
+          <div className="text-body2 text-grayscale-400 break-words">
+            오브를 꼭 추천 드려요. 이번 기회를 놓치면 스스로를 알아볼 기회는
+            아마 영영 없을 거거든요. 지금 눈 딱 감고 한번 나 스스로를 인터뷰
+            해보세요! 기다리고 있을게요ㅎㅎ
           </div>
         </div>
       </div>

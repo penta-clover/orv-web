@@ -6,7 +6,6 @@ import * as ChannelService from "@channel.io/channel-web-sdk-loader";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Providers from "./providers";
 import Analytics from "./analytics";
-import Script from "next/script";
 
 export default function RootLayout({
   children,
@@ -26,12 +25,12 @@ export default function RootLayout({
           property="og:description"
           content="나를 마주할 기회를 선물하는 곳"
         />
-        <meta property="og:image" content="/images/orv-og-thumbnail.jpeg" />
+        <meta property="og:image" content="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/orv-og-thumbnail.jpeg" />
         <meta property="og:url" content="www.orv.im" />
-      </head>
-      <body className={`antialiased hide-scrollbar safe-area font-pretendard`}>
-        <Analytics />
-        <SpeedInsights />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        />
 
         <link
           rel="stylesheet"
@@ -39,6 +38,10 @@ export default function RootLayout({
           crossOrigin="anonymous"
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
         />
+      </head>
+      <body className={`antialiased hide-scrollbar safe-area font-pretendard`}>
+        <Analytics />
+        <SpeedInsights />
 
         <Providers>{children}</Providers>
       </body>

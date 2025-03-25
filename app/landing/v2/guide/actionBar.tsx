@@ -10,7 +10,7 @@ export default function ActionBar(props: {
   return (
     <div className="flex flex-row items-center justify-between h-[56px] w-full">
       <div className="h-[56px] w-[64px] flex items-center justify-center">
-        <Image
+        <Image unoptimized 
           src="/icons/left-arrow.svg"
           width={32}
           height={32}
@@ -24,7 +24,7 @@ export default function ActionBar(props: {
       </div>
 
       <div className="h-[56px] w-[64px] flex items-center justify-center">
-        <Image
+        <Image unoptimized 
           src="/icons/hamburger.svg"
           width={32}
           height={32}
