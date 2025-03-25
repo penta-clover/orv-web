@@ -7,6 +7,8 @@ import ExitInterviewModal from "../../../(components)/exitInterviewModal";
 import StatusBar from "../../../(components)/statusBar";
 import { CameraComponent } from "@/app/interview/(components)/cameraComponent";
 import { Suspense } from "react";
+import PrevButton from "@/app/interview/(components)/prevButton";
+import NextButton from "@/app/interview/(components)/nextButton";
 
 export default function Page() {
   return (
@@ -61,18 +63,21 @@ function Body() {
             </div>
           </div>
         </div>
-        <button
-          className="fixed bottom-[45px] px-[24px] py-[14px] bg-main-lilac50 text-head3 rounded-[10px] transition-all active:scale-95 flex flex-row items-center gap-[5px]"
+
+        <PrevButton
+          className="fixed bottom-[45px] left-[45px]"
+          onClick={() =>
+            router.replace(
+              `/interview/setting/step3?storyboardId=${storyboardId}`
+            )
+          }
+          useKeyboardShortcut
+        />
+        <NextButton
+          className="fixed bottom-[45px] right-[45px]"
           onClick={onNextButtonClick}
-        >
-          <Image
-            src="/icons/circle-check.svg"
-            alt="circle-check"
-            width={24}
-            height={24}
-          />
-          확인했어요
-        </button>
+          useKeyboardShortcut
+        />
       </div>
     </ExitInterviewModal>
   );
