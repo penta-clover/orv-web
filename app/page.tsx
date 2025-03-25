@@ -1,8 +1,21 @@
-'use client';
+"use client";
 
+import { useAuthRepository } from "@/providers/AuthRepositoryContext";
 import { redirect } from "next/navigation";
+import { useEffect } from "react";
 
-// https://api.orv.im/docs/index.html
 export default function Home() {
-  redirect("/landing/v3");
+  const authRepository = useAuthRepository();
+
+  useEffect(() => {
+    const authToken = authRepository.getAuthToken();
+
+    if (authToken) {
+      redirect("/dashboard/home");
+    } else {
+      redirect("/auth/login");
+    }
+  }, []);
+
+  return null;
 }
