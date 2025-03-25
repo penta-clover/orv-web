@@ -1,3 +1,4 @@
+import { Video } from "../model/Video";
 import { VideoMetadata } from "../model/VideoMetadata";
 
 
@@ -9,4 +10,6 @@ export interface ArchiveRepository {
   renameVideo(videoId: string, title: string): Promise<void>;
 
   updateThumbnail(videoId: string, capturedImage: Blob): Promise<void>;
+
+  getMyVideos(): Promise<Video[]>;
 }

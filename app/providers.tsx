@@ -4,8 +4,11 @@ import { AuthRepositoryProvider } from "@/providers/AuthRepositoryContext";
 import { EarlybirdRepositoryProvider } from "@/providers/EarlybirdRepositoryContext";
 import { FirebaseProvider } from "@/providers/FirebaseContext";
 import { MemberRepositoryProvider } from "@/providers/MemberRepositoryContext";
+import { ReservationRepositoryProvider } from "@/providers/ReservationRepositoryContext";
 import { StorageProvider } from "@/providers/StorageContext";
+import { StoryboardRepositoryProvider } from "@/providers/StoryboardRepositoryContext";
 import { TermRepositoryProvider } from "@/providers/TermRepositoryContext";
+import { TopicRepositoryProvider } from "@/providers/TopicRepositoryContext";
 import { ReactNode } from "react";
 
 export default function Providers({ children }: { children: ReactNode }) {
@@ -18,7 +21,13 @@ export default function Providers({ children }: { children: ReactNode }) {
               <ArchiveRepositoryProvider>
                 <MemberRepositoryProvider>
                   <TermRepositoryProvider>
-                    {children}
+                    <TopicRepositoryProvider>
+                      <StoryboardRepositoryProvider>
+                        <ReservationRepositoryProvider>
+                          {children}
+                        </ReservationRepositoryProvider>
+                      </StoryboardRepositoryProvider>
+                    </TopicRepositoryProvider>
                   </TermRepositoryProvider>
                 </MemberRepositoryProvider>
               </ArchiveRepositoryProvider>

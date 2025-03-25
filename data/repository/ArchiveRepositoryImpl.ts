@@ -3,6 +3,7 @@ import { ArchiveRepository } from "@/domain/repository/ArchiveRepository";
 import { Api } from "../Api";
 import { ApiResult } from "../ApiResult";
 import { Storage } from "../Storage";
+import { Video } from "@/domain/model/Video";
 
 export class ArchiveRepositoryImpl implements ArchiveRepository {
   constructor(private api: Api, private storage: Storage) {}
@@ -76,5 +77,22 @@ export class ArchiveRepositoryImpl implements ArchiveRepository {
     if (result.statusCode !== "200") {
       throw new Error(result.message);
     }
+  }
+
+  async getMyVideos(): Promise<Video[]> {
+    const requestPath = `/archive/videos/my`;
+
+    const result: ApiResult<Video[]> = await this.api.get<Video[]>(
+      requestPath,
+      {
+        Authorization: `Bearer ${this.storage.getAuthToken()}`,
+      }
+    );
+
+    if (result.statusCode !== "200") {
+      throw new Error(result.message);
+    }
+
+    return result.data!;
   }
 }
