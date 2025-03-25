@@ -11,9 +11,11 @@ import { CameraComponent } from "../../(components)/cameraComponent";
 import { cn } from "@/lib/utils";
 
 export default function Page() {
-  <Suspense>
-    <Body />
-  </Suspense>;
+  return (
+    <Suspense>
+      <Body />
+    </Suspense>
+  );
 }
 
 function Body() {
@@ -22,15 +24,15 @@ function Body() {
 
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [selectedAspect, setSelectedAspect] = useState<string>("frontal");
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const [selectedAspect, setSelectedAspect] = useState<Aspect>("frontal");
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const onAspectClick = (aspect: string) => {
+  const onAspectClick = (aspect: Aspect) => {
     setSelectedAspect(aspect);
   };
 
   const onNextButtonClick = () =>
-    router.push(
+    router.replace(
       `/interview/setting/step3/preview?storyboardId=${storyboardId}&aspect=${selectedAspect}`
     );
 
@@ -38,9 +40,9 @@ function Body() {
     <ExitInterviewModal
       isOpen={isModalOpen}
       setIsOpen={setIsModalOpen}
-      onExitInterview={() => router.push("/")}
+      onExitInterview={() => router.replace("/")}
     >
-      <div className="relative w-full h-[100svh] flex flex-col items-center justify-start gap-[42px] mt-[70px]">
+      <div className="relative w-full h-[100%] flex flex-col items-center justify-start gap-[42px] mt-[70px]">
         <Image
           unoptimized
           src="/icons/x.svg"
@@ -59,7 +61,6 @@ function Body() {
           <AspectPreview
             selected={selectedAspect === "frontal"}
             onClick={() => onAspectClick("frontal")}
-            inverse
           >
             <Image
               src="/images/pose-guide-frontal.png"
@@ -70,13 +71,12 @@ function Body() {
               draggable={false}
             />
             <div className="absolute top-0 left-0 w-full h-full">
-              <CameraComponent ref={videoRef} />
+              <CameraComponent ref={canvasRef} />
             </div>
           </AspectPreview>
           <AspectPreview
             selected={selectedAspect === "whole"}
             onClick={() => onAspectClick("whole")}
-            inverse
           >
             <Image
               src="/images/pose-guide-whole.png"
@@ -87,13 +87,12 @@ function Body() {
               draggable={false}
             />
             <div className="absolute top-0 left-0 w-full h-full">
-              <CameraComponent ref={videoRef} />
+              <CameraComponent ref={canvasRef} />
             </div>
           </AspectPreview>
           <AspectPreview
             selected={selectedAspect === "side"}
             onClick={() => onAspectClick("side")}
-            inverse
           >
             <Image
               src="/images/pose-guide-side.png"
@@ -104,7 +103,7 @@ function Body() {
               draggable={false}
             />
             <div className="absolute top-0 left-0 w-full h-full">
-              <CameraComponent ref={videoRef} />
+              <CameraComponent ref={canvasRef} />
             </div>
           </AspectPreview>
           <AspectPreview
@@ -123,7 +122,11 @@ function Body() {
         </div>
         <PrevButton
           className="fixed bottom-[45px] left-[45px]"
-          onClick={() => router.back()}
+          onClick={() =>
+            router.replace(
+              `/interview/setting/step2?storyboardId=${storyboardId}`
+            )
+          }
           useKeyboardShortcut
         />
         <NextButton
@@ -140,17 +143,15 @@ function AspectPreview(props: {
   children: React.ReactNode;
   selected: boolean;
   onClick: () => void;
-  inverse?: boolean;
 }) {
-  const { children, selected, onClick, inverse = false } = props;
+  const { children, selected, onClick } = props;
 
   return (
     <div
       className={cn(
         selected ? "border-main-lilac50" : "border-transparent",
-        "rounded-[12px] overflow-hidden border-[2px] aspect-[16/9] cursor-pointer"
+        "rounded-[12px] overflow-hidden border-[2px] aspect-[16/9] cursor-pointer relative"
       )}
-      style={{ transform: inverse ? "scaleX(-1)" : "scaleX(1)" }}
       onClick={onClick}
     >
       {children}

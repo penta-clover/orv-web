@@ -1,52 +1,109 @@
 "use client";
 
 import "@/app/components/blackBody.css";
+import Image from "next/image";
 import { CameraComponent } from "../(components)/cameraComponent";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { cn } from "@/lib/utils";
+import ExitInterviewModal from "../(components)/exitInterviewModal";
+import { useStoryboardRepository } from "@/providers/StoryboardRepositoryContext";
+import TipBox from "../(components)/tipBox";
+import NextButton from "../(components)/nextButton";
 
+interface QuestionContent {
+  number: number;
+  question: string;
+  hint: string;
+  nextSceneId: string;
+}
 
 export default function Page() {
-  return <Suspense>
-    <Body />
-  </Suspense>
+  return (
+    <Suspense>
+      <Body />
+    </Suspense>
+  );
 }
 
 function Body() {
   const searchParams = useSearchParams();
   const storyboardId = searchParams.get("storyboardId")!;
+  const aspect = searchParams.get("aspect")!;
+  const filter = searchParams.get("filter")! as Filter;
+
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [showTip, setShowTip] = useState<boolean>(true);
   const [recording, setRecording] = useState<boolean>(false);
   const [recordedChunks, setRecordedChunks] = useState<Blob[]>([]);
+  const [questionContent, setQuestionContent] = useState<
+    QuestionContent | undefined
+  >(undefined);
+
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const startTimeRef = useRef<number>(0);
   const router = useRouter();
 
-  const startTimeRef = useRef<number>(0);
+  const storyboardRepository = useStoryboardRepository();
+  const RECORDING_FPS = 24; // 녹화 프레임 레이트 설정
 
   useEffect(() => {
+    storyboardRepository.getStoryboardInfo(storyboardId).then((storyboard) => {
+      storyboardRepository
+        .getSceneInfo(storyboard.startSceneId)
+        .then((scene) => {
+          loadQuestion(scene.id, 1);
+        });
+    });
+
     // 컴포넌트가 마운트될 때 인터뷰 시작 시간 기록
     startTimeRef.current = Date.now();
+    startRecording(); // 녹화 시작
   }, []);
+
+  // 질문 불러오기
+  const loadQuestion = (sceneId: string, number: number) => {
+    storyboardRepository.getSceneInfo(sceneId).then((scene) => {
+      if (scene.sceneType !== "END") {
+        setQuestionContent({ ...scene.content, number: number });
+      } else {
+        stopRecording();
+        downloadRecording();
+      }
+    });
+  };
 
   // 녹화 시작 함수
   const startRecording = () => {
-    if (!videoRef.current) return;
-    // video의 srcObject에 할당된 stream을 가져옵니다.
-    const stream = videoRef.current.srcObject as MediaStream;
-    if (!stream) return;
+    if (!canvasRef.current) return;
 
     try {
-      const recorder = new MediaRecorder(stream, {
-        mimeType: "video/webm; codecs=vp9,opus",
-      });
-      mediaRecorderRef.current = recorder;
-      recorder.ondataavailable = (event) => {
-        if (event.data && event.data.size > 0) {
-          setRecordedChunks((prev) => [...prev, event.data]);
-        }
-      };
-      recorder.start();
-      setRecording(true);
+      // canvas의 스트림을 가져옵니다
+      const stream = canvasRef.current.captureStream(RECORDING_FPS); // 설정된 FPS로 캡처
+
+      // 오디오 트랙 추가
+      navigator.mediaDevices
+        .getUserMedia({ audio: true })
+        .then((audioStream) => {
+          const audioTrack = audioStream.getAudioTracks()[0];
+          stream.addTrack(audioTrack);
+
+          const recorder = new MediaRecorder(stream, {
+            mimeType: "video/webm; codecs=vp9,opus",
+          });
+          mediaRecorderRef.current = recorder;
+          recorder.ondataavailable = (event) => {
+            if (event.data && event.data.size > 0) {
+              setRecordedChunks((prev) => [...prev, event.data]);
+            }
+          };
+          recorder.start();
+          setRecording(true);
+        })
+        .catch((error) => {
+          console.error("오디오 스트림 가져오기 실패:", error);
+        });
     } catch (error) {
       console.error("녹화 시작 에러:", error);
     }
@@ -79,39 +136,72 @@ function Body() {
   };
 
   return (
-    <div className="flex flex-col items-center">
-      {/* 카메라 영역 */}
-      <div className="relative inset-y-0">
-        <div style={{ transform: "scaleX(-1)" }}>
-          <CameraComponent ref={videoRef} />
+    <ExitInterviewModal
+      isOpen={isModalOpen}
+      setIsOpen={setIsModalOpen}
+      onExitInterview={() => router.replace("/")}
+    >
+      <div className="relative w-full h-[100%] flex flex-col items-center justify-start gap-[42px] mt-[70px]">
+        <Image
+          unoptimized
+          src="/icons/x.svg"
+          width={32}
+          height={32}
+          alt="close"
+          onClick={() => setIsModalOpen(true)}
+          className="fixed top-[10px] right-[10px] px-[16px] py-[12px] w-[64px] h-[56px] focus:outline-none cursor-pointer"
+        />
+        <div className="relative flex justify-center items-center w-[90vw] lg:w-[1200px] bg-grayscale-900 rounded-[12px] overflow-hidden">
+          <div className={cn(aspect === "none" && "hidden", "w-full h-full")}>
+            <CameraComponent
+              ref={canvasRef}
+              filter={filter}
+              afterDraw={(ctx) => {
+                if (!canvasRef.current) return;
+                const x = 30;
+                const y = canvasRef.current!.height - 50;
+                const gap = 30;
+
+                ctx.font = "20px 'Pretendard-SemiBold'";
+                ctx.fillStyle = "white";
+                ctx.fillText(
+                  `${questionContent?.number ?? 0}번째 질문`,
+                  x,
+                  y - gap * 2
+                );
+
+                ctx.font = "22px 'Pretendard-SemiBold'";
+                ctx.fillText(questionContent?.question ?? "", x, y - gap);
+                ctx.fillText(questionContent?.hint ?? "", x, y);
+              }}
+            />
+          </div>
+        </div>
+        <div className="fixed bottom-[45px] right-[45px] flex flex-col items-end gap-[10px]">
+          {showTip && (
+            <TipBox
+              tag="Tip!"
+              text="마우스 클릭 혹은 방향키 좌우동작을\n통해 조작하세요!"
+              tagColor="text-main-lilac50"
+            />
+          )}
+          <NextButton
+            onClick={() => {
+              if (questionContent?.nextSceneId) {
+                loadQuestion(
+                  questionContent!.nextSceneId,
+                  questionContent!.number + 1
+                );
+              } else {
+                stopRecording();
+                downloadRecording();
+              }
+              setShowTip(false);
+            }}
+            useKeyboardShortcut
+          />
         </div>
       </div>
-
-      {/* (개발용) 녹화 관련 버튼 영역 */}
-      <div className="absolute bottom-20 left-4 flex gap-2">
-        {!recording ? (
-          <button
-            className="bg-green-500 text-white rounded px-4 py-2"
-            onClick={startRecording}
-          >
-            녹화 시작
-          </button>
-        ) : (
-          <button
-            className="bg-red-500 text-white rounded px-4 py-2"
-            onClick={stopRecording}
-          >
-            녹화 중지
-          </button>
-        )}
-        <button
-          className="bg-blue-500 text-white rounded px-4 py-2"
-          onClick={downloadRecording}
-          disabled={recordedChunks.length === 0}
-        >
-          파일 다운로드
-        </button>
-      </div>
-    </div>
+    </ExitInterviewModal>
   );
 }

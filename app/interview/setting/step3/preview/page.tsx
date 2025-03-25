@@ -1,19 +1,19 @@
 "use client";
 import "@/app/components/blackBody.css";
 import Image from "next/image";
-import NextButton from "../../../(components)/nextButton";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useRef, useState } from "react";
 import ExitInterviewModal from "../../../(components)/exitInterviewModal";
-import PrevButton from "../../../(components)/prevButton";
 import StatusBar from "../../../(components)/statusBar";
 import { CameraComponent } from "@/app/interview/(components)/cameraComponent";
 import { Suspense } from "react";
 
 export default function Page() {
-  <Suspense>
-    <Body />
-  </Suspense>;
+  return (
+    <Suspense>
+      <Body />
+    </Suspense>
+  );
 }
 
 function Body() {
@@ -23,10 +23,10 @@ function Body() {
 
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const onNextButtonClick = () =>
-    router.push(
+    router.replace(
       `/interview/setting/step4?storyboardId=${storyboardId}&aspect=${aspect}`
     );
 
@@ -34,9 +34,9 @@ function Body() {
     <ExitInterviewModal
       isOpen={isModalOpen}
       setIsOpen={setIsModalOpen}
-      onExitInterview={() => router.push("/")}
+      onExitInterview={() => router.replace("/")}
     >
-      <div className="relative w-full h-[100svh] flex flex-col items-center justify-start gap-[42px] mt-[70px]">
+      <div className="relative w-full h-[100%] flex flex-col items-center justify-start gap-[42px] mt-[70px]">
         <Image
           unoptimized
           src="/icons/x.svg"
@@ -49,15 +49,15 @@ function Body() {
         <StatusBar currentStep={3} />
         <hr className="border-grayscale-700 border-[0.5px] w-full" />
         <div className="relative flex justify-center items-center h-[476px] w-[1094px] bg-grayscale-900 rounded-[12px] overflow-hidden">
-          <div className="w-full h-full" style={{ transform: "scaleX(-1)" }}>
-            <CameraComponent ref={videoRef} />
+          <div className="w-full h-full">
+            <CameraComponent ref={canvasRef} />
           </div>
           <div className="absolute bottom-[32px] left-[32px] text-white">
             <div className="text-head3">질문 순서표시</div>
             <div className="text-head2 leading-1 mt-[8px]">
-              “여기는 질문 내용이 들어갈 곳입니다. 이런 식으로 나와요”
+              "여기는 질문 내용이 들어갈 곳입니다. 이런 식으로 나와요"
               <br />
-              “여기는 질문에 대한 추가 질문 및 힌트가 있을 곳 입니다”
+              "여기는 질문에 대한 추가 질문 및 힌트가 있을 곳 입니다"
             </div>
           </div>
         </div>

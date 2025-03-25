@@ -21,16 +21,7 @@ export default function Page() {
       <div className="h-[48px]" />
 
       <div className="h-[280px] w-full">
-        <TopicList
-          onClickTopic={(topic: Topic) => {
-            return showPopup(
-              <TopicPreviewPopup
-                topic={topic}
-                onClickClose={() => hidePopup()}
-              />
-            );
-          }}
-        />
+        <TopicList />
       </div>
     </div>
   );

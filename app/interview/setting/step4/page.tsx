@@ -12,9 +12,11 @@ import TipBox from "../../(components)/tipBox";
 import { cn } from "@/lib/utils";
 
 export default function Page() {
-  <Suspense>
-    <Body />
-  </Suspense>;
+  return (
+    <Suspense>
+      <Body />
+    </Suspense>
+  );
 }
 
 function Body() {
@@ -24,21 +26,21 @@ function Body() {
 
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [filter, setFilter] = useState<string>("default");
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const [filter, setFilter] = useState<Filter>("default");
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const onNextButtonClick = () =>
-    router.push(
-      `/interview/recording?storyboardId=${storyboardId}&aspect=${aspect}&filter=${filter}`
+    router.replace(
+      `/interview/setting/ready?storyboardId=${storyboardId}&aspect=${aspect}&filter=${filter}`
     );
 
   return (
     <ExitInterviewModal
       isOpen={isModalOpen}
       setIsOpen={setIsModalOpen}
-      onExitInterview={() => router.push("/")}
+      onExitInterview={() => router.replace("/")}
     >
-      <div className="relative w-full h-[100svh] flex flex-col items-center justify-start gap-[42px] mt-[70px]">
+      <div className="relative w-full h-[100%] flex flex-col items-center justify-start gap-[42px] mt-[70px]">
         <Image
           unoptimized
           src="/icons/x.svg"
@@ -51,9 +53,9 @@ function Body() {
         <StatusBar currentStep={4} />
         <hr className="border-grayscale-700 border-[0.5px] w-full" />
         <div className="flex flex-col gap-[20px]">
-          <div className="relative flex justify-center items-center h-[430px] w-[1094px] bg-grayscale-900 rounded-[12px] overflow-hidden">
-            <div className="w-full h-full" style={{ transform: "scaleX(-1)" }}>
-              <CameraComponent ref={videoRef} />
+          <div className="relative flex justify-center items-center h-[430px] w-[95vw] lg:w-[1094px] bg-grayscale-900 rounded-[12px] overflow-hidden">
+            <div className="w-full h-full">
+              <CameraComponent ref={canvasRef} filter={filter} />
             </div>
             <div className="absolute top-[16px] left-[16px] text-head4 text-white">
               필터 미리보기
@@ -104,7 +106,11 @@ function Body() {
         </div>
         <PrevButton
           className="fixed bottom-[45px] left-[45px]"
-          onClick={() => router.back()}
+          onClick={() =>
+            router.replace(
+              `/interview/setting/step3?storyboardId=${storyboardId}&aspect=${aspect}`
+            )
+          }
           useKeyboardShortcut
         />
         <div className="fixed bottom-[45px] right-[45px] flex flex-col items-end gap-[10px]">

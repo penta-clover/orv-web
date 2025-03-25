@@ -11,9 +11,11 @@ import StatusBar from "../../(components)/statusBar";
 import { Suspense } from "react";
 
 export default function Page() {
-  <Suspense>
-    <Body />
-  </Suspense>;
+  return (
+    <Suspense>
+      <Body />
+    </Suspense>
+  );
 }
 
 function Body() {
@@ -26,7 +28,7 @@ function Body() {
 
   const onNextButtonClick = () => {
     if (ready) {
-      router.push(`/interview/setting/step2?storyboardId=${storyboardId}`);
+      router.replace(`/interview/setting/step2?storyboardId=${storyboardId}`);
     } else {
       //TODO: 체크박스 누르라고 하기
     }
@@ -36,9 +38,9 @@ function Body() {
     <ExitInterviewModal
       isOpen={isModalOpen}
       setIsOpen={setIsModalOpen}
-      onExitInterview={() => router.push("/")}
+      onExitInterview={() => router.replace("/")}
     >
-      <div className="relative w-full h-[100svh] flex flex-col items-center justify-start gap-[42px] mt-[70px]">
+      <div className="relative w-full h-[100%] flex flex-col items-center justify-start gap-[42px] mt-[70px]">
         <Image
           unoptimized
           src="/icons/x.svg"

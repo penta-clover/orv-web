@@ -9,9 +9,11 @@ import { Suspense, useState } from "react";
 import ExitInterviewModal from "../(components)/exitInterviewModal";
 
 export default function Page() {
-  <Suspense>
-    <Body />
-  </Suspense>;
+  return (
+    <Suspense>
+      <Body />
+    </Suspense>
+  );
 }
 
 function Body() {
@@ -34,9 +36,9 @@ function Body() {
     <ExitInterviewModal
       isOpen={isModalOpen}
       setIsOpen={setIsModalOpen}
-      onExitInterview={() => router.push("/")}
+      onExitInterview={() => router.replace("/")}
     >
-      <div className="relative w-full h-[100svh] flex flex-col items-center justify-center gap-[36px]">
+      <div className="relative w-full h-[100vh] flex flex-col items-center justify-center gap-[36px]">
         <Image
           unoptimized
           src="/icons/x.svg"
