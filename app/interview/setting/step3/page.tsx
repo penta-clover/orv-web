@@ -153,6 +153,7 @@ function AspectPreview(props: {
         "rounded-[12px] overflow-hidden border-[2px] aspect-[16/9] cursor-pointer relative"
       )}
       onClick={onClick}
+      style={{ transform: "scaleX(-1)" }}
     >
       {children}
     </div>

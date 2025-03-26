@@ -5,21 +5,21 @@ import React, { useEffect, useImperativeHandle, useRef } from "react";
 interface CameraComponentProps {
   filter?: Filter;
   afterDraw?: (ctx: CanvasRenderingContext2D) => void;
-  test?: string;
 }
 
-// CameraComponent를 forwardRef로 감싸서 외부에서 video 엘리먼트를 참조할 수 있도록 합니다.
+// CameraComponent를 forwardRef로 감싸서 외부에서 canvas 엘리먼트를 참조할 수 있도록 합니다.
 export const CameraComponent = React.forwardRef<
   HTMLCanvasElement,
   CameraComponentProps
 >((props, ref) => {
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const previewRef = useRef<HTMLCanvasElement>(null);
   const animationFrameRef = useRef<number | undefined>(undefined);
   const currentFilterRef = useRef<Filter | undefined>(props.filter);
   const afterDrawRef = useRef<
     ((ctx: CanvasRenderingContext2D) => void) | undefined
-  >(props.afterDraw); // 일단 ref로 하니까 되긴 하는데, 저장하는 양이 커서 좀 더 좋은 방법 찾아야 함
+  >(props.afterDraw);
 
   useImperativeHandle(ref, () => canvasRef.current as HTMLCanvasElement);
 
@@ -61,23 +61,26 @@ export const CameraComponent = React.forwardRef<
   useEffect(() => {
     const video = localVideoRef.current;
     const canvas = canvasRef.current;
-    const ctx = canvas?.getContext("2d", { willReadFrequently: true });
+    const preview = previewRef.current;
 
-    if (!video || !canvas || !ctx) return;
+    // willReadFrequently가 들어가면 GPU가 아닌 CPU에서 렌더링을 하는데,
+    // 그러면 fetch가 우선 순위에 밀려서 딜레이가 생기므로 켜지 않음
+    const ctx = canvas?.getContext("2d");
+    const previewCtx = preview?.getContext("2d");
 
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = "high";
+    if (!video || !canvas || !ctx || !preview || !previewCtx) return;
 
     const drawFrame = () => {
       if (video.readyState === video.HAVE_ENOUGH_DATA) {
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
+        preview.width = video.videoWidth;
+        preview.height = video.videoHeight;
 
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
         const currentFilter = currentFilterRef.current;
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        ctx.filter
         const data = imageData.data;
 
         // 필터가 적용된 경우에만 픽셀 데이터 수정
@@ -87,7 +90,6 @@ export const CameraComponent = React.forwardRef<
             const g = data[i + 1];
             const b = data[i + 2];
 
-            // 얘 밖으로 빼니까 확실히 딜레이가 느껴져서, 더럽지만 여기다가 작성함..
             switch (currentFilter) {
               case "grayscale":
                 const gray = (r + g + b) / 3;
@@ -117,19 +119,13 @@ export const CameraComponent = React.forwardRef<
           }
         }
 
-        // 좌우 반전 적용... 인데 더 나은 방법 없을까 ㅠㅠ
-        createImageBitmap(imageData).then((imageBitmap) => {
-          console.log(ctx);
-          ctx.scale(-1, 1);
-          ctx.translate(-canvas.width, 0);
-          ctx.drawImage(imageBitmap, 0, 0);
+        // 수정된 이미지 데이터를 canvas에 그리기
+        ctx.putImageData(imageData, 0, 0);
+        previewCtx.putImageData(imageData, 0, 0);
 
-          if (afterDrawRef.current) {
-            ctx.scale(-1, 1);
-            ctx.translate(-canvas.width, 0);
-            afterDrawRef.current(ctx);
-          }
-        });
+        if (afterDrawRef.current) {
+          afterDrawRef.current(ctx);
+        }
       }
 
       animationFrameRef.current = requestAnimationFrame(drawFrame);
@@ -164,6 +160,16 @@ export const CameraComponent = React.forwardRef<
       />
       <canvas
         ref={canvasRef}
+        style={{
+          width: "0",
+          height: "0",
+          position: "absolute",
+          opacity: "0",
+          pointerEvents: "none",
+        }}
+      />
+      <canvas
+        ref={previewRef}
         style={{
           width: "100%",
           aspectRatio: "16/9",
