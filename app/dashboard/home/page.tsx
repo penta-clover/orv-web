@@ -4,8 +4,7 @@ import "@/app/components/blackBody.css";
 import VideoList from "./videoList";
 import TopicList from "./topicList";
 import { usePopup } from "../popup";
-import { Topic } from "@/domain/model/Topic";
-import TopicPreviewPopup from "../popup/topicPreviewPopup";
+import ReservationNotification from "./reservationNotification";
 
 export default function Page() {
   const { showPopup, hidePopup } = usePopup();
@@ -22,6 +21,12 @@ export default function Page() {
 
       <div className="h-[280px] w-full">
         <TopicList />
+      </div>
+
+      <div className="h-[104px]" />
+
+      <div className="fixed bottom-[48px] left-[280px]">
+        <ReservationNotification />
       </div>
     </div>
   );
