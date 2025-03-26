@@ -9,6 +9,7 @@ import { StoryboardPreview } from "@/domain/model/StoryboardPreview";
 import ReservationPopup from "../popup/reservationPopup";
 import CompletePopup from "../popup/completePopup";
 import { useReservationRepository } from "@/providers/ReservationRepositoryContext";
+import DragScroll from "react-indiana-drag-scroll";
 
 export default function TopicList() {
   const topicRepository = useTopicRepository();
@@ -92,7 +93,10 @@ export default function TopicList() {
             );
             setPopupState({
               name: "complete",
-              content: { topicItem: popupState.content.topicItem, scheduledAt: date },
+              content: {
+                topicItem: popupState.content.topicItem,
+                scheduledAt: date,
+              },
             });
           }}
         />
@@ -125,11 +129,14 @@ export default function TopicList() {
       <span className="text-head3 text-grayscale-100 ml-[40px] mb-[12px]">
         주제 보기
       </span>
-      <div className="flex flex-row px-[40px] gap-[12px] overflow-scroll hide-scrollbar">
+      <DragScroll
+        style={{ overflowX: "scroll" }}
+        className="flex flex-row px-[40px] gap-[12px] overflow-scroll hide-scrollbar"
+      >
         {topicItems.map((topicItem) => (
           <div
             key={topicItem.topic.id}
-            className="flex flex-col justify-start items-start w-[200px] h-[240px] p-[12px] rounded-[8.32px] bg-grayscale-800 transition-all active:scale-95"
+            className="flex flex-col justify-start items-start flex-shrink-0 w-[200px] h-[240px] p-[12px] rounded-[8.32px] bg-grayscale-800 transition-all active:scale-95"
             onClick={() => {
               setPopupState({ name: "preview", content: { topicItem } });
             }}
@@ -142,7 +149,7 @@ export default function TopicList() {
             </span>
           </div>
         ))}
-      </div>
+      </DragScroll>
     </div>
   );
 }

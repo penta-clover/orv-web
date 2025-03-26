@@ -3,6 +3,8 @@ import { useArchiveRepository } from "@/providers/ArchiveRepositoryContext";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useDraggableScroll } from "@/app/components/useDraggableScroll";
+import DragScroll from "react-indiana-drag-scroll";
 
 export default function VideoList() {
   const archiveRepository = useArchiveRepository();
@@ -30,7 +32,10 @@ export default function VideoList() {
       <span className="text-head3 text-grayscale-100 ml-[40px] mb-[12px]">
         최근
       </span>
-      <div className="flex flex-row px-[40px] gap-[12px] overflow-scroll hide-scrollbar">
+      <DragScroll
+        className="relative flex flex-row px-[40px] gap-[12px] overflow-x-scroll"
+        style={{ overflowX: "scroll" }}
+      >
         {videos.map((video) => (
           <div key={video.id} className="flex flex-col w-[320px] h-[236px]">
             <div className="relative w-[320px] h-[180px] mb-[8px]">
@@ -68,7 +73,7 @@ export default function VideoList() {
             );
           }}
         />
-      </div>
+      </DragScroll>
     </div>
   );
 }
