@@ -1,9 +1,48 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import "@/app/components/blackBody.css";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function Page() {
-  // TODO: 이미 로그인 한 사람 처리
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 2000); // 1초마다 이미지 변경
+    return () => clearInterval(interval);
+  }, []);
+
+  const images = [
+    {
+      referral: "GA",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-demo-ga.jpg",
+      alt: "데모 이미지",
+      className: "object-cover rounded-[8px]",
+    },
+    {
+      referral: "JS",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-demo-js.jpg",
+      alt: "데모 이미지",
+      className: "object-cover rounded-[8px]",
+    },
+    {
+      referral: "JM",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-demo-jm.jpg",
+      alt: "데모 이미지",
+      className: "object-cover rounded-[8px]",
+    },
+    {
+      referral: "HS",
+      src: "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-demo-hs.jpg",
+      alt: "데모 이미지",
+      className: "object-cover rounded-[8px]",
+    },
+  ];
+
   return (
     <div className="flex flex-col justify-center items-center pt-[calc(12dvh)]">
       <Image
@@ -21,14 +60,26 @@ export default function Page() {
 
       <div className="h-[19px]" />
 
-      <Image
-        unoptimized
-        src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-demo-hs.jpg"
-        alt="landing-demo-hs"
-        width={393}
-        height={221}
-      />
-
+      <div className="w-[393px] h-[221px] relative">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={images[currentIndex].src}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="absolute top-0 left-0 w-full h-full"
+          >
+            <Image
+              unoptimized
+              src={images[currentIndex].src}
+              alt="landing-demo-hs"
+              width={393}
+              height={221}
+            />
+          </motion.div>
+        </AnimatePresence>
+      </div>
       <div className="h-[19px]" />
 
       <div className="text-head3 text-grayscale-white text-center">
