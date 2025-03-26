@@ -15,7 +15,7 @@ interface QuestionContent {
   number: number;
   question: string;
   hint: string;
-  nextSceneId: string;
+  nextSceneId?: string;
 }
 
 export default function Page() {
@@ -54,13 +54,17 @@ function Body() {
         .getSceneInfo(storyboard.startSceneId)
         .then((scene) => {
           loadQuestion(scene.id, 1);
+
+          // 첫 질문이 로드될 때 인터뷰 시작 시간 기록
+          startTimeRef.current = Date.now();
+          startRecording(); // 녹화 시작
         });
     });
-
-    // 컴포넌트가 마운트될 때 인터뷰 시작 시간 기록
-    startTimeRef.current = Date.now();
-    startRecording(); // 녹화 시작
   }, []);
+
+  useEffect(() => {
+    downloadRecording();
+  }, [recordedChunks]);
 
   // 질문 불러오기
   const loadQuestion = (sceneId: string, number: number) => {
@@ -69,7 +73,6 @@ function Body() {
         setQuestionContent({ ...scene.content, number: number });
       } else {
         stopRecording();
-        downloadRecording();
       }
     });
   };
@@ -118,6 +121,7 @@ function Body() {
   };
 
   // 녹화된 파일 다운로드 함수
+  // 녹화 정지 직후 호출시 recordedChunks가 비어있을 수 있음 (65번째줄 참고)
   const downloadRecording = () => {
     if (recordedChunks.length === 0) return;
     const blob = new Blob(recordedChunks, { type: "video/webm" });
@@ -152,29 +156,37 @@ function Body() {
           className="fixed top-[10px] right-[10px] px-[16px] py-[12px] w-[64px] h-[56px] focus:outline-none cursor-pointer"
         />
         <div className="relative flex justify-center items-center w-[90vw] lg:w-[1200px] bg-grayscale-900 rounded-[12px] overflow-hidden">
-          <div className={cn(aspect === "none" && "hidden", "w-full h-full")}>
+          <div
+            className={cn(aspect === "none" && "hidden", "w-full h-full")}
+            style={{ transform: "scaleX(-1)" }}
+          >
             <CameraComponent
               ref={canvasRef}
               filter={filter}
               afterDraw={(ctx) => {
                 if (!canvasRef.current) return;
-                const x = 30;
-                const y = canvasRef.current!.height - 50;
-                const gap = 30;
+                const x = 50;
+                const y = canvasRef.current!.height - 60;
+                const gap = 50;
 
-                ctx.font = "20px 'Pretendard-SemiBold'";
+                ctx.font = "30px 'Pretendard-SemiBold'";
                 ctx.fillStyle = "white";
                 ctx.fillText(
                   `${questionContent?.number ?? 0}번째 질문`,
                   x,
-                  y - gap * 2
+                  y - gap
                 );
-
-                ctx.font = "22px 'Pretendard-SemiBold'";
-                ctx.fillText(questionContent?.question ?? "", x, y - gap);
-                ctx.fillText(questionContent?.hint ?? "", x, y);
+                ctx.fillText(questionContent?.question ?? "", x, y);
               }}
             />
+          </div>
+          <div className="absolute bottom-[32px] left-[32px] mr-[32px] text-white">
+            <div className="text-head3">{questionContent?.number}번째 질문</div>
+            <div className="text-head2 leading-1 mt-[8px]">
+              {questionContent?.question}
+              <br />
+              {questionContent?.hint}
+            </div>
           </div>
         </div>
         <div className="fixed bottom-[45px] right-[45px] flex flex-col items-end gap-[10px]">
@@ -194,7 +206,6 @@ function Body() {
                 );
               } else {
                 stopRecording();
-                downloadRecording();
               }
               setShowTip(false);
             }}
