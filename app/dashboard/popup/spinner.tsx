@@ -37,6 +37,17 @@ export default function Spinner({
     },
   });
 
+  // 스피너 초기화 시 selected 값에 따라 스크롤 위치 조정
+  useEffect(() => {
+    const index = items.indexOf(selected);
+    if (index !== -1) {
+      elementRef.current?.scrollTo({
+        top: index * 52,
+        behavior: "smooth",
+      });
+    }
+  }, []);
+
   return (
     <div className={cn("flex flex-col items-center", className)}>
       <ul

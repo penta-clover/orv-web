@@ -9,11 +9,13 @@ export default function ReservationPopup(props: {
   onClickBack: () => void;
   onConfirm: (date: Date) => void;
 }) {
+  const [today] = useState<Date>(new Date(Date.now()));
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<{
     hour: number;
     minute: number;
-  }>({ hour: 0, minute: 0 });
+  }>({ hour: today.getHours(), minute: today.getMinutes() });
+
   return (
     <div className="flex flex-col w-[720px] h-[536px] rounded-[14px] p-[24px] bg-grayscale-800">
       <div className="text-head1 text-grayscale-white h-[36px]">
@@ -34,7 +36,11 @@ export default function ReservationPopup(props: {
           />
         </div>
         <div className="flex flex-col w-[324px] h-full">
-          {selectedDate === null ? null : (
+          {selectedDate === null ? (
+            <span className="h-full flex flex-col justify-center items-center text-body2 text-grayscale-400">
+              날짜를 먼저 선택해주세요
+            </span>
+          ) : (
             <>
               <span className="text-body2 text-grayscale-400 mb-[8px]">
                 시간을 선택해주세요.
@@ -51,6 +57,10 @@ export default function ReservationPopup(props: {
               <TimeSelector
                 onChangeTime={(hour, minute) => {
                   setSelectedTime({ hour, minute });
+                }}
+                initialTime={{
+                  hour: today.getHours(),
+                  minute: today.getMinutes(),
                 }}
               />
             </>
@@ -133,11 +143,22 @@ function SelectableCalendar(props: { onSelect: (date: Date) => void }) {
         </div>
         <div className="flex flex-row gap-[2px]">
           <Image
-            src="/icons/left-arrow-grayscale-white.svg"
+            src={
+              new Date(today.getFullYear(), today.getMonth(), 1) <=
+              new Date(year, month, 0)
+                ? "/icons/left-arrow-grayscale-white.svg"
+                : "/icons/left-arrow-grayscale-600.svg"
+            }
             alt="prior month"
             width={20}
             height={20}
             onClick={() => {
+              if (
+                new Date(today.getFullYear(), today.getMonth(), 1) >
+                new Date(year, month, 0)
+              )
+                return;
+
               const priorMonth = new Date(year, month, 0);
               setYear(priorMonth.getFullYear());
               setMonth(priorMonth.getMonth());
@@ -212,12 +233,13 @@ interface DayItem {
 
 function TimeSelector(props: {
   onChangeTime: (hour: number, minute: number) => void;
+  initialTime?: { hour: number; minute: number };
 }) {
   const HOURS = Array.from({ length: 24 }, (_, i) => i);
   const MINUTES = Array.from({ length: 60 }, (_, i) => i);
 
-  const [hour, setHour] = useState<number>(0);
-  const [minute, setMinute] = useState<number>(0);
+  const [hour, setHour] = useState<number>(props.initialTime?.hour ?? 0);
+  const [minute, setMinute] = useState<number>(props.initialTime?.minute ?? 0);
 
   return (
     <div className="relative flex w-[324px] h-[172px]">
