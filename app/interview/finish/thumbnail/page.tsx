@@ -166,23 +166,23 @@ function Body() {
           </div>
         </div>
 
-        {progress === "ready" || progress === "complete" ? (
-          <div
-            className="absolute flex flex-row justify-center items-center left-[48px] bottom-[48px] w-[139px] h-[56px] bg-main-lilac50 rounded-[12px] transition-allactive:scale-95"
-            onClick={() => router.back()}
-          >
-            <Image
-              unoptimized
-              src="/icons/left-arrow-black.svg"
-              width={24}
-              height={24}
-              alt="left arrow"
-            />
-            <span className="text-head3 text-grayscale-800">이전으로</span>
-          </div>
-        ) : (
-          <></>
-        )}
+        <div
+          className={`absolute flex flex-row justify-center items-center left-[48px] bottom-[48px] w-[139px] h-[56px] bg-main-lilac50 rounded-[12px] duration-all transition-allactive:scale-95 ${
+            progress === "ready" || progress === "complete"
+              ? "opacity-100"
+              : "opacity-0 pointer-events-none"
+          }`}
+          onClick={() => router.back()}
+        >
+          <Image
+            unoptimized
+            src="/icons/left-arrow-black.svg"
+            width={24}
+            height={24}
+            alt="left arrow"
+          />
+          <span className="text-head3 text-grayscale-800">이전으로</span>
+        </div>
       </div>
     </ExitInterviewModal>
   );

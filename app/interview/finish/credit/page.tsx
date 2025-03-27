@@ -13,6 +13,7 @@ import { MyInfo } from "@/domain/model/MyInfo";
 import Image from "next/image";
 import NextButton from "../../(components)/nextButton";
 import ExitInterviewModal from "../../(components)/exitInterviewModal";
+import { useReservationRepository } from "@/providers/ReservationRepositoryContext";
 
 export default function Page() {
   return (
@@ -36,12 +37,13 @@ function Body() {
   const [nickname, setNickname] = useState<string>("");
   const [isUploaded, setIsUploaded] = useState<boolean>(false);
   const [isRecapAgreed, setIsRecapAgreed] = useState<boolean>(true);
-  const [is23SecondsPassed, setIs23SecondsPassed] = useState<boolean>(false);
+  const [is25SecondsPassed, setIs25SecondsPassed] = useState<boolean>(false);
   const [is30SecondsPassed, setIs30SecondsPassed] = useState<boolean>(false);
   const videoPlayerRef = useRef<HTMLVideoElement>(null);
 
   const archiveRepository = useArchiveRepository();
   const memberRepository = useMemberRepository();
+  const reservationRepository = useReservationRepository();
 
   // 중복 실행 방지
   const didUploadRef = useRef(false);
@@ -82,8 +84,8 @@ function Body() {
 
   useEffect(() => {
     setTimeout(() => {
-      setIs23SecondsPassed(true);
-    }, 23000);
+      setIs25SecondsPassed(true);
+    }, 25000);
 
     setTimeout(() => {
       setIs30SecondsPassed(true);
@@ -149,6 +151,7 @@ function Body() {
               width: "200",
               height: "112",
               playerVars: {
+                start: 3,
                 autoplay: 1,
                 controls: 1,
                 modestbranding: 1,
@@ -164,7 +167,7 @@ function Body() {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center">
           <div
             className={`flex flex-col items-end gap-[10px] transition-all ${
-              is23SecondsPassed
+              is25SecondsPassed
                 ? "opacity-100"
                 : "opacity-0 pointer-events-none"
             }`}
@@ -174,13 +177,18 @@ function Body() {
 
           <div
             className={`flex flex-col items-end gap-[10px] transition-all  ${
-              isUploaded && is30SecondsPassed
+              isUploaded && is25SecondsPassed
                 ? "opacity-100"
                 : "opacity-0 pointer-events-none"
             }`}
           >
             <NextButton
               onClick={() => {
+                if (isRecapAgreed) {
+                  const after7Day = new Date(Date.now());
+                  after7Day.setDate(after7Day.getDate() + 7);
+                  reservationRepository.reserveVideoRecap(videoId!, after7Day);
+                }
                 router.push(`/interview/finish/naming?videoId=${videoId}`);
               }}
               useKeyboardShortcut

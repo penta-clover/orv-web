@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^2.11.12",
+    "@amplitude/analytics-types": "^2.9.1",
     "@channel.io/channel-web-sdk-loader": "^2.0.0",
     "@ffmpeg/ffmpeg": "^0.11.6",
     "@radix-ui/react-accordion": "^1.2.3",
