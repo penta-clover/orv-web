@@ -49,7 +49,7 @@ export class ReservationRepositoryImpl implements ReservationRepository {
       "/reservation/recap/video",
       {
         videoId: videoId,
-        reservedAt: scheduledAt,
+        scheduledAt: scheduledAt,
       },
       {
         Authorization: `Bearer ${this.storage.getAuthToken()}`,
