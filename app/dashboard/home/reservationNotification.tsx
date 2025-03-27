@@ -21,7 +21,7 @@ export default function ReservationNotification() {
   return (
     <div
       className={`flex items-center pl-[16px] bg-gd w-[580px] h-[56px] rounded-[16px] text-grayscale-800 flex items-center px-[18px] transition-all active:scale-95 ${
-        reservation?.scheduledAt === null ? "hidden" : ""
+        reservation === null ? "opacity-0 pointer-events-none" : "opacity-100"
       }`}
       onClick={() => {
         router.push(`/interview/guide?storyboardId=${reservation?.storyboardId}`);

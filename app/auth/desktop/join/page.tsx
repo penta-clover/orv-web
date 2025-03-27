@@ -32,7 +32,9 @@ export default function Page() {
   }, [name, phone]);
 
   return (
-    <div className="flex flex-col justify-center items-center pt-[141px]">
+    <div className="flex flex-col h-[calc(100dvh)] justify-center items-center px-[24px]">
+      <div className="h-[8dvh]" />
+      
       <Image
         src={"/icons/logo-main-lilac50.svg"}
         alt="logo"
@@ -42,13 +44,13 @@ export default function Page() {
 
       <div className="h-[37px]" />
 
-      <div className="text-head1 text-grayscale-white">
+      <div className="text-head2 text-grayscale-white">
         회원 가입을 위한 정보를 입력해주세요.
       </div>
 
       <div className="h-[56px]" />
 
-      <div className="w-[532px]">
+      <div className="w-full max-w-[532px]">
         <InputForm
           onChangeName={(name: string) => setName(name)}
           onChangePhone={(phone: string) => setPhone(phone)}
@@ -59,7 +61,7 @@ export default function Page() {
 
       <div className="h-[112px]" />
 
-      <span className="text-head3 text-grayscale-300">
+      <span className="text-head3 text-grayscale-300 text-center">
         로그인 시 <span className="font-bold">이용약관</span>과{" "}
         <span className="font-bold">개인정보처리방침</span>에 모두 동의한 것으로
         간주합니다.
@@ -68,7 +70,7 @@ export default function Page() {
       <div className="h-[16px]" />
 
       <button
-        className={`flex items-center justify-center text-head3 rounded-[12px] h-[56px] w-[532px] transition-all active:scale-95 ${
+        className={`flex items-center justify-center text-head3 rounded-[12px] max-w-[532px] h-[56px] w-full transition-all active:scale-95 ${
           isComplete
             ? "text-grayscale-800 bg-main-lilac50"
             : "text-grayscale-500 bg-grayscale-800"

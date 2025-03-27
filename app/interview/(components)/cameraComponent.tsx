@@ -34,10 +34,11 @@ export const CameraComponent = React.forwardRef<
 
   // 카메라 설정
   useEffect(() => {
+    let stream: MediaStream | null = null;
     if (typeof window !== "undefined" && navigator.mediaDevices) {
       const enableCamera = async () => {
         try {
-          const stream = await navigator.mediaDevices.getUserMedia({
+          stream = await navigator.mediaDevices.getUserMedia({
             video: {
               // HD 해상도 적용
               width: { ideal: 1280 },
@@ -55,6 +56,16 @@ export const CameraComponent = React.forwardRef<
 
       enableCamera();
     }
+
+    // cleanup: 컴포넌트 unmount 시 스트림의 트랙 종료
+    return () => {
+      if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
+      }
+      if (localVideoRef.current) {
+        localVideoRef.current.srcObject = null;
+      }
+    };
   }, []);
 
   // 캔버스 설정

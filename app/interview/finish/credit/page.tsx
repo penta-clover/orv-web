@@ -6,14 +6,20 @@ import YouTube from "react-youtube";
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useArchiveRepository } from "@/providers/ArchiveRepositoryContext";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, use, useEffect, useRef, useState } from "react";
 import { useMemberRepository } from "@/providers/MemberRepositoryContext";
+import RecapCheckbox from "./recapCheckbox";
 import { MyInfo } from "@/domain/model/MyInfo";
+import Image from "next/image";
+import NextButton from "../../(components)/nextButton";
+import ExitInterviewModal from "../../(components)/exitInterviewModal";
 
 export default function Page() {
-  return <Suspense>
-    <Body />
-  </Suspense>
+  return (
+    <Suspense>
+      <Body />
+    </Suspense>
+  );
 }
 
 function Body() {
@@ -24,9 +30,14 @@ function Body() {
   const topic = searchParams.get("topic")!;
 
   const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const [videoId, setVideoId] = useState<string | null>(null);
   const [nickname, setNickname] = useState<string>("");
+  const [isUploaded, setIsUploaded] = useState<boolean>(false);
+  const [isRecapAgreed, setIsRecapAgreed] = useState<boolean>(true);
+  const [is23SecondsPassed, setIs23SecondsPassed] = useState<boolean>(false);
+  const [is30SecondsPassed, setIs30SecondsPassed] = useState<boolean>(false);
   const videoPlayerRef = useRef<HTMLVideoElement>(null);
 
   const archiveRepository = useArchiveRepository();
@@ -45,6 +56,7 @@ function Body() {
         const response = await fetch(localVideoUrl);
         const blob = await response.blob();
         const videoId = await archiveRepository.uploadVideo(blob, storyboardId);
+        setIsUploaded(true);
         console.log(videoId);
         setVideoId(videoId);
         console.log("비디오 업로드 성공");
@@ -61,79 +73,131 @@ function Body() {
       .then((myInfo: MyInfo) => setNickname(myInfo.nickname));
   }, []);
 
-  // blob 영상 5배속 설정
+  // blob 영상 2배속 설정
   useEffect(() => {
     if (videoPlayerRef.current) {
       videoPlayerRef.current.playbackRate = 2;
     }
   }, []);
 
-  return (
-    <div className="relative">
-      {/* 왼쪽 하단 blob 영상 */}
-      <video
-        ref={videoPlayerRef}
-        src={localVideoUrl}
-        autoPlay
-        loop
-        muted
-        style={{
-          position: "fixed",
-          bottom: "48px",
-          left: "48px",
-          width: "450px",
-          height: "240px",
-          objectFit: "cover",
-          zIndex: 1,
-        }}
-      />
+  useEffect(() => {
+    setTimeout(() => {
+      setIs23SecondsPassed(true);
+    }, 23000);
 
-      {/* 우측 하단 react-youtube 플레이어 */}
-      <div
-        style={{
-          position: "fixed",
-          bottom: "16px",
-          right: "16px",
-          zIndex: 2,
-          textAlign: "center",
-        }}
-      >
-        <YouTube
-          videoId="muTUmQnqGDY"
-          opts={{
-            width: "200",
-            height: "112",
-            playerVars: {
-              autoplay: 1,
-              controls: 1,
-              modestbranding: 1,
-              rel: 0,
-            },
-          }}
+    setTimeout(() => {
+      setIs30SecondsPassed(true);
+    }, 30000);
+  }, []);
+
+  return (
+    <ExitInterviewModal
+      isOpen={isModalOpen}
+      setIsOpen={setIsModalOpen}
+      onExitInterview={() => router.replace("/")}
+    >
+      <div className="relative h-[calc(100dvh)] w-[calc(100dvw)]">
+        <Image
+          unoptimized
+          src="/icons/x.svg"
+          width={32}
+          height={32}
+          alt="close"
+          onClick={() => setIsModalOpen(true)}
+          className="fixed top-[10px] right-[10px] px-[16px] py-[12px] w-[64px] h-[56px] focus:outline-none cursor-pointer"
         />
-        <div className="text-body4 text-grayscale-200 w-full">
-          DANIEL - 은방울
+        {/* 왼쪽 하단 blob 영상 */}
+        <div className="fixed flex flex-col bottom-[24px] left-[24px] z-[2]">
+          <video
+            ref={videoPlayerRef}
+            src={localVideoUrl}
+            autoPlay
+            loop
+            muted
+            className="rounded-[10px] w-[450px] h-[240px]"
+            style={{
+              objectFit: "cover",
+            }}
+          />
+          <div className="text-body4 text-grayscale-200 w-full flex justify-start mt-[10px]">
+            <Image
+              src="/icons/rolling-spinner-grayscale-white.gif"
+              alt="spinner"
+              width={24}
+              height={24}
+              className="mr-[8px]"
+              style={{ color: "white" }}
+            />
+            영상이 변환되고 있어요. 잠시만 기다려주세요. 이 작업은 30초 정도
+            소요돼요.
+          </div>
+        </div>
+
+        {/* 우측 하단 react-youtube 플레이어 */}
+        <div
+          style={{
+            position: "fixed",
+            bottom: "24px",
+            right: "24px",
+            zIndex: 2,
+            textAlign: "center",
+          }}
+        >
+          <YouTube
+            videoId="muTUmQnqGDY"
+            opts={{
+              width: "200",
+              height: "112",
+              playerVars: {
+                autoplay: 1,
+                controls: 1,
+                modestbranding: 1,
+                rel: 0,
+              },
+            }}
+          />
+          <div className="text-body4 text-grayscale-200 w-full flex justify-center mt-[4px]">
+            DANIEL - 은방울
+          </div>
+        </div>
+
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center">
+          <div
+            className={`flex flex-col items-end gap-[10px] transition-all ${
+              is23SecondsPassed
+                ? "opacity-100"
+                : "opacity-0 pointer-events-none"
+            }`}
+          >
+            <RecapCheckbox onChange={(checked) => setIsRecapAgreed(checked)} />
+          </div>
+
+          <div
+            className={`flex flex-col items-end gap-[10px] transition-all  ${
+              isUploaded && is30SecondsPassed
+                ? "opacity-100"
+                : "opacity-0 pointer-events-none"
+            }`}
+          >
+            <NextButton
+              onClick={() => {
+                router.push(`/interview/finish/naming?videoId=${videoId}`);
+              }}
+              useKeyboardShortcut
+            />
+          </div>
+        </div>
+
+        {/* 크레딧 애니메이션 영역 */}
+        <div className="absolute top-0 left-0 creditsAnimation flex flex-col items-center h-[100dvh] overflow-hidden w-[100dvw]">
+          <Roster
+            myNickname={nickname}
+            totalInterviewTime={Number(totalInterviewTime)}
+            topic={topic}
+          />
         </div>
       </div>
-
-      {/* 크레딧 애니메이션 영역 */}
-      <div className="absolute top-0 left-0 creditsAnimation flex flex-col items-center h-[100dvh] overflow-hidden w-[100dvw]">
-        <Roster
-          myNickname={nickname}
-          totalInterviewTime={Number(totalInterviewTime)}
-          topic={topic}
-        />
-      </div>
-
-      <button
-        className="absolute text-main-lilac50 p-2 right-0"
-        onClick={() =>
-          router.replace(`/interview/finish/naming?videoId=${videoId}`)
-        }
-      >
-        다음으로
-      </button>
-    </div>
+    </ExitInterviewModal>
   );
 }
 

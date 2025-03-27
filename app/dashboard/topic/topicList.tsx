@@ -69,7 +69,7 @@ export default function TopicList() {
           onClickStart={() => {
             hidePopup();
             router.push(
-              `/interview/setting/guide?storyboardId=${popupState.content.topicItem.preview.storyboardId}`
+              `/interview/guide?storyboardId=${popupState.content.topicItem.preview.storyboardId}`
             );
           }}
         />

@@ -82,12 +82,11 @@ function Body() {
           onClick={() => router.back()}
           useKeyboardShortcut
         />
-        <div className="fixed bottom-[45px] right-[45px] flex flex-col items-end gap-[10px]">
-          <TipBox
-            tag="Tip!"
-            text="마우스 클릭 혹은 방향키 좌우동작을\n통해 조작하세요!"
-            tagColor="text-main-lilac50"
-          />
+        <div
+          className={`fixed bottom-[45px] right-[45px] flex flex-col items-end gap-[10px] transition-all  ${
+            ready ? "opacity-100" : "opacity-0 pointer-events-none"
+          }`}
+        >
           <NextButton onClick={onNextButtonClick} useKeyboardShortcut />
         </div>
       </div>

@@ -6,6 +6,7 @@ import { Suspense, useEffect, useState } from "react";
 import ExitInterviewModal from "../../(components)/exitInterviewModal";
 import { cn } from "@/lib/utils";
 import { useStoryboardRepository } from "@/providers/StoryboardRepositoryContext";
+import Typewriter from "./typeWriter";
 
 export default function Page() {
   return (
@@ -23,7 +24,7 @@ function Body() {
 
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [title, setTitle] = useState<string>("");
+  const [title, setTitle] = useState<string | null>(null);
 
   const storyboardRepository = useStoryboardRepository();
 
@@ -34,9 +35,18 @@ function Body() {
         router.replace(
           `/interview/recording?storyboardId=${storyboardId}&aspect=${aspect}&filter=${filter}`
         );
-      }, 5000);
+      }, 21000);
     });
   }, [storyboardId]);
+
+  const typewriterText = `
+  안녕하세요 나를 마주하는 시간, 오브입니다.\n \n
+  오늘 인터뷰의 주제는 “${title}”입니다.
+  오늘 함께 하는 시간동안 꼭 스스로를 알아가는 것이 아니더라도
+  마음 편하고 즐거운 시간을 보내시면 좋겠습니다.\n \n
+  영상에 비치는 나의 모습이 어색하더라도 이번을 시작으로 기록을 남겨보세요.
+  나중에 점점 더 멋지게 변화하는 스스로를 발견할 수 있답니다.\n \n
+  그럼 이제 인터뷰를 시작해볼게요. 인터뷰 시작!`;
 
   return (
     <ExitInterviewModal
@@ -56,23 +66,9 @@ function Body() {
         />
         <div className="fixed top-0 h-full flex flex-col justify-center items-center">
           <div className="w-[95vw] lg:w-[952px] text-body0 text-main-lilac50 text-center ">
-            안녕하세요 나를 마주하는 시간, 오브입니다.
-            <br />
-            <br />
-            오늘 인터뷰의 주제는 “{title}”입니다.
-            <br />
-            오늘 함께 하는 시간동안 꼭 스스로를 알아가는 것이 아니더라도
-            <br />
-            마음 편하고 즐거운 시간을 보내시면 좋겠습니다.
-            <br />
-            <br />
-            영상에 비치는 나의 모습이 어색하더라도 이번을 시작으로 기록을
-            남겨보세요.
-            <br />
-            나중에 점점 더 멋지게 변화하는 스스로를 발견할 수 있답니다.
-            <br />
-            <br />
-            그럼 이제 인터뷰를 시작해볼게요. 인터뷰 시작!
+            {title === null ? null : (
+              <Typewriter text={typewriterText} speed={80} />
+            )}
           </div>
         </div>
       </div>

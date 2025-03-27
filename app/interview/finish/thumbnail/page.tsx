@@ -3,16 +3,25 @@
 import "@/app/components/blackBody.css";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useArchiveRepository } from "@/providers/ArchiveRepositoryContext";
-import { Suspense, useEffect, useImperativeHandle, useRef, useState } from "react";
+import {
+  Suspense,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { VideoMetadata } from "@/domain/model/VideoMetadata";
 import { useMemberRepository } from "@/providers/MemberRepositoryContext";
 import { MyInfo } from "@/domain/model/MyInfo";
 import Image from "next/image";
+import ExitInterviewModal from "../../(components)/exitInterviewModal";
 
 export default function Page() {
-  return <Suspense>
-    <Body />
-  </Suspense>
+  return (
+    <Suspense>
+      <Body />
+    </Suspense>
+  );
 }
 
 function Body() {
@@ -22,6 +31,7 @@ function Body() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [capturedImage, setCapturedImage] = useState<Blob | null>(null);
   const [nickname, setNickname] = useState<string>("");
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const router = useRouter();
 
   const memberRepository = useMemberRepository();
@@ -34,115 +44,147 @@ function Body() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center h-[100dvh]">
-      <div className="flex flex-col grow items-center justify-center pb-[10px]">
-        <div className="text-white font-semibold text-[40px] leading-[44px]">
-          마지막으로 오늘을 기념할 사진 한장을 남길게요
-        </div>
+    <ExitInterviewModal
+      isOpen={isModalOpen}
+      setIsOpen={setIsModalOpen}
+      onExitInterview={() => router.replace("/")}
+    >
+      <div className="relative flex flex-col items-center h-[100dvh]">
+        <Image
+          unoptimized
+          src="/icons/x.svg"
+          width={32}
+          height={32}
+          alt="close"
+          onClick={() => setIsModalOpen(true)}
+          className="fixed top-[10px] right-[10px] px-[16px] py-[12px] w-[64px] h-[56px] focus:outline-none cursor-pointer"
+        />
+        <div className="flex flex-col grow items-center justify-center pb-[10px]">
+          <div className="text-white font-semibold text-[40px] leading-[44px]">
+            마지막으로 오늘을 기념할 사진 한장을 남길게요
+          </div>
 
-        <div className="h-[44px]" />
+          <div className="h-[44px]" />
 
-        <div className="text-grayscale-500 text-center font-medium text-[24px] leading-[36px]">
-          인터뷰 썸네일 그리고 인터뷰 Recap에 들어가는 사진이에요.
-          <br />
-          아래 버튼을 누르면 {nickname}님의 모습이 화면에 나오고 5초 뒤에 사진이
-          찍혀요.
-        </div>
+          <div className="text-grayscale-500 text-center font-medium text-[24px] leading-[36px]">
+            인터뷰 썸네일 그리고 인터뷰 Recap에 들어가는 사진이에요.
+            <br />
+            아래 버튼을 누르면 {nickname}님의 모습이 화면에 나오고 5초 뒤에
+            사진이 찍혀요.
+          </div>
 
-        <div className="h-[56px]" />
+          <div className="h-[56px]" />
 
-        <div className="flex flex-col justify-start w-full h-[536px]">
-          {progress === "ready" ? (
-            <div className="flex justify-center items-center h-[476px] w-[1094px] bg-grayscale-900 rounded-[12px]">
-              <button
-                className="w-[91px] h-[56px] bg-grayscale-50 text-grayscale-800 rounded-[12px] text-head3 transition-all active:scale-95"
-                onClick={() => {
+          <div className="flex flex-col justify-start w-full h-[536px]">
+            {progress === "ready" ? (
+              <div className="flex justify-center items-center h-[476px] w-[846px] bg-grayscale-900 rounded-[12px]">
+                <button
+                  className="w-[91px] h-[56px] bg-grayscale-50 text-grayscale-800 rounded-[12px] text-head3 transition-all active:scale-95"
+                  onClick={() => {
+                    setProgress("countdown");
+                  }}
+                >
+                  촬영하기
+                </button>
+              </div>
+            ) : (
+              <></>
+            )}
+
+            {progress === "countdown" ? (
+              <CountdownComponent
+                onComplete={() => {
+                  if (videoRef.current) {
+                    setProgress("flash");
+
+                    setTimeout(() => {
+                      setProgress("complete");
+                    }, 1000);
+
+                    const video = videoRef.current;
+                    const canvas = document.createElement("canvas");
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    const context = canvas.getContext("2d");
+                    if (context) {
+                      context.drawImage(
+                        video,
+                        0,
+                        0,
+                        canvas.width,
+                        canvas.height
+                      );
+
+                      canvas.toBlob((blob) => {
+                        if (blob) {
+                          setCapturedImage(blob);
+                        }
+                      }, "image/png");
+                    }
+                  }
+                }}
+                ref={videoRef}
+              />
+            ) : (
+              <></>
+            )}
+
+            {progress === "flash" ? (
+              <div className="flex justify-center items-center h-[476px] w-[846px] bg-grayscale-white rounded-[12px]"></div>
+            ) : (
+              <></>
+            )}
+
+            {progress === "complete" ? (
+              <ResultPreview
+                capturedImage={capturedImage}
+                onClickAgain={() => {
                   setProgress("countdown");
                 }}
-              >
-                촬영하기
-              </button>
-            </div>
-          ) : (
-            <></>
-          )}
-
-          {progress === "countdown" ? (
-            <CountdownComponent
-              onComplete={() => {
-                if (videoRef.current) {
-                  const video = videoRef.current;
-                  const canvas = document.createElement("canvas");
-                  canvas.width = video.videoWidth;
-                  canvas.height = video.videoHeight;
-                  const context = canvas.getContext("2d");
-                  if (context) {
-                    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-                    canvas.toBlob((blob) => {
-                      if (blob) {
-                        setCapturedImage(blob);
-                      }
-                      setProgress("complete");
-                    }, "image/png");
+                onClickConfirm={() => {
+                  if (!capturedImage || !videoId) {
+                    return;
                   }
-                }
-              }}
-              ref={videoRef}
-            />
-          ) : (
-            <></>
-          )}
 
-          {progress === "complete" ? (
-            <ResultPreview
-              capturedImage={capturedImage}
-              onClickAgain={() => {
-                setProgress("countdown");
-              }}
-              onClickConfirm={() => {
-                if (!capturedImage || !videoId) {
-                  return;
-                }
-
-                archiveRepository
-                  .updateThumbnail(videoId, capturedImage)
-                  .then(async () => {
-                    const videoMetadata: VideoMetadata =
-                      await archiveRepository.getVideo(videoId);
-                    router.replace(
-                      `/interview/finish/download?videoId=${videoMetadata.id}`
-                    );
-                  })
-                  .catch((error: any) => {
-                    console.error("썸네일 업데이트 실패:", error);
-                  });
-              }}
-            />
-          ) : (
-            <></>
-          )}
+                  archiveRepository
+                    .updateThumbnail(videoId, capturedImage)
+                    .then(async () => {
+                      const videoMetadata: VideoMetadata =
+                        await archiveRepository.getVideo(videoId);
+                      router.replace(
+                        `/interview/finish/download?videoId=${videoMetadata.id}`
+                      );
+                    })
+                    .catch((error: any) => {
+                      console.error("썸네일 업데이트 실패:", error);
+                    });
+                }}
+              />
+            ) : (
+              <></>
+            )}
+          </div>
         </div>
+
+        {progress === "ready" || progress === "complete" ? (
+          <div
+            className="absolute flex flex-row justify-center items-center left-[48px] bottom-[48px] w-[139px] h-[56px] bg-main-lilac50 rounded-[12px] transition-allactive:scale-95"
+            onClick={() => router.back()}
+          >
+            <Image
+              unoptimized
+              src="/icons/left-arrow-black.svg"
+              width={24}
+              height={24}
+              alt="left arrow"
+            />
+            <span className="text-head3 text-grayscale-800">이전으로</span>
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
-
-      {progress === "ready" || progress === "complete" ? (
-        <div
-          className="absolute flex flex-row justify-center items-center left-[48px] bottom-[48px] w-[139px] h-[56px] bg-main-lilac50 rounded-[12px] transition-allactive:scale-95"
-          onClick={() => router.back()}
-        >
-          <Image
-            unoptimized
-            src="/icons/left-arrow-black.svg"
-            width={24}
-            height={24}
-            alt="left arrow"
-          />
-          <span className="text-head3 text-grayscale-800">이전으로</span>
-        </div>
-      ) : (
-        <></>
-      )}
-    </div>
+    </ExitInterviewModal>
   );
 }
 
@@ -196,11 +238,18 @@ function CountdownComponent(props: {
       };
 
       enableCamera();
+      return () => {
+        if (localVideoRef.current && localVideoRef.current.srcObject) {
+          const stream = localVideoRef.current.srcObject as MediaStream;
+          stream.getTracks().forEach((track) => track.stop());
+          localVideoRef.current.srcObject = null;
+        }
+      };
     }
   }, []);
 
   return (
-    <div className="relative flex justify-center items-center h-[476px] w-[1094px] bg-grayscale-900 rounded-[12px]">
+    <div className="relative flex justify-center items-center h-[476px] w-[846px] bg-grayscale-900 rounded-[12px]">
       <video
         ref={localVideoRef}
         autoPlay
@@ -228,7 +277,7 @@ function ResultPreview(props: {
 }) {
   return (
     <div className="flex flex-col">
-      <div className="flex justify-center items-center h-[476px] w-[1094px] bg-grayscale-900 rounded-[12px]">
+      <div className="flex justify-center items-center h-[476px] w-[846px] bg-grayscale-900 rounded-[12px]">
         {props.capturedImage ? (
           <img
             src={URL.createObjectURL(props.capturedImage)}

@@ -109,7 +109,9 @@ function Body() {
           useKeyboardShortcut
         />
         <NextButton
-          className="fixed bottom-[45px] right-[45px]"
+          className={`fixed bottom-[45px] right-[45px] transition-all  ${
+            ready ? "opacity-100" : "opacity-0 pointer-events-none"
+          }`}
           onClick={onNextButtonClick}
           useKeyboardShortcut
         />

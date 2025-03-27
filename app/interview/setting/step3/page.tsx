@@ -29,12 +29,11 @@ function Body() {
 
   const onAspectClick = (aspect: Aspect) => {
     setSelectedAspect(aspect);
-  };
 
-  const onNextButtonClick = () =>
     router.replace(
-      `/interview/setting/step3/preview?storyboardId=${storyboardId}&aspect=${selectedAspect}`
+      `/interview/setting/step3/preview?storyboardId=${storyboardId}&aspect=${aspect}`
     );
+  };
 
   return (
     <ExitInterviewModal
@@ -109,6 +108,7 @@ function Body() {
           <AspectPreview
             selected={selectedAspect === "none"}
             onClick={() => onAspectClick("none")}
+            reverseX={false}
           >
             <div className="flex flex-col items-center justify-center gap-[8px] bg-grayscale-900 rounded-[12px] aspect-[16/9] cursor-pointer">
               <div className="text-head2 text-grayscale-50">
@@ -129,11 +129,6 @@ function Body() {
           }
           useKeyboardShortcut
         />
-        <NextButton
-          className="fixed bottom-[45px] right-[45px]"
-          onClick={onNextButtonClick}
-          useKeyboardShortcut
-        />
       </div>
     </ExitInterviewModal>
   );
@@ -143,8 +138,9 @@ function AspectPreview(props: {
   children: React.ReactNode;
   selected: boolean;
   onClick: () => void;
+  reverseX?: boolean;
 }) {
-  const { children, selected, onClick } = props;
+  const { children, selected, onClick, reverseX = true } = props;
 
   return (
     <div
@@ -153,7 +149,7 @@ function AspectPreview(props: {
         "rounded-[12px] overflow-hidden border-[2px] aspect-[16/9] cursor-pointer relative"
       )}
       onClick={onClick}
-      style={{ transform: "scaleX(-1)" }}
+      style={{ transform: reverseX ? "scaleX(-1)" : undefined }}
     >
       {children}
     </div>

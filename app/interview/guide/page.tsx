@@ -26,7 +26,7 @@ function Body() {
 
   const onNextButtonClick = () => {
     if (ready) {
-      router.push(`/interview/setting/step1?storyboardId=${storyboardId}`);
+      router.replace(`/interview/setting/step1?storyboardId=${storyboardId}`);
     } else {
       //TODO: 체크박스 누르라고 하기
     }
@@ -71,12 +71,11 @@ function Body() {
           />
           충분히 고민하고 생각 정리 했어요
         </label>
-        <div className="fixed bottom-[45px] right-[45px] flex flex-col items-end gap-[10px]">
-          <TipBox
-            tag="Tip!"
-            text="마우스 클릭 혹은 방향키 좌우동작을\n통해 조작하세요!"
-            tagColor="text-main-lilac50"
-          />
+        <div
+          className={`fixed bottom-[45px] right-[45px] flex flex-col items-end gap-[10px] transition-all  ${
+            ready ? "opacity-100" : "opacity-0 pointer-events-none"
+          }`}
+        >
           <NextButton onClick={onNextButtonClick} useKeyboardShortcut />
         </div>
       </div>

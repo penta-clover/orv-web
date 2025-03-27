@@ -50,7 +50,7 @@ function Body() {
         />
         <StatusBar currentStep={3} />
         <hr className="border-grayscale-700 border-[0.5px] w-full" />
-        <div className="relative flex justify-center items-center h-[476px] w-[1094px] bg-grayscale-900 rounded-[12px] overflow-hidden">
+        <div className="relative flex justify-center items-center h-[476px] w-[846px] bg-grayscale-900 rounded-[12px] overflow-hidden">
           <div className="w-full h-full" style={{ transform: "scaleX(-1)" }}>
             <CameraComponent ref={canvasRef} />
           </div>

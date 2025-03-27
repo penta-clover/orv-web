@@ -44,7 +44,9 @@ export default function Page() {
   ];
 
   return (
-    <div className="flex flex-col justify-center items-center pt-[calc(12dvh)]">
+    <div className="flex flex-col h-[calc(100dvh)] justify-center items-center">
+      <div className="h-[8dvh]" />
+
       <Image
         src={"/icons/logo-main-lilac50.svg"}
         alt="logo"
@@ -54,13 +56,13 @@ export default function Page() {
 
       <div className="h-[37px]" />
 
-      <div className="text-head1 text-grayscale-white">
+      <div className="text-head2 text-grayscale-white">
         당신만의 인터뷰 지금 시작하세요
       </div>
 
       <div className="h-[19px]" />
 
-      <div className="w-[393px] h-[221px] relative">
+      <div className="max-w-[532px] w-full aspect-[16/9] relative">
         <AnimatePresence mode="wait">
           <motion.div
             key={images[currentIndex].src}
@@ -73,9 +75,10 @@ export default function Page() {
             <Image
               unoptimized
               src={images[currentIndex].src}
-              alt="landing-demo-hs"
-              width={393}
-              height={221}
+              alt="landing-demo-image"
+              width={0}
+              height={0}
+              className="max-w-[532px] w-full aspect-[16/9]"
             />
           </motion.div>
         </AnimatePresence>
@@ -90,7 +93,7 @@ export default function Page() {
 
       <div className="h-[94px]" />
 
-      <div className="flex flex-col space-y-[12px] items-center w-[432px]">
+      <div className="flex flex-col space-y-[12px] items-center max-w-[532px] w-full">
         <div className="flex flex-row w-full justify-center px-[24px]">
           <Link
             href="https://api.orv.im/api/v0/auth/login/kakao"

@@ -4,7 +4,7 @@ export default function StatusBar(props: { currentStep: number }) {
   const { currentStep } = props;
 
   return (
-    <div className="pb-[20px]">
+    <div className="h-[86px]">
       <div className="w-[424px] h-[2px] bg-grayscale-500 relative top-[23px] -z-10"></div>
       <div className="flex flex-row gap-[80px] relative">
         <div className="flex flex-col items-center">
