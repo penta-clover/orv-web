@@ -145,72 +145,96 @@ function Body() {
       setIsOpen={setIsModalOpen}
       onExitInterview={() => router.replace("/")}
     >
-      <div className="relative w-full h-[100%] flex flex-col items-center justify-start gap-[42px] mt-[70px]">
-        <Image
-          unoptimized
-          src="/icons/x.svg"
-          width={32}
-          height={32}
-          alt="close"
-          onClick={() => setIsModalOpen(true)}
-          className="fixed top-[10px] right-[10px] px-[16px] py-[12px] w-[64px] h-[56px] focus:outline-none cursor-pointer"
-        />
-        <div className="relative flex justify-center items-center w-[90vw] lg:w-[1200px] bg-grayscale-900 rounded-[12px] overflow-hidden">
-          <div
-            className={cn(aspect === "none" && "hidden", "w-full h-full")}
-            style={{ transform: "scaleX(-1)" }}
-          >
-            <CameraComponent
-              ref={canvasRef}
-              filter={filter}
-              afterDraw={(ctx) => {
-                if (!canvasRef.current) return;
-                const x = 50;
-                const y = canvasRef.current!.height - 60;
-                const gap = 50;
-
-                ctx.font = "30px 'Pretendard-SemiBold'";
-                ctx.fillStyle = "white";
-                ctx.fillText(
-                  `${questionContent?.number ?? 0}번째 질문`,
-                  x,
-                  y - gap
-                );
-                ctx.fillText(questionContent?.question ?? "", x, y);
-              }}
-            />
-          </div>
-          <div className="absolute bottom-[32px] left-[32px] mr-[32px] text-white">
-            <div className="text-head3">{questionContent?.number}번째 질문</div>
-            <div className="text-head2 leading-1 mt-[8px]">
-              {questionContent?.question}
-              <br />
-              {questionContent?.hint}
+      <div className="relative w-full h-[calc(100dvh)] flex flex-col items-center justify-start py-[20px] px-[48px]">
+        <div className="flex flex-col grow items-center justify-center">
+          <div className="w-[90vw] lg:w-[1200px] flex justify-end">
+            <div
+              className="w-[139px] h-[56px] flex items-center justify-center gap-[2px] bg-grayscale-50 rounded-[12px] self-end active:scale-95"
+              onClick={() => setIsModalOpen(true)}
+            >
+              <Image
+                unoptimized
+                src="/icons/x-grayscale-black.svg"
+                width={24}
+                height={24}
+                alt="close"
+                className="focus:outline-none cursor-pointer"
+              />
+              <span className="text-head3 text-grayscale-800">종료하기</span>
             </div>
           </div>
-        </div>
-        <div className="fixed bottom-[45px] right-[45px] flex flex-col items-end gap-[10px]">
-          {showTip && (
-            <TipBox
-              tag="Tip!"
-              text="마우스 클릭 혹은 방향키 좌우동작을\n통해 조작하세요!"
-              tagColor="text-main-lilac50"
-            />
-          )}
-          <NextButton
-            onClick={() => {
-              if (questionContent?.nextSceneId) {
-                loadQuestion(
-                  questionContent!.nextSceneId,
-                  questionContent!.number + 1
-                );
-              } else {
-                stopRecording();
-              }
-              setShowTip(false);
-            }}
-            useKeyboardShortcut
-          />
+
+          <div className="h-[10px] flex-shrink-0" />
+
+          <div className="relative flex justify-center items-center w-[90vw] lg:w-[1200px] bg-grayscale-900 rounded-[12px] overflow-hidden">
+            <div
+              className={cn(aspect === "none" && "hidden", "w-full h-full")}
+              style={{ transform: "scaleX(-1)" }}
+            >
+              <CameraComponent
+                ref={canvasRef}
+                filter={filter}
+                afterDraw={(ctx) => {
+                  if (!canvasRef.current) return;
+                  const x = 50;
+                  const y = canvasRef.current!.height - 60;
+                  const gap = 50;
+
+                  ctx.font = "30px 'Pretendard-SemiBold'";
+                  ctx.fillStyle = "white";
+                  ctx.fillText(
+                    `${questionContent?.number ?? 0}번째 질문`,
+                    x,
+                    y - gap
+                  );
+                  ctx.fillText(questionContent?.question ?? "", x, y);
+                }}
+              />
+            </div>
+            <div className="absolute bottom-[32px] left-[32px] mr-[32px] text-white">
+              <div className="text-head3">
+                {questionContent?.number}번째 질문
+              </div>
+              <div className="text-head2 leading-1 mt-[8px]">
+                {questionContent?.question}
+                <br />
+                {questionContent?.hint}
+              </div>
+            </div>
+
+            <div className="absolute bottom-[24.5px] right-[24.5px] flex flex-col items-end gap-[10px]">
+              {showTip && (
+                <TipBox
+                  tag="Tip!"
+                  text="마우스 클릭 혹은 방향키 좌우동작을\n통해 조작하세요!"
+                  tagColor="text-main-lilac50"
+                />
+              )}
+              <NextButton
+                onClick={() => {
+                  if (questionContent?.nextSceneId) {
+                    loadQuestion(
+                      questionContent!.nextSceneId,
+                      questionContent!.number + 1
+                    );
+                  } else {
+                    stopRecording();
+                  }
+                  setShowTip(false);
+                }}
+                useKeyboardShortcut
+                className="rounded-[28px] w-[48px] h-[48px] p-0 flex items-center justify-center"
+              >
+                <Image
+                  unoptimized
+                  src="/icons/right-arrow-black.svg"
+                  alt="right-arrow"
+                  width={24}
+                  height={24}
+                />
+              </NextButton>
+            </div>
+          </div>
         </div>
       </div>
     </ExitInterviewModal>

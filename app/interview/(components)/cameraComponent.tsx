@@ -102,6 +102,85 @@ export const CameraComponent = React.forwardRef<
             const b = data[i + 2];
 
             switch (currentFilter) {
+              case "bright": {
+                // 각 색상 값에 1.5배 적용하고 255를 초과하지 않도록 제한
+                data[i] = Math.min(255, data[i] * 1.5); // R 값
+                data[i + 1] = Math.min(255, data[i + 1] * 1.5); // G 값
+                data[i + 2] = Math.min(255, data[i + 2] * 1.5); // B 값
+                break;
+              }
+              case "monotone": {
+                const gray = (r + g + b) / 3;
+                const bright = Math.min(255, gray * 1.1);
+                let contrasted = (bright - 128) * 0.9 + 128;
+                contrasted = Math.max(0, Math.min(255, contrasted)); // 0~255 범위로 클램핑
+
+                // 최종 픽셀 값 설정 (R, G, B 모두 동일)
+                data[i] = data[i + 1] = data[i + 2] = contrasted;
+                break;
+              }
+              case "natural": {
+                const brightnessFactor = 1.05;
+                const contrastFactor = 1.05;
+                data[i] = Math.max(0, Math.min(255, ((r * brightnessFactor - 128) * contrastFactor + 128)));
+                data[i + 1] = Math.max(0, Math.min(255, ((g * brightnessFactor - 128) * contrastFactor + 128)));
+                data[i + 2] = Math.max(0, Math.min(255, ((b * brightnessFactor - 128) * contrastFactor + 128)));
+                break;
+              }
+              case "soft": {
+                const brightnessFactor = 1.10;
+                const contrastFactor = 0.85;
+                const saturationFactor = 1.10;
+                
+                // 1. Brightness와 Contrast 적용
+                let r1 = ((r * brightnessFactor) - 128) * contrastFactor + 128;
+                let g1 = ((g * brightnessFactor) - 128) * contrastFactor + 128;
+                let b1 = ((b * brightnessFactor) - 128) * contrastFactor + 128;
+                
+                // 0 ~ 255 사이로 클램핑
+                r1 = Math.max(0, Math.min(255, r1));
+                g1 = Math.max(0, Math.min(255, g1));
+                b1 = Math.max(0, Math.min(255, b1));
+              
+                // 2. Saturation 적용: gray + (채널값 - gray) * saturationFactor
+                const gray = (r1 + g1 + b1) / 3;
+                const rFinal = Math.max(0, Math.min(255, gray + (r1 - gray) * saturationFactor));
+                const gFinal = Math.max(0, Math.min(255, gray + (g1 - gray) * saturationFactor));
+                const bFinal = Math.max(0, Math.min(255, gray + (b1 - gray) * saturationFactor));
+              
+                data[i] = rFinal;
+                data[i + 1] = gFinal;
+                data[i + 2] = bFinal;
+                break;
+              }
+              case "lark": {
+                const brightnessFactor = 1.15;
+                const contrastFactor = 0.95;
+                const saturationFactor = 0.80;
+              
+                // Brightness와 Contrast 적용
+                let r1 = ((r * brightnessFactor) - 128) * contrastFactor + 128;
+                let g1 = ((g * brightnessFactor) - 128) * contrastFactor + 128;
+                let b1 = ((b * brightnessFactor) - 128) * contrastFactor + 128;
+              
+                // 0~255 범위로 클램핑
+                r1 = Math.max(0, Math.min(255, r1));
+                g1 = Math.max(0, Math.min(255, g1));
+                b1 = Math.max(0, Math.min(255, b1));
+              
+                // 채널값의 평균 계산 (그레이스케일)
+                const gray = (r1 + g1 + b1) / 3;
+              
+                // Saturation 적용: gray와의 차이를 조정
+                const rFinal = Math.max(0, Math.min(255, gray + (r1 - gray) * saturationFactor));
+                const gFinal = Math.max(0, Math.min(255, gray + (g1 - gray) * saturationFactor));
+                const bFinal = Math.max(0, Math.min(255, gray + (b1 - gray) * saturationFactor));
+              
+                data[i] = rFinal;
+                data[i + 1] = gFinal;
+                data[i + 2] = bFinal;
+                break;
+              }
               case "grayscale":
                 const gray = (r + g + b) / 3;
                 data[i] = gray;

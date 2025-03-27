@@ -60,7 +60,7 @@ function Body() {
         <hr className="border-grayscale-700 border-[0.5px] w-full" />
 
         <div className="flex flex-col grow items-center justify-center">
-          <div className="flex flex-col gap-[20px]">
+          <div className="flex flex-col gap-[20px] items-center">
             <div className="relative flex justify-center items-center h-[430px] w-[846px] bg-grayscale-900 rounded-[12px] overflow-hidden">
               <div
                 className="w-full h-full"
@@ -82,20 +82,12 @@ function Body() {
                 기본
               </FilterButton>
               <FilterButton
-                selected={filter === "grayscale"}
+                selected={filter === "monotone"}
                 onClick={() => {
-                  setFilter("grayscale");
+                  setFilter("monotone");
                 }}
               >
-                흑백
-              </FilterButton>
-              <FilterButton
-                selected={filter === "warm"}
-                onClick={() => {
-                  setFilter("warm");
-                }}
-              >
-                따뜻하게
+                모노톤
               </FilterButton>
               <FilterButton
                 selected={filter === "bright"}
@@ -103,30 +95,44 @@ function Body() {
                   setFilter("bright");
                 }}
               >
-                밝게
+                밝기 증가
               </FilterButton>
               <FilterButton
-                selected={filter === "cold"}
+                selected={filter === "natural"}
                 onClick={() => {
-                  setFilter("cold");
+                  setFilter("natural");
                 }}
               >
-                차갑게
+                네추럴
+              </FilterButton>
+              <FilterButton
+                selected={filter === "soft"}
+                onClick={() => {
+                  setFilter("soft");
+                }}
+              >
+                소프트
+              </FilterButton>
+              <FilterButton
+                selected={filter === "lark"}
+                onClick={() => {
+                  setFilter("lark");
+                }}
+              >
+                Lark
               </FilterButton>
             </div>
           </div>
         </div>
-        <div className="w-full h-[104px]">
-          <PrevButton
-            className="fixed bottom-[45px] left-[45px]"
-            onClick={() =>
-              router.replace(
-                `/interview/setting/step3?storyboardId=${storyboardId}&aspect=${aspect}`
-              )
-            }
-            useKeyboardShortcut
-          />
-        </div>
+        <PrevButton
+          className="fixed bottom-[45px] left-[45px]"
+          onClick={() =>
+            router.replace(
+              `/interview/setting/step3?storyboardId=${storyboardId}&aspect=${aspect}`
+            )
+          }
+          useKeyboardShortcut
+        />
         <div className="fixed bottom-[45px] right-[45px] flex flex-col items-end gap-[10px]">
           <TipBox
             tag="Notice"
