@@ -35,7 +35,7 @@ function Body() {
       setIsOpen={setIsModalOpen}
       onExitInterview={() => router.replace("/")}
     >
-      <div className="relative flex flex-col h-[100dvh]">
+      <div className="relative flex flex-col h-[100dvh] justify-center">
         <Image
           unoptimized
           src="/icons/x.svg"
@@ -45,7 +45,7 @@ function Body() {
           onClick={() => setIsModalOpen(true)}
           className="fixed top-[10px] right-[10px] px-[16px] py-[12px] w-[64px] h-[56px] focus:outline-none cursor-pointer"
         />
-        <div className="flex flex-col grow items-center justify-center pb-[182px]">
+        <div className="flex flex-col items-center justify-center">
           <div className="text-white font-semibold text-[40px] leading-[64px] text-center">
             {formattedDate} 오늘은 여기까지
             <br />

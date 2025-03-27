@@ -40,7 +40,7 @@ function Body() {
       setIsOpen={setIsModalOpen}
       onExitInterview={() => router.replace("/")}
     >
-      <div className="relative w-full h-[100%] flex flex-col items-center justify-start gap-[42px] mt-[70px]">
+      <div className="relative w-full h-[calc(100dvh)] flex flex-col items-center justify-start">
         <Image
           unoptimized
           src="/icons/x.svg"
@@ -50,44 +50,60 @@ function Body() {
           onClick={() => setIsModalOpen(true)}
           className="fixed top-[10px] right-[10px] px-[16px] py-[12px] w-[64px] h-[56px] focus:outline-none cursor-pointer"
         />
+
+        <div className="h-[40px]" />
+
         <StatusBar currentStep={1} />
+
+        <div className="h-[24px]" />
+
         <hr className="border-grayscale-700 border-[0.5px] w-full" />
-        <div className="flex flex-row gap-[30px] px-[20px]">
-          <ImageCard
-            src="/images/setting-place-guide-1.jpg"
-            alt="place example 1"
-            text="인터뷰는 나를 마주하는 시간입니다.\n이를 방해 받지 않기 위해\n혼자만의 조용한 공간을 마련해주세요!\n내 방 혹은 조용한 공간, 나만의 아지트 어디든 좋아요."
-          />
-          <ImageCard
-            src="/images/setting-place-guide-2.jpg"
-            alt="place example 2"
-            text="아로마, 인센스 스틱이나 내가 제일 좋아하는 잠옷, 쿠션 등과 함께 해도 좋아요. 심리적으로 가장 편한 상황을 조성해서 스스로에게 몰입할 수 있는 환경을 만들어주세요."
-          />
+
+        <div className="flex flex-col grow items-center justify-center">
+          <div className="flex flex-row gap-[30px] px-[20px]">
+            <ImageCard
+              src="/images/setting-place-guide-1.jpg"
+              alt="place example 1"
+              text="인터뷰는 나를 마주하는 시간입니다.\n이를 방해 받지 않기 위해\n혼자만의 조용한 공간을 마련해주세요!\n내 방 혹은 조용한 공간, 나만의 아지트 어디든 좋아요."
+            />
+            <ImageCard
+              src="/images/setting-place-guide-2.jpg"
+              alt="place example 2"
+              text="아로마, 인센스 스틱이나 내가 제일 좋아하는 잠옷, 쿠션 등과 함께 해도 좋아요. 심리적으로 가장 편한 상황을 조성해서 스스로에게 몰입할 수 있는 환경을 만들어주세요."
+            />
+          </div>
+
+          <div className="h-[43px]" />
+
+          <label
+            htmlFor="ready"
+            className="flex flex-row items-center h-[24px] gap-[6px] text-body2 text-grayscale-white"
+          >
+            <input
+              id="ready"
+              type="checkbox"
+              suppressHydrationWarning
+              className="appearance-none w-[16px] h-[16px] mx-[4px] bg-[url('/icons/checkbox-unchecked.svg')] checked:bg-[url('/icons/checkbox-checked.svg')] transition-all"
+              onChange={(e) => setReady(e.target.checked)}
+            />
+            혼자만의 환경을 준비했어요
+          </label>
         </div>
-        <label
-          htmlFor="ready"
-          className="flex flex-row items-center h-[24px] gap-[6px] text-body2 text-grayscale-white"
-        >
-          <input
-            id="ready"
-            type="checkbox"
-            suppressHydrationWarning
-            className="appearance-none w-[16px] h-[16px] mx-[4px] bg-[url('/icons/checkbox-unchecked.svg')] checked:bg-[url('/icons/checkbox-checked.svg')] transition-all"
-            onChange={(e) => setReady(e.target.checked)}
+        <div className="w-full h-[104px]">
+          <PrevButton
+            className="fixed bottom-[45px] left-[45px]"
+            onClick={() =>
+              router.replace(`/interview/guide?storyboardId=${storyboardId}`)
+            }
+            useKeyboardShortcut
           />
-          혼자만의 환경을 준비했어요
-        </label>
-        <PrevButton
-          className="fixed bottom-[45px] left-[45px]"
-          onClick={() => router.back()}
-          useKeyboardShortcut
-        />
-        <div
-          className={`fixed bottom-[45px] right-[45px] flex flex-col items-end gap-[10px] transition-all  ${
-            ready ? "opacity-100" : "opacity-0 pointer-events-none"
-          }`}
-        >
-          <NextButton onClick={onNextButtonClick} useKeyboardShortcut />
+          <div
+            className={`fixed bottom-[45px] right-[45px] flex flex-col items-end gap-[10px] transition-all  ${
+              ready ? "opacity-100" : "opacity-0 pointer-events-none"
+            }`}
+          >
+            <NextButton onClick={onNextButtonClick} useKeyboardShortcut />
+          </div>
         </div>
       </div>
     </ExitInterviewModal>

@@ -40,7 +40,7 @@ function Body() {
       setIsOpen={setIsModalOpen}
       onExitInterview={() => router.replace("/")}
     >
-      <div className="relative w-full h-[100%] flex flex-col items-center justify-start gap-[42px] mt-[70px]">
+      <div className="relative w-full h-[calc(100dvh)] flex flex-col items-center justify-start">
         <Image
           unoptimized
           src="/icons/x.svg"
@@ -50,69 +50,83 @@ function Body() {
           onClick={() => setIsModalOpen(true)}
           className="fixed top-[10px] right-[10px] px-[16px] py-[12px] w-[64px] h-[56px] focus:outline-none cursor-pointer"
         />
+
+        <div className="h-[40px]" />
+
         <StatusBar currentStep={4} />
+
+        <div className="h-[24px]" />
+
         <hr className="border-grayscale-700 border-[0.5px] w-full" />
-        <div className="flex flex-col gap-[20px]">
-          <div className="relative flex justify-center items-center h-[430px] w-[846px] bg-grayscale-900 rounded-[12px] overflow-hidden">
-            <div className="w-full h-full" style={{ transform: "scaleX(-1)" }}>
-              <CameraComponent ref={canvasRef} filter={filter} />
+
+        <div className="flex flex-col grow items-center justify-center">
+          <div className="flex flex-col gap-[20px]">
+            <div className="relative flex justify-center items-center h-[430px] w-[846px] bg-grayscale-900 rounded-[12px] overflow-hidden">
+              <div
+                className="w-full h-full"
+                style={{ transform: "scaleX(-1)" }}
+              >
+                <CameraComponent ref={canvasRef} filter={filter} />
+              </div>
+              <div className="absolute top-[16px] left-[16px] text-head4 text-white">
+                필터 미리보기
+              </div>
             </div>
-            <div className="absolute top-[16px] left-[16px] text-head4 text-white">
-              필터 미리보기
+            <div className="flex flex-row items-center gap-[16px]">
+              <FilterButton
+                selected={filter === "default"}
+                onClick={() => {
+                  setFilter("default");
+                }}
+              >
+                기본
+              </FilterButton>
+              <FilterButton
+                selected={filter === "grayscale"}
+                onClick={() => {
+                  setFilter("grayscale");
+                }}
+              >
+                흑백
+              </FilterButton>
+              <FilterButton
+                selected={filter === "warm"}
+                onClick={() => {
+                  setFilter("warm");
+                }}
+              >
+                따뜻하게
+              </FilterButton>
+              <FilterButton
+                selected={filter === "bright"}
+                onClick={() => {
+                  setFilter("bright");
+                }}
+              >
+                밝게
+              </FilterButton>
+              <FilterButton
+                selected={filter === "cold"}
+                onClick={() => {
+                  setFilter("cold");
+                }}
+              >
+                차갑게
+              </FilterButton>
             </div>
-          </div>
-          <div className="flex flex-row items-center gap-[16px]">
-            <FilterButton
-              selected={filter === "default"}
-              onClick={() => {
-                setFilter("default");
-              }}
-            >
-              기본
-            </FilterButton>
-            <FilterButton
-              selected={filter === "grayscale"}
-              onClick={() => {
-                setFilter("grayscale");
-              }}
-            >
-              흑백
-            </FilterButton>
-            <FilterButton
-              selected={filter === "warm"}
-              onClick={() => {
-                setFilter("warm");
-              }}
-            >
-              따뜻하게
-            </FilterButton>
-            <FilterButton
-              selected={filter === "bright"}
-              onClick={() => {
-                setFilter("bright");
-              }}
-            >
-              밝게
-            </FilterButton>
-            <FilterButton
-              selected={filter === "cold"}
-              onClick={() => {
-                setFilter("cold");
-              }}
-            >
-              차갑게
-            </FilterButton>
           </div>
         </div>
-        <PrevButton
-          className="fixed bottom-[45px] left-[45px]"
-          onClick={() =>
-            router.replace(
-              `/interview/setting/step3?storyboardId=${storyboardId}&aspect=${aspect}`
-            )
-          }
-          useKeyboardShortcut
-        />
+        <div className="w-full h-[104px]">
+          <PrevButton
+            className="fixed bottom-[45px] left-[45px]"
+            onClick={() =>
+              router.replace(
+                `/interview/setting/step3?storyboardId=${storyboardId}&aspect=${aspect}`
+              )
+            }
+            useKeyboardShortcut
+          />
+        </div>
         <div className="fixed bottom-[45px] right-[45px] flex flex-col items-end gap-[10px]">
           <TipBox
             tag="Notice"

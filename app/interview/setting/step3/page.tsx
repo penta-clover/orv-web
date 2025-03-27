@@ -41,7 +41,7 @@ function Body() {
       setIsOpen={setIsModalOpen}
       onExitInterview={() => router.replace("/")}
     >
-      <div className="relative w-full h-[100%] flex flex-col items-center justify-start gap-[42px] mt-[70px]">
+      <div className="relative w-full h-[calc(100dvh)] flex flex-col items-center justify-start">
         <Image
           unoptimized
           src="/icons/x.svg"
@@ -51,84 +51,95 @@ function Body() {
           onClick={() => setIsModalOpen(true)}
           className="fixed top-[10px] right-[10px] px-[16px] py-[12px] w-[64px] h-[56px] focus:outline-none cursor-pointer"
         />
+
+        <div className="h-[40px]" />
+
         <StatusBar currentStep={3} />
+
+        <div className="h-[24px]" />
+
         <hr className="border-grayscale-700 border-[0.5px] w-full" />
-        <div className="relative grid grid-rows-2 grid-flow-col gap-[20px] h-[60vh]">
-          <div className="absolute top-[12px] left-[12px] px-[8px] py-[1px] bg-system-info text-white text-caption1 rounded-[4px] z-20">
-            추천
+
+        <div className="flex flex-col grow items-center justify-center">
+          <div className="relative grid grid-rows-2 grid-flow-col gap-[20px] h-[60vh]">
+            <div className="absolute top-[12px] left-[12px] px-[8px] py-[1px] bg-system-info text-white text-caption1 rounded-[4px] z-20">
+              추천
+            </div>
+            <AspectPreview
+              selected={selectedAspect === "frontal"}
+              onClick={() => onAspectClick("frontal")}
+            >
+              <Image
+                src="/images/pose-guide-frontal.png"
+                width={100}
+                height={100}
+                alt="frontal"
+                className="w-full h-full object-cover absolute z-10"
+                draggable={false}
+              />
+              <div className="absolute top-0 left-0 w-full h-full">
+                <CameraComponent ref={canvasRef} />
+              </div>
+            </AspectPreview>
+            <AspectPreview
+              selected={selectedAspect === "whole"}
+              onClick={() => onAspectClick("whole")}
+            >
+              <Image
+                src="/images/pose-guide-whole.png"
+                width={100}
+                height={100}
+                alt="whole"
+                className="w-full h-full object-cover absolute z-10"
+                draggable={false}
+              />
+              <div className="absolute top-0 left-0 w-full h-full">
+                <CameraComponent ref={canvasRef} />
+              </div>
+            </AspectPreview>
+            <AspectPreview
+              selected={selectedAspect === "side"}
+              onClick={() => onAspectClick("side")}
+            >
+              <Image
+                src="/images/pose-guide-side.png"
+                width={100}
+                height={100}
+                alt="side"
+                className="w-full h-full object-cover absolute z-10"
+                draggable={false}
+              />
+              <div className="absolute top-0 left-0 w-full h-full">
+                <CameraComponent ref={canvasRef} />
+              </div>
+            </AspectPreview>
+            <AspectPreview
+              selected={selectedAspect === "none"}
+              onClick={() => onAspectClick("none")}
+              reverseX={false}
+            >
+              <div className="flex flex-col items-center justify-center gap-[8px] bg-grayscale-900 rounded-[12px] aspect-[16/9] cursor-pointer">
+                <div className="text-head2 text-grayscale-50">
+                  화면 없이 검은색 바탕으로 질문만
+                </div>
+                <div className="text-body2 text-grayscale-300">
+                  *화면에 스스로의 모습이 비치는게 어색한 경우에 추천드려요.
+                </div>
+              </div>
+            </AspectPreview>
           </div>
-          <AspectPreview
-            selected={selectedAspect === "frontal"}
-            onClick={() => onAspectClick("frontal")}
-          >
-            <Image
-              src="/images/pose-guide-frontal.png"
-              width={100}
-              height={100}
-              alt="frontal"
-              className="w-full h-full object-cover absolute z-10"
-              draggable={false}
-            />
-            <div className="absolute top-0 left-0 w-full h-full">
-              <CameraComponent ref={canvasRef} />
-            </div>
-          </AspectPreview>
-          <AspectPreview
-            selected={selectedAspect === "whole"}
-            onClick={() => onAspectClick("whole")}
-          >
-            <Image
-              src="/images/pose-guide-whole.png"
-              width={100}
-              height={100}
-              alt="whole"
-              className="w-full h-full object-cover absolute z-10"
-              draggable={false}
-            />
-            <div className="absolute top-0 left-0 w-full h-full">
-              <CameraComponent ref={canvasRef} />
-            </div>
-          </AspectPreview>
-          <AspectPreview
-            selected={selectedAspect === "side"}
-            onClick={() => onAspectClick("side")}
-          >
-            <Image
-              src="/images/pose-guide-side.png"
-              width={100}
-              height={100}
-              alt="side"
-              className="w-full h-full object-cover absolute z-10"
-              draggable={false}
-            />
-            <div className="absolute top-0 left-0 w-full h-full">
-              <CameraComponent ref={canvasRef} />
-            </div>
-          </AspectPreview>
-          <AspectPreview
-            selected={selectedAspect === "none"}
-            onClick={() => onAspectClick("none")}
-            reverseX={false}
-          >
-            <div className="flex flex-col items-center justify-center gap-[8px] bg-grayscale-900 rounded-[12px] aspect-[16/9] cursor-pointer">
-              <div className="text-head2 text-grayscale-50">
-                화면 없이 검은색 바탕으로 질문만
-              </div>
-              <div className="text-body2 text-grayscale-300">
-                *화면에 스스로의 모습이 비치는게 어색한 경우에 추천드려요.
-              </div>
-            </div>
-          </AspectPreview>
         </div>
-        <PrevButton
-          className="fixed bottom-[45px] left-[45px]"
-          onClick={() =>
-            router.replace(
-              `/interview/setting/step2?storyboardId=${storyboardId}`
-            )
-          }
-          useKeyboardShortcut
-        />
+        <div className="w-full h-[104px]">
+          <PrevButton
+            className="fixed bottom-[45px] left-[45px]"
+            onClick={() =>
+              router.replace(
+                `/interview/setting/step2?storyboardId=${storyboardId}`
+              )
+            }
+            useKeyboardShortcut
+          />
+        </div>
       </div>
     </ExitInterviewModal>
   );

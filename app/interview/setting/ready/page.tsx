@@ -31,11 +31,6 @@ function Body() {
   useEffect(() => {
     storyboardRepository.getStoryboardInfo(storyboardId).then((storyboard) => {
       setTitle(storyboard.title);
-      setTimeout(() => {
-        router.replace(
-          `/interview/recording?storyboardId=${storyboardId}&aspect=${aspect}&filter=${filter}`
-        );
-      }, 21000);
     });
   }, [storyboardId]);
 
@@ -67,7 +62,17 @@ function Body() {
         <div className="fixed top-0 h-full flex flex-col justify-center items-center">
           <div className="w-[95vw] lg:w-[952px] text-body0 text-main-lilac50 text-center ">
             {title === null ? null : (
-              <Typewriter text={typewriterText} speed={80} />
+              <Typewriter
+                text={typewriterText}
+                speed={80}
+                onWritingEnd={() => {
+                  setTimeout(() => {
+                    router.replace(
+                      `/interview/recording?storyboardId=${storyboardId}&aspect=${aspect}&filter=${filter}`
+                    );
+                  }, 1200);
+                }}
+              />
             )}
           </div>
         </div>
