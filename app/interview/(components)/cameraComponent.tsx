@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useImperativeHandle, useRef } from "react";
+import Image from "next/image";
 
 interface CameraComponentProps {
   filter?: Filter;
@@ -20,6 +21,7 @@ export const CameraComponent = React.forwardRef<
   const afterDrawRef = useRef<
     ((ctx: CanvasRenderingContext2D) => void) | undefined
   >(props.afterDraw);
+  const overlayRef = useRef<HTMLImageElement | null>(null);
 
   useImperativeHandle(ref, () => canvasRef.current as HTMLCanvasElement);
 
@@ -31,6 +33,14 @@ export const CameraComponent = React.forwardRef<
   useEffect(() => {
     afterDrawRef.current = props.afterDraw;
   }, [props.afterDraw]);
+
+  useEffect(() => {
+    const img = new window.Image();
+    img.src = "/images/studio-lighting-fhd.png";
+    img.onload = () => {
+      overlayRef.current = img;
+    };
+  }, []);
 
   // 카메라 설정
   useEffect(() => {
@@ -122,32 +132,59 @@ export const CameraComponent = React.forwardRef<
               case "natural": {
                 const brightnessFactor = 1.05;
                 const contrastFactor = 1.05;
-                data[i] = Math.max(0, Math.min(255, ((r * brightnessFactor - 128) * contrastFactor + 128)));
-                data[i + 1] = Math.max(0, Math.min(255, ((g * brightnessFactor - 128) * contrastFactor + 128)));
-                data[i + 2] = Math.max(0, Math.min(255, ((b * brightnessFactor - 128) * contrastFactor + 128)));
+                data[i] = Math.max(
+                  0,
+                  Math.min(
+                    255,
+                    (r * brightnessFactor - 128) * contrastFactor + 128
+                  )
+                );
+                data[i + 1] = Math.max(
+                  0,
+                  Math.min(
+                    255,
+                    (g * brightnessFactor - 128) * contrastFactor + 128
+                  )
+                );
+                data[i + 2] = Math.max(
+                  0,
+                  Math.min(
+                    255,
+                    (b * brightnessFactor - 128) * contrastFactor + 128
+                  )
+                );
                 break;
               }
               case "soft": {
-                const brightnessFactor = 1.10;
+                const brightnessFactor = 1.1;
                 const contrastFactor = 0.85;
-                const saturationFactor = 1.10;
-                
+                const saturationFactor = 1.1;
+
                 // 1. Brightness와 Contrast 적용
-                let r1 = ((r * brightnessFactor) - 128) * contrastFactor + 128;
-                let g1 = ((g * brightnessFactor) - 128) * contrastFactor + 128;
-                let b1 = ((b * brightnessFactor) - 128) * contrastFactor + 128;
-                
+                let r1 = (r * brightnessFactor - 128) * contrastFactor + 128;
+                let g1 = (g * brightnessFactor - 128) * contrastFactor + 128;
+                let b1 = (b * brightnessFactor - 128) * contrastFactor + 128;
+
                 // 0 ~ 255 사이로 클램핑
                 r1 = Math.max(0, Math.min(255, r1));
                 g1 = Math.max(0, Math.min(255, g1));
                 b1 = Math.max(0, Math.min(255, b1));
-              
+
                 // 2. Saturation 적용: gray + (채널값 - gray) * saturationFactor
                 const gray = (r1 + g1 + b1) / 3;
-                const rFinal = Math.max(0, Math.min(255, gray + (r1 - gray) * saturationFactor));
-                const gFinal = Math.max(0, Math.min(255, gray + (g1 - gray) * saturationFactor));
-                const bFinal = Math.max(0, Math.min(255, gray + (b1 - gray) * saturationFactor));
-              
+                const rFinal = Math.max(
+                  0,
+                  Math.min(255, gray + (r1 - gray) * saturationFactor)
+                );
+                const gFinal = Math.max(
+                  0,
+                  Math.min(255, gray + (g1 - gray) * saturationFactor)
+                );
+                const bFinal = Math.max(
+                  0,
+                  Math.min(255, gray + (b1 - gray) * saturationFactor)
+                );
+
                 data[i] = rFinal;
                 data[i + 1] = gFinal;
                 data[i + 2] = bFinal;
@@ -156,26 +193,35 @@ export const CameraComponent = React.forwardRef<
               case "lark": {
                 const brightnessFactor = 1.15;
                 const contrastFactor = 0.95;
-                const saturationFactor = 0.80;
-              
+                const saturationFactor = 0.8;
+
                 // Brightness와 Contrast 적용
-                let r1 = ((r * brightnessFactor) - 128) * contrastFactor + 128;
-                let g1 = ((g * brightnessFactor) - 128) * contrastFactor + 128;
-                let b1 = ((b * brightnessFactor) - 128) * contrastFactor + 128;
-              
+                let r1 = (r * brightnessFactor - 128) * contrastFactor + 128;
+                let g1 = (g * brightnessFactor - 128) * contrastFactor + 128;
+                let b1 = (b * brightnessFactor - 128) * contrastFactor + 128;
+
                 // 0~255 범위로 클램핑
                 r1 = Math.max(0, Math.min(255, r1));
                 g1 = Math.max(0, Math.min(255, g1));
                 b1 = Math.max(0, Math.min(255, b1));
-              
+
                 // 채널값의 평균 계산 (그레이스케일)
                 const gray = (r1 + g1 + b1) / 3;
-              
+
                 // Saturation 적용: gray와의 차이를 조정
-                const rFinal = Math.max(0, Math.min(255, gray + (r1 - gray) * saturationFactor));
-                const gFinal = Math.max(0, Math.min(255, gray + (g1 - gray) * saturationFactor));
-                const bFinal = Math.max(0, Math.min(255, gray + (b1 - gray) * saturationFactor));
-              
+                const rFinal = Math.max(
+                  0,
+                  Math.min(255, gray + (r1 - gray) * saturationFactor)
+                );
+                const gFinal = Math.max(
+                  0,
+                  Math.min(255, gray + (g1 - gray) * saturationFactor)
+                );
+                const bFinal = Math.max(
+                  0,
+                  Math.min(255, gray + (b1 - gray) * saturationFactor)
+                );
+
                 data[i] = rFinal;
                 data[i + 1] = gFinal;
                 data[i + 2] = bFinal;
@@ -213,6 +259,12 @@ export const CameraComponent = React.forwardRef<
         ctx.putImageData(imageData, 0, 0);
         previewCtx.putImageData(imageData, 0, 0);
 
+        // 성능 이슈로 인해 주석 처리...
+        // if (overlayRef.current) {
+        //   // 예: 전체 화면에 맞춰 그리기
+        //   ctx.drawImage(overlayRef.current, 0, 0, canvas.width, canvas.height);
+        // }
+
         if (afterDrawRef.current) {
           afterDrawRef.current(ctx);
         }
@@ -235,6 +287,17 @@ export const CameraComponent = React.forwardRef<
 
   return (
     <div className="relative w-full h-full">
+      <div
+        className="absolute inset-0 z-10"
+        style={{ transform: "scaleX(-1)" }}
+      >
+        <Image
+          unoptimized
+          src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/studio-lighting.png"
+          fill
+          alt="studio-lighting"
+        />
+      </div>
       <video
         ref={localVideoRef}
         autoPlay
