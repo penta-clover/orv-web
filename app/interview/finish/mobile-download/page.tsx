@@ -27,7 +27,7 @@ function Body() {
     archiveRepository.getVideo(videoId).then((video) => {
       setVideo(video);
     });
-  });
+  }, []);
 
   const handleDownload = async () => {
     if (video?.videoUrl) {
