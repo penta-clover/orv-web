@@ -6,7 +6,7 @@ export default function BackgroundMusic() {
     let currentTrack = 1;
     const totalTracks = 6;
     const audio = new Audio(`https://d3bdjeyz3ry3pi.cloudfront.net/static/audios/interview-audio-${currentTrack}.mp3`);
-    audio.volume = 1.0; // 필요에 따라 볼륨 조정
+    audio.volume = 0.7; // 필요에 따라 볼륨 조정
 
     const handleEnded = () => {
       currentTrack = currentTrack === totalTracks ? 1 : currentTrack + 1;

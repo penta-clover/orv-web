@@ -10,7 +10,7 @@ import ExitInterviewModal from "../(components)/exitInterviewModal";
 import { useStoryboardRepository } from "@/providers/StoryboardRepositoryContext";
 import TipBox from "../(components)/tipBox";
 import NextButton from "../(components)/nextButton";
-import BackgroundMusic from "./BackgroundMusic";
+import BackgroundMusic from "./backgroundMusic";
 
 interface QuestionContent {
   number: number;
