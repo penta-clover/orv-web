@@ -191,7 +191,7 @@ function Body() {
                 }
                 router.push(`/interview/finish/naming?videoId=${videoId}`);
               }}
-              useKeyboardShortcut
+              useKeyboardShortcut={false}
             />
           </div>
         </div>
