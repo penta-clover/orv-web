@@ -61,7 +61,7 @@ function Body() {
         <hr className="border-grayscale-700 border-[0.5px] w-full" />
 
         <div className="flex flex-col grow items-center justify-center">
-          <div className="relative grid grid-rows-2 grid-flow-col gap-[20px] h-[60vh]">
+          <div className="relative grid grid-rows-2 grid-cols-2 grid-flow-col gap-[20px] h-[60vh]">
             <div className="absolute top-[12px] left-[12px] px-[8px] py-[1px] bg-system-info text-white text-caption1 rounded-[4px] z-20">
               추천
             </div>
