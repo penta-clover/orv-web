@@ -8,6 +8,161 @@ interface CameraComponentProps {
   afterDraw?: (ctx: CanvasRenderingContext2D) => void;
 }
 
+const CAMERA_FPS = 24;
+const FRAME_INTERVAL = 1000 / CAMERA_FPS;
+
+// WebGL 셰이더
+const vertexShaderSource = `
+  attribute vec2 a_position;
+  attribute vec2 a_texCoord;
+  varying vec2 v_texCoord;
+  void main() {
+    gl_Position = vec4(a_position, 0, 1);
+    v_texCoord = a_texCoord;
+  }
+`;
+
+const fragmentShaderSource = `
+  precision mediump float;
+  uniform sampler2D u_image;
+  uniform float u_brightness;
+  uniform float u_contrast;
+  uniform float u_saturation;
+  varying vec2 v_texCoord;
+  
+  void main() {
+    vec4 color = texture2D(u_image, v_texCoord);
+    vec3 rgb = color.rgb;
+    
+    // 1. 밝기 적용
+    rgb = rgb * u_brightness;
+    
+    // 2. 대비 적용
+    rgb = (rgb - 0.5) * u_contrast + 0.5;
+    
+    // 3. 채도 적용
+    float gray = dot(rgb, vec3(0.299, 0.587, 0.114));
+    rgb = mix(vec3(gray), rgb, u_saturation);
+    
+    // 0~1 범위로 클램핑
+    rgb = clamp(rgb, 0.0, 1.0);
+    
+    gl_FragColor = vec4(rgb, color.a);
+  }
+`;
+
+// WebGL 유틸리티 함수들
+function createShader(gl: WebGLRenderingContext, type: number, source: string) {
+  const shader = gl.createShader(type);
+  if (!shader) throw new Error("Failed to create shader");
+
+  gl.shaderSource(shader, source);
+  gl.compileShader(shader);
+
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    console.error("Shader compilation error:", gl.getShaderInfoLog(shader));
+    gl.deleteShader(shader);
+    return null;
+  }
+
+  return shader;
+}
+
+function createProgram(gl: WebGLRenderingContext) {
+  const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+  const fragmentShader = createShader(
+    gl,
+    gl.FRAGMENT_SHADER,
+    fragmentShaderSource
+  );
+
+  if (!vertexShader || !fragmentShader) return null;
+
+  const program = gl.createProgram();
+  if (!program) throw new Error("Failed to create program");
+
+  gl.attachShader(program, vertexShader);
+  gl.attachShader(program, fragmentShader);
+  gl.linkProgram(program);
+
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    console.error("Program linking error:", gl.getProgramInfoLog(program));
+    gl.deleteProgram(program);
+    return null;
+  }
+
+  return program;
+}
+
+// 필터 설정을 WebGL uniform으로 변환하는 함수
+// 나중에 RGB 기준이든, Convolution Matrix든 변경할 수 있음
+// 일단 밝기, 채도, 대비 사용
+function getFilterUniforms(filter: Filter) {
+  switch (filter) {
+    case "bright":
+      return {
+        brightness: 1.2,
+        contrast: 1.0,
+        saturation: 1.0,
+      };
+    case "monotone": {
+      return {
+        brightness: 1.1,
+        contrast: 0.9,
+        saturation: 0.0,
+      };
+    }
+    case "natural":
+      return {
+        brightness: 1.05,
+        contrast: 1.05,
+        saturation: 1.0,
+      };
+    case "soft":
+      return {
+        brightness: 1.1,
+        contrast: 0.85,
+        saturation: 1.1,
+      };
+    case "lark":
+      return {
+        brightness: 1.15,
+        contrast: 0.95,
+        saturation: 0.8,
+      };
+    case "grayscale":
+      return {
+        brightness: 1.0,
+        contrast: 1.0,
+        saturation: 0.0,
+      };
+    case "warm":
+      return {
+        brightness: 1.1,
+        contrast: 1.0,
+        saturation: 1.2,
+      };
+    case "cold":
+      return {
+        brightness: 0.9,
+        contrast: 1.0,
+        saturation: 0.8,
+      };
+    case "dark":
+      return {
+        brightness: 0.8,
+        contrast: 1.0,
+        saturation: 1.0,
+      };
+    default:
+      return {
+        brightness: 1.0,
+        contrast: 1.0,
+        saturation: 1.0,
+      };
+  }
+}
+
 // CameraComponent를 forwardRef로 감싸서 외부에서 canvas 엘리먼트를 참조할 수 있도록 합니다.
 export const CameraComponent = React.forwardRef<
   HTMLCanvasElement,
@@ -16,7 +171,7 @@ export const CameraComponent = React.forwardRef<
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const previewRef = useRef<HTMLCanvasElement>(null);
-  const animationFrameRef = useRef<number | undefined>(undefined);
+  const setTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const currentFilterRef = useRef<Filter | undefined>(props.filter);
   const afterDrawRef = useRef<
     ((ctx: CanvasRenderingContext2D) => void) | undefined
@@ -84,203 +239,159 @@ export const CameraComponent = React.forwardRef<
     const canvas = canvasRef.current;
     const preview = previewRef.current;
 
-    // willReadFrequently가 들어가면 GPU가 아닌 CPU에서 렌더링을 하는데,
-    // 그러면 fetch가 우선 순위에 밀려서 딜레이가 생기므로 켜지 않음
-    const ctx = canvas?.getContext("2d");
-    const previewCtx = preview?.getContext("2d");
+    if (!video || !canvas || !preview) return;
 
-    if (!video || !canvas || !ctx || !preview || !previewCtx) return;
+    // WebGL 컨텍스트 초기화 (preview 캔버스에서)
+    const gl = preview.getContext("webgl");
+    if (!gl) {
+      console.error("WebGL not supported");
+      return;
+    }
 
-    const drawFrame = () => {
-      if (video.readyState === video.HAVE_ENOUGH_DATA) {
+    // WebGL 프로그램 생성
+    const program = createProgram(gl);
+    if (!program) {
+      console.error("Failed to create WebGL program");
+      return;
+    }
+
+    // 버퍼 초기화
+    const positionBuffer = gl.createBuffer();
+    const texCoordBuffer = gl.createBuffer();
+    if (!positionBuffer || !texCoordBuffer) {
+      console.error("Failed to create buffers");
+      return;
+    }
+
+    // 정점 데이터 설정
+    const positions = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
+    const texCoords = new Float32Array([0, 1, 1, 1, 0, 0, 1, 0]);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, texCoords, gl.STATIC_DRAW);
+
+    // 텍스처 초기화
+    const texture = gl.createTexture();
+    if (!texture) {
+      console.error("Failed to create texture");
+      return;
+    }
+
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+    // 비디오 크기가 변경될 때만 캔버스 크기 조정
+    let lastVideoWidth = 0;
+    let lastVideoHeight = 0;
+
+    const updateCanvasSize = () => {
+      if (
+        video.videoWidth !== lastVideoWidth ||
+        video.videoHeight !== lastVideoHeight
+      ) {
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         preview.width = video.videoWidth;
         preview.height = video.videoHeight;
+        lastVideoWidth = video.videoWidth;
+        lastVideoHeight = video.videoHeight;
+      }
+    };
 
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const drawFrame = () => {
+      if (video.readyState === video.HAVE_ENOUGH_DATA) {
+        updateCanvasSize();
 
+        // WebGL 렌더링
+        gl.viewport(0, 0, preview.width, preview.height);
+        gl.useProgram(program);
+
+        // 버퍼 바인딩
+        const positionLocation = gl.getAttribLocation(program, "a_position");
+        const texCoordLocation = gl.getAttribLocation(program, "a_texCoord");
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        gl.enableVertexAttribArray(positionLocation);
+        gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+        gl.enableVertexAttribArray(texCoordLocation);
+        gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
+
+        // 텍스처 업데이트
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texImage2D(
+          gl.TEXTURE_2D,
+          0,
+          gl.RGBA,
+          gl.RGBA,
+          gl.UNSIGNED_BYTE,
+          video
+        );
+
+        // 필터 uniform 설정
         const currentFilter = currentFilterRef.current;
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const data = imageData.data;
+        const uniforms = getFilterUniforms(currentFilter || "default");
 
-        // 필터가 적용된 경우에만 픽셀 데이터 수정
-        if (currentFilter && currentFilter !== "default") {
-          for (let i = 0; i < data.length; i += 4) {
-            const r = data[i];
-            const g = data[i + 1];
-            const b = data[i + 2];
+        const brightnessLocation = gl.getUniformLocation(
+          program,
+          "u_brightness"
+        );
+        const contrastLocation = gl.getUniformLocation(program, "u_contrast");
+        const saturationLocation = gl.getUniformLocation(
+          program,
+          "u_saturation"
+        );
 
-            switch (currentFilter) {
-              case "bright": {
-                // 각 색상 값에 1.5배 적용하고 255를 초과하지 않도록 제한
-                data[i] = Math.min(255, data[i] * 1.5); // R 값
-                data[i + 1] = Math.min(255, data[i + 1] * 1.5); // G 값
-                data[i + 2] = Math.min(255, data[i + 2] * 1.5); // B 값
-                break;
-              }
-              case "monotone": {
-                const gray = (r + g + b) / 3;
-                const bright = Math.min(255, gray * 1.1);
-                let contrasted = (bright - 128) * 0.9 + 128;
-                contrasted = Math.max(0, Math.min(255, contrasted)); // 0~255 범위로 클램핑
+        gl.uniform1f(brightnessLocation, uniforms.brightness);
+        gl.uniform1f(contrastLocation, uniforms.contrast);
+        gl.uniform1f(saturationLocation, uniforms.saturation);
 
-                // 최종 픽셀 값 설정 (R, G, B 모두 동일)
-                data[i] = data[i + 1] = data[i + 2] = contrasted;
-                break;
-              }
-              case "natural": {
-                const brightnessFactor = 1.05;
-                const contrastFactor = 1.05;
-                data[i] = Math.max(
-                  0,
-                  Math.min(
-                    255,
-                    (r * brightnessFactor - 128) * contrastFactor + 128
-                  )
-                );
-                data[i + 1] = Math.max(
-                  0,
-                  Math.min(
-                    255,
-                    (g * brightnessFactor - 128) * contrastFactor + 128
-                  )
-                );
-                data[i + 2] = Math.max(
-                  0,
-                  Math.min(
-                    255,
-                    (b * brightnessFactor - 128) * contrastFactor + 128
-                  )
-                );
-                break;
-              }
-              case "soft": {
-                const brightnessFactor = 1.1;
-                const contrastFactor = 0.85;
-                const saturationFactor = 1.1;
+        // 그리기
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
-                // 1. Brightness와 Contrast 적용
-                let r1 = (r * brightnessFactor - 128) * contrastFactor + 128;
-                let g1 = (g * brightnessFactor - 128) * contrastFactor + 128;
-                let b1 = (b * brightnessFactor - 128) * contrastFactor + 128;
-
-                // 0 ~ 255 사이로 클램핑
-                r1 = Math.max(0, Math.min(255, r1));
-                g1 = Math.max(0, Math.min(255, g1));
-                b1 = Math.max(0, Math.min(255, b1));
-
-                // 2. Saturation 적용: gray + (채널값 - gray) * saturationFactor
-                const gray = (r1 + g1 + b1) / 3;
-                const rFinal = Math.max(
-                  0,
-                  Math.min(255, gray + (r1 - gray) * saturationFactor)
-                );
-                const gFinal = Math.max(
-                  0,
-                  Math.min(255, gray + (g1 - gray) * saturationFactor)
-                );
-                const bFinal = Math.max(
-                  0,
-                  Math.min(255, gray + (b1 - gray) * saturationFactor)
-                );
-
-                data[i] = rFinal;
-                data[i + 1] = gFinal;
-                data[i + 2] = bFinal;
-                break;
-              }
-              case "lark": {
-                const brightnessFactor = 1.15;
-                const contrastFactor = 0.95;
-                const saturationFactor = 0.8;
-
-                // Brightness와 Contrast 적용
-                let r1 = (r * brightnessFactor - 128) * contrastFactor + 128;
-                let g1 = (g * brightnessFactor - 128) * contrastFactor + 128;
-                let b1 = (b * brightnessFactor - 128) * contrastFactor + 128;
-
-                // 0~255 범위로 클램핑
-                r1 = Math.max(0, Math.min(255, r1));
-                g1 = Math.max(0, Math.min(255, g1));
-                b1 = Math.max(0, Math.min(255, b1));
-
-                // 채널값의 평균 계산 (그레이스케일)
-                const gray = (r1 + g1 + b1) / 3;
-
-                // Saturation 적용: gray와의 차이를 조정
-                const rFinal = Math.max(
-                  0,
-                  Math.min(255, gray + (r1 - gray) * saturationFactor)
-                );
-                const gFinal = Math.max(
-                  0,
-                  Math.min(255, gray + (g1 - gray) * saturationFactor)
-                );
-                const bFinal = Math.max(
-                  0,
-                  Math.min(255, gray + (b1 - gray) * saturationFactor)
-                );
-
-                data[i] = rFinal;
-                data[i + 1] = gFinal;
-                data[i + 2] = bFinal;
-                break;
-              }
-              case "grayscale":
-                const gray = (r + g + b) / 3;
-                data[i] = gray;
-                data[i + 1] = gray;
-                data[i + 2] = gray;
-                break;
-              case "warm":
-                data[i] = Math.min(255, r * 1.2); // 빨간색 강화
-                data[i + 1] = Math.min(255, g * 1.1); // 초록색 약간 강화
-                break;
-              case "cold":
-                data[i] = Math.max(0, r * 0.8); // 빨간색 감소
-                data[i + 2] = Math.min(255, b * 1.2); // 파란색 강화
-                break;
-              case "bright":
-                data[i] = Math.min(255, r * 1.2);
-                data[i + 1] = Math.min(255, g * 1.2);
-                data[i + 2] = Math.min(255, b * 1.2);
-                break;
-              case "dark":
-                data[i] = Math.max(0, r * 0.8);
-                data[i + 1] = Math.max(0, g * 0.8);
-                data[i + 2] = Math.max(0, b * 0.8);
-                break;
-            }
+        // 오버레이와 자막 그리기
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          ctx.drawImage(preview, 0, 0, preview.width, preview.height);
+          if (overlayRef.current) {
+            ctx.drawImage(
+              overlayRef.current,
+              0,
+              0,
+              canvas.width,
+              canvas.height
+            );
           }
-        }
 
-        // 수정된 이미지 데이터를 canvas에 그리기
-        ctx.putImageData(imageData, 0, 0);
-        previewCtx.putImageData(imageData, 0, 0);
-
-        // 성능 이슈로 인해 주석 처리...
-        // if (overlayRef.current) {
-        //   // 예: 전체 화면에 맞춰 그리기
-        //   ctx.drawImage(overlayRef.current, 0, 0, canvas.width, canvas.height);
-        // }
-
-        if (afterDrawRef.current) {
-          afterDrawRef.current(ctx);
+          // 자막 그리기
+          if (afterDrawRef.current) {
+            afterDrawRef.current(ctx);
+          }
         }
       }
 
-      animationFrameRef.current = requestAnimationFrame(drawFrame);
+      setTimeoutRef.current = setTimeout(drawFrame, FRAME_INTERVAL);
     };
 
-    // 비디오가 로드되면 그리기 시작
     video.onloadedmetadata = () => {
       drawFrame();
     };
 
     return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
+      if (setTimeoutRef.current) {
+        clearTimeout(setTimeoutRef.current);
+      }
+      if (gl) {
+        gl.deleteProgram(program);
+        gl.deleteBuffer(positionBuffer);
+        gl.deleteBuffer(texCoordBuffer);
+        gl.deleteTexture(texture);
       }
     };
   }, []);
