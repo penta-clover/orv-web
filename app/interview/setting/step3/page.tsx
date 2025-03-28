@@ -122,7 +122,7 @@ function Body() {
                 <div className="text-head2 text-grayscale-50">
                   화면 없이 검은색 바탕으로 질문만
                 </div>
-                <div className="text-body2 text-grayscale-300">
+                <div className="text-body3 text-grayscale-300 text-center">
                   *화면에 스스로의 모습이 비치는게 어색한 경우에 추천드려요.
                 </div>
               </div>
