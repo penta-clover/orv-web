@@ -10,6 +10,7 @@ import ExitInterviewModal from "../(components)/exitInterviewModal";
 import { useStoryboardRepository } from "@/providers/StoryboardRepositoryContext";
 import TipBox from "../(components)/tipBox";
 import NextButton from "../(components)/nextButton";
+import BackgroundMusic from "./BackgroundMusic";
 
 interface QuestionContent {
   number: number;
@@ -20,9 +21,12 @@ interface QuestionContent {
 
 export default function Page() {
   return (
-    <Suspense>
-      <Body />
-    </Suspense>
+    <>
+      <BackgroundMusic />
+      <Suspense>
+        <Body />
+      </Suspense>
+    </>
   );
 }
 
