@@ -209,6 +209,7 @@ function Body() {
                   tag="Tip!"
                   text="마우스 클릭 혹은 방향키 좌우동작을\n통해 조작하세요!"
                   tagColor="text-main-lilac50"
+                  dismissOnClick
                 />
               )}
               <NextButton
