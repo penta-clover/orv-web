@@ -3,12 +3,14 @@ import "@/app/components/blackBody.css";
 import Image from "next/image";
 import NextButton from "../../(components)/nextButton";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import ExitInterviewModal from "../../(components)/exitInterviewModal";
 import PrevButton from "../../(components)/prevButton";
 import StatusBar from "../../(components)/statusBar";
-import { CameraComponent } from "../../(components)/cameraComponent";
+import { CameraComponent } from "../../(components)/camera/cameraComponent";
 import { cn } from "@/lib/utils";
+import { getCameraStream } from "../../(components)/camera/cameraStream";
+import { createFilteredCanvas } from "../../(components)/camera/filteredCanvas";
 
 export default function Page() {
   return (
@@ -25,7 +27,16 @@ function Body() {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedAspect, setSelectedAspect] = useState<Aspect>("frontal");
+  const [sourceCanvas, setSourceCanvas] = useState<
+    HTMLCanvasElement | undefined
+  >();
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    getCameraStream().then((stream) => {
+      setSourceCanvas(createFilteredCanvas(stream));
+    });
+  }, []);
 
   const onAspectClick = (aspect: Aspect) => {
     setSelectedAspect(aspect);
@@ -78,7 +89,7 @@ function Body() {
                 draggable={false}
               />
               <div className="absolute top-0 left-0 w-full h-full">
-                <CameraComponent ref={canvasRef} />
+                <CameraComponent ref={canvasRef} sourceCanvas={sourceCanvas} />
               </div>
             </AspectPreview>
             <AspectPreview
@@ -94,7 +105,7 @@ function Body() {
                 draggable={false}
               />
               <div className="absolute top-0 left-0 w-full h-full">
-                <CameraComponent ref={canvasRef} />
+                <CameraComponent ref={canvasRef} sourceCanvas={sourceCanvas} />
               </div>
             </AspectPreview>
             <AspectPreview
@@ -110,7 +121,7 @@ function Body() {
                 draggable={false}
               />
               <div className="absolute top-0 left-0 w-full h-full">
-                <CameraComponent ref={canvasRef} />
+                <CameraComponent ref={canvasRef} sourceCanvas={sourceCanvas} />
               </div>
             </AspectPreview>
             <AspectPreview
