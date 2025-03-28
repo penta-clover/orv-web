@@ -180,13 +180,14 @@ function Body() {
                   const y = canvasRef.current!.height - 60;
                   const gap = 50;
 
-                  ctx.font = "30px 'Pretendard-SemiBold'";
+                  ctx.font = "25px 'Pretendard-SemiBold'";
                   ctx.fillStyle = "white";
                   ctx.fillText(
                     `${questionContent?.number ?? 0}번째 질문`,
                     x,
                     y - gap
                   );
+                  ctx.font = "30px 'Pretendard-SemiBold'";
                   ctx.fillText(questionContent?.question ?? "", x, y);
                 }}
               />
