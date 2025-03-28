@@ -32,7 +32,6 @@ export default function Spinner({
       }
       const newSelected = items[closestIndex];
       if (newSelected !== undefined && newSelected !== selected) {
-        console.log("newSelected", newSelected);
         onChange(newSelected);
       }
     },
