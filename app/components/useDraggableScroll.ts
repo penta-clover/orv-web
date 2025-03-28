@@ -29,7 +29,6 @@ export function useDraggableScroll<T extends HTMLElement = HTMLElement>(
   };
 
   const handleScroll = () => {
-    console.log("hi");
     if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
     scrollTimeout.current = setTimeout(() => {
       internalHandleScrollEnd();

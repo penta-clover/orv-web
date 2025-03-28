@@ -260,7 +260,7 @@ function TimeSelector(props: {
         selected={minute}
         onChange={(val: number) => {
           setMinute(val);
-          props.onChangeTime(hour, minute);
+          props.onChangeTime(hour, val);
         }}
         className="z-40 absolute left-[182px] w-[48px]"
       />
