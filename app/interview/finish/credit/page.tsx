@@ -14,6 +14,9 @@ import Image from "next/image";
 import NextButton from "../../(components)/nextButton";
 import ExitInterviewModal from "../../(components)/exitInterviewModal";
 import { useReservationRepository } from "@/providers/ReservationRepositoryContext";
+import { useStoryboardRepository } from "@/providers/StoryboardRepositoryContext";
+import { useTopicRepository } from "@/providers/TopicRepositoryContext";
+import { Topic } from "@/domain/model/Topic";
 
 export default function Page() {
   return (
@@ -28,7 +31,7 @@ function Body() {
   const localVideoUrl = searchParams.get("videoUrl")!;
   const storyboardId = searchParams.get("storyboardId")!;
   const totalInterviewTime = searchParams.get("totalInterviewTime")!;
-  const topic = searchParams.get("topic")!;
+  const topicId = searchParams.get("topicId")!;
 
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -40,10 +43,12 @@ function Body() {
   const [is25SecondsPassed, setIs25SecondsPassed] = useState<boolean>(false);
   const [is30SecondsPassed, setIs30SecondsPassed] = useState<boolean>(false);
   const videoPlayerRef = useRef<HTMLVideoElement>(null);
+  const [topic, setTopic] = useState<Topic | null>(null);
 
   const archiveRepository = useArchiveRepository();
   const memberRepository = useMemberRepository();
   const reservationRepository = useReservationRepository();
+  const storyboardRepository = useStoryboardRepository();
 
   // 중복 실행 방지
   const didUploadRef = useRef(false);
@@ -80,6 +85,17 @@ function Body() {
     if (videoPlayerRef.current) {
       videoPlayerRef.current.playbackRate = 2;
     }
+  }, []);
+
+  useEffect(() => {
+    storyboardRepository.getTopicOfStoryboard(storyboardId).then((topics: Topic[]) => {
+      if (topics === null || topics.length === 0) {
+        console.error("topics not found");
+        return;
+      }
+
+      setTopic(topics[0]);
+    });
   }, []);
 
   useEffect(() => {
@@ -201,7 +217,7 @@ function Body() {
           <Roster
             myNickname={nickname}
             totalInterviewTime={Number(totalInterviewTime)}
-            topic={topic}
+            topic={topic ? topic.name : ""}
           />
         </div>
       </div>

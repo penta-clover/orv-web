@@ -18,6 +18,7 @@ export default function Page() {
 
 function Body() {
   const searchParams = useSearchParams();
+  const topicId = searchParams.get("topicId")!;
   const storyboardId = searchParams.get("storyboardId")!;
 
   const router = useRouter();

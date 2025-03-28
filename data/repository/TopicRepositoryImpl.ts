@@ -25,6 +25,21 @@ export class TopicRepositoryImpl implements TopicRepository {
         const result = await this.api.get<Storyboard>(requestPath, {
             'Authorization': `Bearer ${this.storage.getAuthToken()}`
         });
+        
+        console.log(result)
+        
+        if (result.statusCode != '200') {
+            throw new Error(result.message);
+        }
+
+        return result.data!;
+    }
+
+    async getTopicById(topicId: string): Promise<Topic> {
+        const requestPath = `/topic/${topicId}`;
+        const result = await this.api.get<Topic>(requestPath, {
+            'Authorization': `Bearer ${this.storage.getAuthToken()}`
+        });
 
         if (result.statusCode != '200') {
             throw new Error(result.message);
