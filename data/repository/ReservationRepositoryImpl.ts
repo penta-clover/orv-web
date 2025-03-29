@@ -41,6 +41,34 @@ export class ReservationRepositoryImpl implements ReservationRepository {
     return result.data;
   }
 
+  async getForwardReservationsAfter(from: Date): Promise<Reservation[] | null> {
+    const result = await this.api.get<Reservation[]>(`/reservation/interview/forward?from=${from.toISOString()}`, {
+      Authorization: `Bearer ${this.storage.getAuthToken()}`,
+    });
+
+    if (result.statusCode !== "200") {
+      throw new Error(result.message);
+    }
+
+    return result.data;
+  }
+
+  async changeInterviewReservationStatusAsDone(reservationId: string): Promise<boolean> {
+    const result = await this.api.patch<void>(
+      `/reservation/interview/${reservationId}/done`,
+      {},
+      {
+        Authorization: `Bearer ${this.storage.getAuthToken()}`,
+      }
+    );
+
+    if (result.statusCode !== "200") {
+      throw new Error(result.message);
+    }
+
+    return true;
+  }
+
   async reserveVideoRecap(
     videoId: string,
     scheduledAt: Date
