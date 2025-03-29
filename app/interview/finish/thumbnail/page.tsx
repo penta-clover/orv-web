@@ -227,7 +227,7 @@ function CountdownComponent(props: {
         try {
           const stream = await navigator.mediaDevices.getUserMedia({
             video: true,
-            audio: true,
+            audio: false,
           });
           if (localVideoRef.current) {
             localVideoRef.current.srcObject = stream;
