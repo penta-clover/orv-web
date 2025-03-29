@@ -2,6 +2,7 @@
 
 import "@/app/components/blackBody.css";
 import { useAuthRepository } from "@/providers/AuthRepositoryContext";
+import { useTermRepository } from "@/providers/TermRepositoryContext";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -14,7 +15,8 @@ export default function Page() {
   // const [hasAgreeed, setHasAgreed] = useState<boolean>(false);
 
   const authRepository = useAuthRepository();
-  
+  const termRepository = useTermRepository();
+
   const router = useRouter();
 
   useEffect(() => {
@@ -28,13 +30,12 @@ export default function Page() {
     } else {
       setCautionNotice("");
     }
-
   }, [name, phone]);
 
   return (
     <div className="flex flex-col h-[calc(100dvh)] justify-center items-center px-[24px]">
       <div className="h-[8dvh]" />
-      
+
       <Image
         src={"/icons/logo-main-lilac50.svg"}
         alt="logo"
@@ -77,7 +78,20 @@ export default function Page() {
         }`}
         disabled={!isComplete}
         onClick={async () => {
-          await authRepository.join({nickname: name, gender: null, birthDay: null});
+          await authRepository.join({
+            nickname: name,
+            gender: null,
+            birthDay: null,
+            phoneNumber: phone,
+          });
+
+          await Promise.all([
+            termRepository.updateTermAgreement("term250301", true),
+            termRepository.updateTermAgreement("privacy250301", true),
+            termRepository.updateTermAgreement("alarm250301", true),
+            termRepository.updateTermAgreement("enhance250301", true),
+          ]);
+
           router.push("/");
         }}
       >
@@ -117,7 +131,9 @@ function InputForm(props: {
         />
       </div>
 
-      <div className="h-[22px] mt-[2px] text-body4 text-grayscale-500">{props.phoneCaution ?? ""}</div>
+      <div className="h-[22px] mt-[2px] text-body4 text-grayscale-500">
+        {props.phoneCaution ?? ""}
+      </div>
     </div>
   );
 }
