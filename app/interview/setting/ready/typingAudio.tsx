@@ -6,19 +6,19 @@ const TypingAudio = forwardRef((props, ref) => {
 
   useEffect(() => {
     const audio = new Audio("https://d3bdjeyz3ry3pi.cloudfront.net/static/audios/keyboard-typing.mp3");
-    audio.volume = 1.0;
+    audio.volume = 0.7;
     audioRef.current = audio;
 
     // 오디오가 끝나면 처음부터 재생하는 핸들러
     const handleEnded = () => {
       audio.currentTime = 0;
-      audio.play().catch((err) => console.error("오디오 재생 에러:", err));
+      audio.play().catch((err) => console.log("오디오 재생 에러:", err));
     };
 
     audio.addEventListener("ended", handleEnded);
 
     // 컴포넌트 마운트 시 자동 재생 (브라우저 정책에 따라 사용자 인터랙션 필요)
-    audio.play().catch((err) => console.error("오디오 재생 에러:", err));
+    audio.play().catch((err) => console.log("오디오 재생 에러:", err));
 
     return () => {
       audio.pause();
@@ -36,7 +36,7 @@ const TypingAudio = forwardRef((props, ref) => {
     playAudio: () => {
       if (audioRef.current) {
         audioRef.current.currentTime = 0;
-        audioRef.current.play().catch((err) => console.error("오디오 재생 에러:", err));
+        audioRef.current.play().catch((err) => console.log("오디오 재생 에러:", err));
       }
     },
   }));
