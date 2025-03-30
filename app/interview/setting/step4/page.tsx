@@ -3,18 +3,14 @@ import "@/app/components/blackBody.css";
 import Image from "next/image";
 import NextButton from "../../(components)/nextButton";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState, Suspense } from "react";
+import { useEffect, useState, Suspense } from "react";
 import ExitInterviewModal from "../../(components)/exitInterviewModal";
 import PrevButton from "../../(components)/prevButton";
 import StatusBar from "../../(components)/statusBar";
-import { CameraComponent } from "@/app/interview/(components)/camera/cameraComponent";
 import TipBox from "../../(components)/tipBox";
 import { cn } from "@/lib/utils";
 import { getCameraStream } from "@/app/interview/(components)/camera/cameraStream";
-import {
-  createFilteredCanvas,
-  FilteredCanvasElement,
-} from "@/app/interview/(components)/camera/filteredCanvas";
+import { FilteredCanvas } from "../../(components)/camera/filteredCanvas";
 
 export default function Page() {
   return (
@@ -32,10 +28,7 @@ function Body() {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [filter, setFilter] = useState<Filter>("default");
-  const [sourceCanvas, setSourceCanvas] = useState<
-    FilteredCanvasElement | undefined
-  >();
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [stream, setStream] = useState<MediaStream | undefined>();
 
   const onNextButtonClick = () =>
     router.replace(
@@ -44,15 +37,9 @@ function Body() {
 
   useEffect(() => {
     getCameraStream().then((stream) => {
-      setSourceCanvas(createFilteredCanvas(stream, filter));
+      setStream(stream);
     });
   }, []);
-
-  useEffect(() => {
-    if (sourceCanvas) {
-      sourceCanvas.updateFilter(filter);
-    }
-  }, [filter]);
 
   return (
     <ExitInterviewModal
@@ -82,12 +69,13 @@ function Body() {
         <div className="flex flex-col grow items-center justify-center">
           <div className="flex flex-col gap-[20px] items-center">
             <div className="relative flex justify-center items-center h-[430px] w-[846px] bg-grayscale-900 rounded-[12px] overflow-hidden">
-              <div
-                className="w-full h-full"
-                style={{ transform: "scaleX(-1)" }}
-              >
-                <CameraComponent ref={canvasRef} sourceCanvas={sourceCanvas} />
-              </div>
+              {aspect !== "none" && (
+                <FilteredCanvas
+                  stream={stream}
+                  filter={filter}
+                  overlay="/images/studio-lighting-fhd.png"
+                />
+              )}
               <div className="absolute top-[16px] left-[16px] text-head4 text-white">
                 필터 미리보기
               </div>

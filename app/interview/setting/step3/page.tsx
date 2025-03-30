@@ -1,16 +1,14 @@
 "use client";
 import "@/app/components/blackBody.css";
 import Image from "next/image";
-import NextButton from "../../(components)/nextButton";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
 import ExitInterviewModal from "../../(components)/exitInterviewModal";
 import PrevButton from "../../(components)/prevButton";
 import StatusBar from "../../(components)/statusBar";
-import { CameraComponent } from "../../(components)/camera/cameraComponent";
 import { cn } from "@/lib/utils";
 import { getCameraStream } from "../../(components)/camera/cameraStream";
-import { createFilteredCanvas } from "../../(components)/camera/filteredCanvas";
+import { FilteredCanvas } from "../../(components)/camera/filteredCanvas";
 
 export default function Page() {
   return (
@@ -27,14 +25,11 @@ function Body() {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedAspect, setSelectedAspect] = useState<Aspect>("frontal");
-  const [sourceCanvas, setSourceCanvas] = useState<
-    HTMLCanvasElement | undefined
-  >();
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [stream, setStream] = useState<MediaStream | undefined>();
 
   useEffect(() => {
     getCameraStream().then((stream) => {
-      setSourceCanvas(createFilteredCanvas(stream));
+      setStream(stream);
     });
   }, []);
 
@@ -89,7 +84,10 @@ function Body() {
                 draggable={false}
               />
               <div className="absolute top-0 left-0 w-full h-full">
-                <CameraComponent ref={canvasRef} sourceCanvas={sourceCanvas} />
+                <FilteredCanvas
+                  stream={stream}
+                  overlay="/images/studio-lighting-fhd.png"
+                />
               </div>
             </AspectPreview>
             <AspectPreview
@@ -105,7 +103,10 @@ function Body() {
                 draggable={false}
               />
               <div className="absolute top-0 left-0 w-full h-full">
-                <CameraComponent ref={canvasRef} sourceCanvas={sourceCanvas} />
+                <FilteredCanvas
+                  stream={stream}
+                  overlay="/images/studio-lighting-fhd.png"
+                />
               </div>
             </AspectPreview>
             <AspectPreview
@@ -121,13 +122,15 @@ function Body() {
                 draggable={false}
               />
               <div className="absolute top-0 left-0 w-full h-full">
-                <CameraComponent ref={canvasRef} sourceCanvas={sourceCanvas} />
+                <FilteredCanvas
+                  stream={stream}
+                  overlay="/images/studio-lighting-fhd.png"
+                />
               </div>
             </AspectPreview>
             <AspectPreview
               selected={selectedAspect === "none"}
               onClick={() => onAspectClick("none")}
-              reverseX={false}
             >
               <div className="flex flex-col items-center justify-center gap-[8px] bg-grayscale-900 rounded-[12px] aspect-[16/9] cursor-pointer">
                 <div className="text-head2 text-grayscale-50">
@@ -160,9 +163,8 @@ function AspectPreview(props: {
   children: React.ReactNode;
   selected: boolean;
   onClick: () => void;
-  reverseX?: boolean;
 }) {
-  const { children, selected, onClick, reverseX = true } = props;
+  const { children, selected, onClick } = props;
 
   return (
     <div
@@ -171,7 +173,6 @@ function AspectPreview(props: {
         "rounded-[12px] overflow-hidden border-[2px] aspect-[16/9] cursor-pointer relative"
       )}
       onClick={onClick}
-      style={{ transform: reverseX ? "scaleX(-1)" : undefined }}
     >
       {children}
     </div>

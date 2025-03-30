@@ -1,11 +1,12 @@
-export class CanvasRecorder {
+// stream을 녹화하는 클래스
+export class StreamRecorder {
   private recorder: MediaRecorder | null = null;
   private chunks: Blob[] = [];
   private recording: boolean = false;
   private chunksReadyPromise: Promise<void> | null = null;
   private resolveChunksReady: (() => void) | null = null;
 
-  get isRecording() {
+  get isRecording(): boolean {
     return this.recording;
   }
 
@@ -19,9 +20,10 @@ export class CanvasRecorder {
     this.resolveChunksReady = null;
   }
 
-  startRecording(canvas: HTMLCanvasElement, fps: number) {
-    const stream = canvas.captureStream(fps);
-
+  startRecording(
+    stream: MediaStream,
+    mimetype: string = "video/webm;codecs=h264,opus"
+  ) {
     navigator.mediaDevices
       .getUserMedia({ audio: true })
       .then((audioStream) => {
@@ -29,7 +31,7 @@ export class CanvasRecorder {
         stream.addTrack(audioTrack);
 
         const recorder = new MediaRecorder(stream, {
-          mimeType: "video/mp4; codecs=vp9,opus",
+          mimeType: mimetype,
         });
         this.recorder = recorder;
         this.chunksReadyPromise = new Promise((resolve) => {
@@ -67,11 +69,11 @@ export class CanvasRecorder {
     }
   }
 
-  getBlobUrl() {
+  getBlobUrl(mimetype: string = "video/mp4") {
     if (this.chunksReadyPromise) {
       throw new Error("녹화 데이터가 아직 준비되지 않았습니다.");
     }
-    const blob = new Blob(this.chunks, { type: "video/mp4" });
+    const blob = new Blob(this.chunks, { type: mimetype });
     return URL.createObjectURL(blob);
   }
 }

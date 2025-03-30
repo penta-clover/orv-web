@@ -12,9 +12,11 @@ const vertexShaderSource = `
 const fragmentShaderSource = `
   precision mediump float;
   uniform sampler2D u_image;
+  uniform sampler2D u_overlay;
   uniform float u_brightness;
   uniform float u_contrast;
   uniform float u_saturation;
+  uniform bool u_hasOverlay;
   varying vec2 v_texCoord;
   
   void main() {
@@ -31,6 +33,14 @@ const fragmentShaderSource = `
     float gray = dot(rgb, vec3(0.299, 0.587, 0.114));
     rgb = mix(vec3(gray), rgb, u_saturation);
     
+    // 4. 오버레이 적용
+    if (u_hasOverlay) {
+      // 오버레이 텍스처 좌표를 좌우반전
+      vec2 overlayCoord = vec2(1.0 - v_texCoord.x, v_texCoord.y);
+      vec4 overlay = texture2D(u_overlay, overlayCoord);
+      rgb = mix(rgb, overlay.rgb, overlay.a);
+    }
+    
     // 0~1 범위로 클램핑
     rgb = clamp(rgb, 0.0, 1.0);
     
@@ -44,14 +54,19 @@ export class WebGLRenderer {
   private positionBuffer: WebGLBuffer | null = null;
   private texCoordBuffer: WebGLBuffer | null = null;
   private texture: WebGLTexture | null = null;
+  private overlayTexture: WebGLTexture | null = null;
   private uniformLocations: {
     brightness: WebGLUniformLocation | null;
     contrast: WebGLUniformLocation | null;
     saturation: WebGLUniformLocation | null;
+    overlay: WebGLUniformLocation | null;
+    hasOverlay: WebGLUniformLocation | null;
   } = {
     brightness: null,
     contrast: null,
     saturation: null,
+    overlay: null,
+    hasOverlay: null,
   };
   private attributeLocations: {
     position: number;
@@ -71,9 +86,15 @@ export class WebGLRenderer {
     this.positionBuffer = this.gl.createBuffer();
     this.texCoordBuffer = this.gl.createBuffer();
     this.texture = this.gl.createTexture();
+    this.overlayTexture = this.gl.createTexture();
 
-    if (!this.positionBuffer || !this.texCoordBuffer || !this.texture) {
-      throw new Error("Failed to create WebGL buffers or texture");
+    if (
+      !this.positionBuffer ||
+      !this.texCoordBuffer ||
+      !this.texture ||
+      !this.overlayTexture
+    ) {
+      throw new Error("Failed to create WebGL buffers or textures");
     }
 
     // 정점 데이터 설정
@@ -108,11 +129,50 @@ export class WebGLRenderer {
       this.gl.LINEAR
     );
 
+    // 오버레이 텍스처 설정
+    this.gl.bindTexture(this.gl.TEXTURE_2D, this.overlayTexture);
+    this.gl.texParameteri(
+      this.gl.TEXTURE_2D,
+      this.gl.TEXTURE_WRAP_S,
+      this.gl.CLAMP_TO_EDGE
+    );
+    this.gl.texParameteri(
+      this.gl.TEXTURE_2D,
+      this.gl.TEXTURE_WRAP_T,
+      this.gl.CLAMP_TO_EDGE
+    );
+    this.gl.texParameteri(
+      this.gl.TEXTURE_2D,
+      this.gl.TEXTURE_MIN_FILTER,
+      this.gl.LINEAR
+    );
+    this.gl.texParameteri(
+      this.gl.TEXTURE_2D,
+      this.gl.TEXTURE_MAG_FILTER,
+      this.gl.LINEAR
+    );
+
+    // 초기 오버레이 텍스처 설정 (투명)
+    const emptyData = new Uint8Array([0, 0, 0, 0]);
+    this.gl.texImage2D(
+      this.gl.TEXTURE_2D,
+      0,
+      this.gl.RGBA,
+      1,
+      1,
+      0,
+      this.gl.RGBA,
+      this.gl.UNSIGNED_BYTE,
+      emptyData
+    );
+
     // uniform 위치 저장
     this.uniformLocations = {
       brightness: this.gl.getUniformLocation(this.program, "u_brightness"),
       contrast: this.gl.getUniformLocation(this.program, "u_contrast"),
       saturation: this.gl.getUniformLocation(this.program, "u_saturation"),
+      overlay: this.gl.getUniformLocation(this.program, "u_overlay"),
+      hasOverlay: this.gl.getUniformLocation(this.program, "u_hasOverlay"),
     };
 
     // attribute 위치 저장
@@ -120,6 +180,12 @@ export class WebGLRenderer {
       position: this.gl.getAttribLocation(this.program, "a_position"),
       texCoord: this.gl.getAttribLocation(this.program, "a_texCoord"),
     };
+
+    // 초기 오버레이 상태 설정
+    if (this.uniformLocations.hasOverlay) {
+      this.gl.useProgram(this.program);
+      this.gl.uniform1i(this.uniformLocations.hasOverlay, 0);
+    }
   }
 
   private createShader(type: number, source: string): WebGLShader | null {
@@ -173,12 +239,44 @@ export class WebGLRenderer {
     return program;
   }
 
+  setOverlay(image: HTMLImageElement | null) {
+    if (!this.overlayTexture) return;
+
+    this.gl.bindTexture(this.gl.TEXTURE_2D, this.overlayTexture);
+
+    if (image) {
+      this.gl.texImage2D(
+        this.gl.TEXTURE_2D,
+        0,
+        this.gl.RGBA,
+        this.gl.RGBA,
+        this.gl.UNSIGNED_BYTE,
+        image
+      );
+    } else {
+      // 오버레이를 제거할 때는 투명한 텍스처로 초기화
+      const emptyData = new Uint8Array([0, 0, 0, 0]);
+      this.gl.texImage2D(
+        this.gl.TEXTURE_2D,
+        0,
+        this.gl.RGBA,
+        1,
+        1,
+        0,
+        this.gl.RGBA,
+        this.gl.UNSIGNED_BYTE,
+        emptyData
+      );
+    }
+  }
+
   draw(video: HTMLVideoElement, filter: FilterData) {
     if (
       !this.program ||
       !this.positionBuffer ||
       !this.texCoordBuffer ||
       !this.texture ||
+      !this.overlayTexture ||
       !this.attributeLocations
     ) {
       throw new Error("WebGL resources not initialized");
@@ -209,7 +307,20 @@ export class WebGLRenderer {
       0
     );
 
-    // 텍스처 업데이트
+    // 오버레이 텍스처 설정
+    this.gl.activeTexture(this.gl.TEXTURE1);
+    this.gl.bindTexture(this.gl.TEXTURE_2D, this.overlayTexture);
+    if (this.uniformLocations.overlay) {
+      this.gl.uniform1i(this.uniformLocations.overlay, 1);
+    }
+    if (this.uniformLocations.hasOverlay) {
+      this.gl.uniform1i(
+        this.uniformLocations.hasOverlay,
+        this.overlayTexture ? 1 : 0
+      );
+    }
+
+    this.gl.activeTexture(this.gl.TEXTURE0);
     this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
     this.gl.texImage2D(
       this.gl.TEXTURE_2D,
@@ -251,10 +362,16 @@ export class WebGLRenderer {
       this.gl.deleteTexture(this.texture);
       this.texture = null;
     }
+    if (this.overlayTexture) {
+      this.gl.deleteTexture(this.overlayTexture);
+      this.overlayTexture = null;
+    }
     this.uniformLocations = {
       brightness: null,
       contrast: null,
       saturation: null,
+      overlay: null,
+      hasOverlay: null,
     };
     this.attributeLocations = null;
   }
