@@ -97,7 +97,8 @@ function Body() {
           stream.addTrack(audioTrack);
 
           const recorder = new MediaRecorder(stream, {
-            mimeType: "video/mp4; codecs=vp9,opus",
+            mimeType: "video/webm;codecs=h264,opus",
+            
           });
           mediaRecorderRef.current = recorder;
           recorder.ondataavailable = (event) => {
@@ -128,7 +129,7 @@ function Body() {
   // 녹화 정지 직후 호출시 recordedChunks가 비어있을 수 있음 (65번째줄 참고)
   const downloadRecording = () => {
     if (recordedChunks.length === 0) return;
-    const blob = new Blob(recordedChunks, { type: "video/mp4" });
+    const blob = new Blob(recordedChunks, { type: "video/webm" });
     const url = URL.createObjectURL(blob);
 
     // 인터뷰 전체 시간 계산 (초 단위)
