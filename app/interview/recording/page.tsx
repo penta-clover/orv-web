@@ -128,7 +128,7 @@ function Body() {
   // 녹화 정지 직후 호출시 recordedChunks가 비어있을 수 있음 (65번째줄 참고)
   const downloadRecording = () => {
     if (recordedChunks.length === 0) return;
-    const blob = new Blob(recordedChunks, { type: "video/webm" });
+    const blob = new Blob(recordedChunks, { type: "video/mp4" });
     const url = URL.createObjectURL(blob);
 
     // 인터뷰 전체 시간 계산 (초 단위)
