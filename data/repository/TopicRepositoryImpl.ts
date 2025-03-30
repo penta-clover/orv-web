@@ -26,8 +26,6 @@ export class TopicRepositoryImpl implements TopicRepository {
             'Authorization': `Bearer ${this.storage.getAuthToken()}`
         });
         
-        console.log(result)
-        
         if (result.statusCode != '200') {
             throw new Error(result.message);
         }

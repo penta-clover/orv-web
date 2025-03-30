@@ -2,11 +2,12 @@
 import "@/app/components/blackBody.css";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import ExitInterviewModal from "../../(components)/exitInterviewModal";
 import { cn } from "@/lib/utils";
 import { useStoryboardRepository } from "@/providers/StoryboardRepositoryContext";
 import Typewriter from "./typeWriter";
+import TypingAudio from "./typingAudio";
 
 export default function Page() {
   return (
@@ -43,12 +44,33 @@ function Body() {
   나중에 점점 더 멋지게 변화하는 스스로를 발견할 수 있답니다.\n \n
   그럼 이제 인터뷰를 시작해볼게요. 인터뷰 시작!`;
 
+  // Define a type for the ref that includes the methods we need
+  type AudioRefType = {
+    playAudio: () => void;
+    stopAudio: () => void;
+  };
+
+  const audioRef = useRef<AudioRefType | null>(null);
+
+  const handleStop = () => {
+    if (audioRef.current) {
+      audioRef.current.stopAudio();
+    }
+  };
+
+  const handlePlay = () => {
+    if (audioRef.current) {
+      audioRef.current.playAudio();
+    }
+  };
+
   return (
     <ExitInterviewModal
       isOpen={isModalOpen}
       setIsOpen={setIsModalOpen}
       onExitInterview={() => router.replace("/")}
     >
+      <TypingAudio ref={audioRef} />
       <div className="relative w-full h-[100%] flex flex-col items-center justify-start gap-[42px] mt-[70px]">
         <Image
           unoptimized
@@ -66,6 +88,7 @@ function Body() {
                 text={typewriterText}
                 speed={80}
                 onWritingEnd={() => {
+                  handleStop();
                   setTimeout(() => {
                     router.replace(
                       `/interview/recording?storyboardId=${storyboardId}&aspect=${aspect}&filter=${filter}`

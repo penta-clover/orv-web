@@ -16,6 +16,7 @@ import {
   createFilteredCanvas,
   FilteredCanvasElement,
 } from "../(components)/camera/filteredCanvas";
+import BackgroundMusic from "./backgroundMusic";
 
 interface QuestionContent {
   number: number;
@@ -26,9 +27,12 @@ interface QuestionContent {
 
 export default function Page() {
   return (
-    <Suspense>
-      <Body />
-    </Suspense>
+    <>
+      <BackgroundMusic />
+      <Suspense>
+        <Body />
+      </Suspense>
+    </>
   );
 }
 

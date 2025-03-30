@@ -41,7 +41,7 @@ function Body() {
       router.replace("/auth/login");
       return;
     }
-    await authRepository.join({nickname, gender, birthDay});
+    await authRepository.join({nickname, gender, birthDay, phoneNumber: null});
   
     await Promise.all([
       termRepository.updateTermAgreement("term250301", checked.includes("term")),

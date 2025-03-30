@@ -29,7 +29,7 @@ export class CanvasRecorder {
         stream.addTrack(audioTrack);
 
         const recorder = new MediaRecorder(stream, {
-          mimeType: "video/webm; codecs=vp9,opus",
+          mimeType: "video/mp4; codecs=vp9,opus",
         });
         this.recorder = recorder;
         this.chunksReadyPromise = new Promise((resolve) => {
@@ -71,7 +71,7 @@ export class CanvasRecorder {
     if (this.chunksReadyPromise) {
       throw new Error("녹화 데이터가 아직 준비되지 않았습니다.");
     }
-    const blob = new Blob(this.chunks, { type: "video/webm" });
+    const blob = new Blob(this.chunks, { type: "video/mp4" });
     return URL.createObjectURL(blob);
   }
 }

@@ -47,7 +47,9 @@ function Body() {
     <ExitInterviewModal
       isOpen={isModalOpen}
       setIsOpen={setIsModalOpen}
-      onExitInterview={() => router.replace("/")}
+      onExitInterview={() => {
+        router.replace("/");
+      }}
     >
       <div className="relative flex flex-col items-center h-[100dvh]">
         <Image
@@ -95,12 +97,6 @@ function Body() {
               <CountdownComponent
                 onComplete={() => {
                   if (videoRef.current) {
-                    setProgress("flash");
-
-                    setTimeout(() => {
-                      setProgress("complete");
-                    }, 1000);
-
                     const video = videoRef.current;
                     const canvas = document.createElement("canvas");
                     canvas.width = video.videoWidth;
@@ -114,10 +110,21 @@ function Body() {
                         canvas.width,
                         canvas.height
                       );
-
                       canvas.toBlob((blob) => {
                         if (blob) {
                           setCapturedImage(blob);
+
+                          // 캡처 후에 스트림 종료
+                          const stream = video.srcObject as MediaStream | null;
+                          if (stream) {
+                            stream.getTracks().forEach((track) => track.stop());
+                            video.srcObject = null;
+                          }
+
+                          setProgress("flash");
+                          setTimeout(() => {
+                            setProgress("complete");
+                          }, 1000);
                         }
                       }, "image/png");
                     }
@@ -195,6 +202,7 @@ function CountdownComponent(props: {
   const [second, setSecond] = useState<number>(5);
   const [isEnd, setIsEnd] = useState<boolean>(false);
   const localVideoRef = useRef<HTMLVideoElement>(null);
+
   useImperativeHandle(
     props.ref,
     () => localVideoRef.current as HTMLVideoElement
@@ -222,30 +230,32 @@ function CountdownComponent(props: {
   }, [isEnd]);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && navigator.mediaDevices) {
-      const enableCamera = async () => {
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({
-            video: true,
-            audio: true,
-          });
-          if (localVideoRef.current) {
-            localVideoRef.current.srcObject = stream;
-          }
-        } catch (error) {
-          console.error("카메라를 활성화하는 도중 에러 발생:", error);
-        }
-      };
+    let stream: MediaStream | null = null;
 
-      enableCamera();
-      return () => {
-        if (localVideoRef.current && localVideoRef.current.srcObject) {
-          const stream = localVideoRef.current.srcObject as MediaStream;
-          stream.getTracks().forEach((track) => track.stop());
-          localVideoRef.current.srcObject = null;
+    const enableCamera = async () => {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: false,
+        });
+        if (localVideoRef.current) {
+          localVideoRef.current.srcObject = stream;
         }
-      };
-    }
+      } catch (error) {
+        console.error("카메라 활성화 중 에러:", error);
+      }
+    };
+
+    enableCamera();
+
+    return () => {
+      if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
+      }
+      if (localVideoRef.current) {
+        localVideoRef.current.srcObject = null;
+      }
+    };
   }, []);
 
   return (
