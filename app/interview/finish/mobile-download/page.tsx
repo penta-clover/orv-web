@@ -37,7 +37,7 @@ function Body() {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = video.title ? `${video.title}.webm` : "video.webm";
+        link.download = video.title ? `${video.title}.mp4` : "video.mp4";
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
