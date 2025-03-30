@@ -97,7 +97,7 @@ function Body() {
           stream.addTrack(audioTrack);
 
           const recorder = new MediaRecorder(stream, {
-            mimeType: "video/webm; codecs=vp9,opus",
+            mimeType: "video/mp4; codecs=vp9,opus",
           });
           mediaRecorderRef.current = recorder;
           recorder.ondataavailable = (event) => {
