@@ -15,8 +15,9 @@ import NextButton from "../../(components)/nextButton";
 import ExitInterviewModal from "../../(components)/exitInterviewModal";
 import { useReservationRepository } from "@/providers/ReservationRepositoryContext";
 import { useStoryboardRepository } from "@/providers/StoryboardRepositoryContext";
-import { useTopicRepository } from "@/providers/TopicRepositoryContext";
 import { Topic } from "@/domain/model/Topic";
+import { FFmpeg } from "@ffmpeg/ffmpeg";
+import { fetchFile } from "@ffmpeg/util";
 
 export default function Page() {
   return (
@@ -59,14 +60,81 @@ function Body() {
 
     async function fetchAndUpload() {
       try {
-        // blob 파일 URL로부터 실제 blob 데이터를 가져옵니다.
+        console.time("전체 변환 및 업로드 시간");
+
+        // localVideoUrl로부터 mp4 blob 파일을 가져옵니다.
+        console.log("1️⃣ blob 파일 다운로드 시작");
+        console.time("blob 다운로드 시간");
         const response = await fetch(localVideoUrl);
-        const blob = await response.blob();
-        const videoId = await archiveRepository.uploadVideo(blob, storyboardId);
+        const inputBlob = await response.blob();
+        console.timeEnd("blob 다운로드 시간");
+        console.log(
+          `📊 blob 파일 크기: ${(inputBlob.size / (1024 * 1024)).toFixed(2)}MB`
+        );
+
+        // ffmpeg.js 초기화 (최초 실행 시 로드)
+        console.log("2️⃣ FFmpeg 초기화 시작");
+        console.time("FFmpeg 초기화 시간");
+        const ffmpeg = new FFmpeg();
+        if (!ffmpeg.loaded) {
+          await ffmpeg.load();
+        }
+        console.timeEnd("FFmpeg 초기화 시간");
+
+        // ffmpeg 가상 파일 시스템에 webm 파일 작성
+        console.log("3️⃣ 가상 파일 시스템에 MP4 쓰기 시작");
+        console.time("파일 쓰기 시간");
+        const inputVideoData = await fetchFile(inputBlob);
+        ffmpeg.writeFile("input.webm", inputVideoData);
+        console.timeEnd("파일 쓰기 시간");
+        console.log("   ✅ 파일 쓰기 완료");
+
+        // ffmpeg를 이용한 코덱 및 확장자 전환
+        console.log("4️⃣ 변환 시작 (libx264 인코딩)");
+        console.time("변환 시간");
+        await ffmpeg.exec([
+          "-i",
+          "input.webm",
+          "-c:v",
+          "libx264",
+          "-preset",
+          "veryfast",
+          "-c:a",
+          "opus",
+          "-c",
+          "copy",
+          "-movflags",
+          "faststart",
+          "output.mp4",
+        ]);
+        console.timeEnd("변환 시간");
+        console.log("✅ 변환 완료");
+
+        // 변환된 mp4 파일 읽어오기
+        console.log("5️⃣ 변환된 MP4 파일 읽기");
+        console.time("MP4 파일 읽기 시간");
+        const mp4Data = await ffmpeg.readFile("output.mp4");
+        const mp4Blob = new Blob([mp4Data], {
+          type: "video/mp4",
+        });
+        console.timeEnd("MP4 파일 읽기 시간");
+        console.log(
+          `📊 MP4 파일 크기: ${(mp4Blob.size / (1024 * 1024)).toFixed(2)}MB`
+        );
+
+        // mp4 Blob을 이용해 영상 업로드 요청
+        console.log("6️⃣ 서버에 MP4 파일 업로드 시작");
+        console.time("업로드 시간");
+        const videoId = await archiveRepository.uploadVideo(
+          mp4Blob,
+          storyboardId
+        );
+        console.timeEnd("업로드 시간");
+
         setIsUploaded(true);
-        console.log(videoId);
         setVideoId(videoId);
-        console.log("비디오 업로드 성공");
+        console.log("✅ 전체 프로세스 완료 - 비디오 업로드 성공:", videoId);
+        console.timeEnd("전체 변환 및 업로드 시간");
       } catch (error) {
         console.error("비디오 업로드 중 에러 발생:", error);
       }
@@ -88,14 +156,16 @@ function Body() {
   }, []);
 
   useEffect(() => {
-    storyboardRepository.getTopicOfStoryboard(storyboardId).then((topics: Topic[]) => {
-      if (topics === null || topics.length === 0) {
-        console.error("topics not found");
-        return;
-      }
+    storyboardRepository
+      .getTopicOfStoryboard(storyboardId)
+      .then((topics: Topic[]) => {
+        if (topics === null || topics.length === 0) {
+          console.error("topics not found");
+          return;
+        }
 
-      setTopic(topics[0]);
-    });
+        setTopic(topics[0]);
+      });
   }, []);
 
   useEffect(() => {

@@ -99,7 +99,7 @@ function Body() {
   // 녹화된 파일 다운로드 함수
   // 녹화 정지 직후 호출시 recordedChunks가 비어있을 수 있음 (65번째줄 참고)
   const downloadRecording = () => {
-    const url = streamRecorderRef.current?.getBlobUrl();
+    const url = streamRecorderRef.current?.getBlobUrl("video/webm");
     if (!url) return;
 
     // 인터뷰 전체 시간 계산 (초 단위)
@@ -107,14 +107,9 @@ function Body() {
       (Date.now() - startTimeRef.current) / 1000
     );
 
-    // router.replace(
-    //   `/interview/finish/credit?videoUrl=${url}&storyboardId=${storyboardId}&totalInterviewTime=${totalInterviewTime}`
-    // );
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `interview_${totalInterviewTime}s.webm`;
-    a.click();
+    router.replace(
+      `/interview/finish/credit?videoUrl=${url}&storyboardId=${storyboardId}&totalInterviewTime=${totalInterviewTime}`
+    );
 
     streamRecorderRef.current?.reset();
   };
