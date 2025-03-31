@@ -49,8 +49,8 @@ function Body() {
   const [stream, setStream] = useState<MediaStream | null>(null);
 
   const streamRecorderRef = useRef<StreamRecorder | null>(null);
-  const previewCanvasRef = useRef<HTMLCanvasElement | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const previewCanvasRef = useRef<HTMLCanvasElement | null>(null);   // 녹화 중 사용자에게 표시되는 캔버스
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);          // 녹화되는 캔버스
   const startTimeRef = useRef<number>(0);
   const router = useRouter();
 
