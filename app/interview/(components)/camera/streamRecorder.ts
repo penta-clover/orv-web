@@ -5,6 +5,7 @@ export class StreamRecorder {
   private recording: boolean = false;
   private chunksReadyPromise: Promise<void> | null = null;
   private resolveChunksReady: (() => void) | null = null;
+  private mimetype: string = "video/webm";
 
   get isRecording(): boolean {
     return this.recording;
@@ -20,31 +21,40 @@ export class StreamRecorder {
     this.resolveChunksReady = null;
   }
 
-  startRecording(
-    stream: MediaStream,
-    mimetype: string = "video/webm;codecs=h264,opus"
-  ) {
+  startRecording(stream: MediaStream) {
+    // 오디오 트랙 추가
     navigator.mediaDevices
       .getUserMedia({ audio: true })
       .then((audioStream) => {
         const audioTrack = audioStream.getAudioTracks()[0];
         stream.addTrack(audioTrack);
 
-        const recorder = new MediaRecorder(stream, {
-          mimeType: mimetype,
+        if (MediaRecorder.isTypeSupported("video/webm;codecs=h264,opus")) {
+          this.mimetype = "video/webm;codecs=h264,opus";
+        } else if (
+          MediaRecorder.isTypeSupported("video/mp4;codecs=avc1,mp4a")
+        ) {
+          this.mimetype = "video/mp4;codecs=avc1,mp4a";
+        } else {
+          this.mimetype = "video/webm";
+        }
+
+        console.log("RecorderType", this.mimetype);
+        this.recorder = new MediaRecorder(stream, {
+          mimeType: this.mimetype,
         });
-        this.recorder = recorder;
+
         this.chunksReadyPromise = new Promise((resolve) => {
           this.resolveChunksReady = resolve;
         });
 
-        recorder.ondataavailable = (event) => {
+        this.recorder.ondataavailable = (event) => {
           if (event.data && event.data.size > 0) {
             this.chunks.push(event.data);
           }
         };
 
-        recorder.onstop = () => {
+        this.recorder.onstop = () => {
           this.recording = false;
           if (this.resolveChunksReady) {
             this.resolveChunksReady();
@@ -52,7 +62,7 @@ export class StreamRecorder {
           }
         };
 
-        recorder.start();
+        this.recorder.start();
         this.recording = true;
       })
       .catch((error) => {
@@ -69,11 +79,12 @@ export class StreamRecorder {
     }
   }
 
-  getBlobUrl(mimetype: string = "video/mp4") {
+  getBlobUrl() {
     if (this.chunksReadyPromise) {
       throw new Error("녹화 데이터가 아직 준비되지 않았습니다.");
     }
-    const blob = new Blob(this.chunks, { type: mimetype });
+    console.log("BlobType", this.mimetype);
+    const blob = new Blob(this.chunks, { type: this.mimetype });
     return URL.createObjectURL(blob);
   }
 }

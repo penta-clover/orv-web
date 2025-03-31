@@ -49,8 +49,8 @@ function Body() {
   const [stream, setStream] = useState<MediaStream | null>(null);
 
   const streamRecorderRef = useRef<StreamRecorder | null>(null);
-  const previewCanvasRef = useRef<HTMLCanvasElement | null>(null);   // 녹화 중 사용자에게 표시되는 캔버스
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);          // 녹화되는 캔버스
+  const previewCanvasRef = useRef<HTMLCanvasElement | null>(null); // 녹화 중 사용자에게 표시되는 캔버스
+  const canvasRef = useRef<HTMLCanvasElement | null>(null); // 녹화되는 캔버스
   const startTimeRef = useRef<number>(0);
   const router = useRouter();
 
@@ -99,7 +99,7 @@ function Body() {
   // 녹화된 파일 다운로드 함수
   // 녹화 정지 직후 호출시 recordedChunks가 비어있을 수 있음 (65번째줄 참고)
   const downloadRecording = () => {
-    const url = streamRecorderRef.current?.getBlobUrl("video/webm");
+    const url = streamRecorderRef.current?.getBlobUrl();
     if (!url) return;
 
     // 인터뷰 전체 시간 계산 (초 단위)
