@@ -2,13 +2,14 @@
 import "@/app/components/blackBody.css";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ExitInterviewModal from "../../../(components)/exitInterviewModal";
 import StatusBar from "../../../(components)/statusBar";
-import { CameraComponent } from "@/app/interview/(components)/cameraComponent";
 import { Suspense } from "react";
 import PrevButton from "@/app/interview/(components)/prevButton";
 import NextButton from "@/app/interview/(components)/nextButton";
+import { getCameraStream } from "@/app/interview/(components)/camera/cameraStream";
+import { FilteredCanvas } from "@/app/interview/(components)/camera/filteredCanvas";
 
 export default function Page() {
   return (
@@ -25,12 +26,18 @@ function Body() {
 
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [stream, setStream] = useState<MediaStream | undefined>();
 
   const onNextButtonClick = () =>
     router.replace(
       `/interview/setting/step4?storyboardId=${storyboardId}&aspect=${aspect}`
     );
+
+  useEffect(() => {
+    getCameraStream().then((stream) => {
+      setStream(stream);
+    });
+  }, []);
 
   return (
     <ExitInterviewModal
@@ -59,9 +66,12 @@ function Body() {
 
         <div className="flex flex-col grow items-center justify-center">
           <div className="relative flex justify-center items-center h-[476px] w-[846px] bg-grayscale-900 rounded-[12px] overflow-hidden">
-            <div className="w-full h-full" style={{ transform: "scaleX(-1)" }}>
-              <CameraComponent ref={canvasRef} />
-            </div>
+            {aspect !== "none" && (
+              <FilteredCanvas
+                stream={stream}
+                overlay="/images/studio-lighting-fhd.png"
+              />
+            )}
             <div className="absolute bottom-[32px] left-[32px] text-white">
               <div className="text-head3">질문 순서표시</div>
               <div className="text-head2 leading-1 mt-[8px]">
