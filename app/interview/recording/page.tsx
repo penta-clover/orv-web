@@ -16,6 +16,13 @@ import {
   BlankCanvas,
   FilteredCanvas,
 } from "../(components)/camera/filteredCanvas";
+import Scene from "../(components)/scene/scene";
+import SceneFactory from "../(components)/scene/sceneFactory";
+import { isSubtitled } from "../(components)/scene/renderingOptions/subtitled";
+import { isPreviewOverlay } from "../(components)/scene/renderingOptions/previewOverlay";
+import { isKnowNextScene } from "../(components)/scene/renderingOptions/knowNextScene";
+import { isEnding } from "../(components)/scene/renderingOptions/ending";
+import InterviewContext from "../(components)/scene/interviewContext";
 
 interface QuestionContent {
   number: number;
@@ -43,15 +50,14 @@ function Body() {
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [showTip, setShowTip] = useState<boolean>(true);
-  const [questionContent, setQuestionContent] = useState<
-    QuestionContent | undefined
-  >(undefined);
+  const [currentScene, setCurrentScene] = useState<Scene | undefined>();
   const [stream, setStream] = useState<MediaStream | null>(null);
 
   const streamRecorderRef = useRef<StreamRecorder | null>(null);
   const previewCanvasRef = useRef<HTMLCanvasElement | null>(null); // 녹화 중 사용자에게 표시되는 캔버스
   const canvasRef = useRef<HTMLCanvasElement | null>(null); // 녹화되는 캔버스
   const startTimeRef = useRef<number>(0);
+  const interviewContext = useRef<InterviewContext>(new InterviewContext());
   const router = useRouter();
 
   const storyboardRepository = useStoryboardRepository();
@@ -67,7 +73,7 @@ function Body() {
           storyboardRepository
             .getSceneInfo(storyboard.startSceneId)
             .then((scene) => {
-              loadQuestion(scene.id, 1);
+              loadScene(scene.id, 1);
 
               // 첫 질문이 로드될 때 인터뷰 시작 시간 기록
               startTimeRef.current = Date.now();
@@ -84,17 +90,30 @@ function Body() {
   }, []);
 
   // 질문 불러오기
-  const loadQuestion = (sceneId: string, number: number) => {
+  const loadScene = (sceneId: string, number: number) => {
     storyboardRepository.getSceneInfo(sceneId).then((scene) => {
-      if (scene.sceneType !== "END") {
-        setQuestionContent({ ...scene.content, number: number });
-      } else {
+      const newScene: Scene = SceneFactory.createScene(
+        scene,
+        interviewContext.current
+      );
+
+      console.log(interviewContext.current.priorScenes);
+
+      setCurrentScene(newScene);
+
+      if (isEnding(newScene)) {
         streamRecorderRef.current
           ?.stopRecording()
           .then(() => downloadRecording());
       }
     });
   };
+
+  useEffect(() => {
+    if (!currentScene) return;
+
+    interviewContext.current.addScene(currentScene!);
+  }, [currentScene]);
 
   // 녹화된 파일 다운로드 함수
   // 녹화 정지 직후 호출시 recordedChunks가 비어있을 수 있음 (65번째줄 참고)
@@ -122,7 +141,7 @@ function Body() {
     >
       <div className="relative w-full h-[calc(100dvh)] flex flex-col items-center justify-start py-[20px] px-[48px]">
         <div className="flex flex-col grow items-center justify-center">
-          <div className="w-[90vw] lg:w-[1200px] flex justify-end">
+          <div className="w-[90vw] lg:w-[1200px] flex justify-end mb-[10px]">
             <div
               className="w-[139px] h-[56px] flex items-center justify-center gap-[2px] bg-grayscale-50 rounded-[12px] self-end active:scale-95"
               onClick={() => setIsModalOpen(true)}
@@ -156,22 +175,9 @@ function Body() {
             <SubtitleCanvas
               ref={canvasRef}
               sourceCanvasRef={previewCanvasRef}
-              subtitles={[
-                {
-                  text: `${questionContent?.number ?? 0}번째 질문`,
-                  x: 50,
-                  y: -110,
-                  fontSize: 25,
-                  color: "white",
-                },
-                {
-                  text: questionContent?.question ?? "",
-                  x: 50,
-                  y: -60,
-                  fontSize: 30,
-                  color: "white",
-                },
-              ]}
+              subtitles={
+                isSubtitled(currentScene) ? currentScene.getSubtitles() : []
+              }
               style={{
                 width: "0",
                 height: "0",
@@ -182,16 +188,7 @@ function Body() {
               fps={RECORDING_FPS}
             />
 
-            <div className="absolute bottom-[32px] left-[32px] mr-[32px] text-white">
-              <div className="text-head3">
-                {questionContent?.number}번째 질문
-              </div>
-              <div className="text-head2 leading-1 mt-[8px]">
-                {questionContent?.question}
-                <br />
-                {questionContent?.hint}
-              </div>
-            </div>
+            {isPreviewOverlay(currentScene) && currentScene.getOverlays()}
 
             <div className="absolute bottom-[24.5px] right-[24.5px] flex flex-col items-end gap-[10px]">
               {showTip && (
@@ -204,11 +201,9 @@ function Body() {
               )}
               <NextButton
                 onClick={() => {
-                  if (questionContent?.nextSceneId) {
-                    loadQuestion(
-                      questionContent!.nextSceneId,
-                      questionContent!.number + 1
-                    );
+                  if (isKnowNextScene(currentScene)) {
+                    const nextSceneId = currentScene.getNextSceneId();
+                    loadScene(nextSceneId, 1);
                   }
                   setShowTip(false);
                 }}
@@ -224,6 +219,19 @@ function Body() {
                 />
               </NextButton>
             </div>
+
+            {isEnding(currentScene) && (
+              <div className="w-full h-full">
+                <Image
+                  src="/icons/rolling-spinner-grayscale-white.gif"
+                  alt="spinner"
+                  width={48}
+                  height={48}
+                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 "
+                  style={{ color: "white" }}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
