@@ -96,10 +96,26 @@ function Body() {
           const audioTrack = audioStream.getAudioTracks()[0];
           stream.addTrack(audioTrack);
 
-          const recorder = new MediaRecorder(stream, {
-            mimeType: "video/webm;codecs=h264,opus",
-            
-          });
+          let recorder = null;
+
+          if (MediaRecorder.isTypeSupported("video/webm;codecs=h264,opus")) {
+            console.log("video/webm;codecs=h264,opus")
+            recorder = new MediaRecorder(stream, {
+              mimeType: "video/webm;codecs=h264,opus",
+            });
+          } else if (
+            MediaRecorder.isTypeSupported("video/mp4;codecs=avc1,mp4a")
+          ) {
+            console.log("video/mp4;codecs=avc1,mp4a")
+            recorder = new MediaRecorder(stream, {
+              mimeType: "video/mp4;codecs=avc1,mp4a",
+            });
+          } else {
+            recorder = new MediaRecorder(stream, {
+              mimeType: "video/webm",
+            });
+          }
+
           mediaRecorderRef.current = recorder;
           recorder.ondataavailable = (event) => {
             if (event.data && event.data.size > 0) {
