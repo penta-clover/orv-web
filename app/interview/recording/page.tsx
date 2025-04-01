@@ -65,7 +65,6 @@ function Body() {
 
   useEffect(() => {
     streamRecorderRef.current = new StreamRecorder();
-
     getCameraStream().then((stream) => {
       storyboardRepository
         .getStoryboardInfo(storyboardId)
@@ -97,9 +96,11 @@ function Body() {
         interviewContext.current
       );
 
-      console.log(interviewContext.current.priorScenes);
-
       setCurrentScene(newScene);
+
+      // Strict Mode에서만 렌더링이 두 번 발생 > addScene이 두 번 호출됨
+      // Production 환경에서는 문제가 없습니다.
+      interviewContext.current.addScene(newScene);  
 
       if (isEnding(newScene)) {
         streamRecorderRef.current
@@ -108,12 +109,6 @@ function Body() {
       }
     });
   };
-
-  useEffect(() => {
-    if (!currentScene) return;
-
-    interviewContext.current.addScene(currentScene!);
-  }, [currentScene]);
 
   // 녹화된 파일 다운로드 함수
   // 녹화 정지 직후 호출시 recordedChunks가 비어있을 수 있음 (65번째줄 참고)
