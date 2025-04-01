@@ -27,9 +27,13 @@ export const FilteredCanvas = React.forwardRef<
     video.autoplay = true;
     video.playsInline = true;
     video.muted = true;
-    video.style.width = "0px";
-    video.style.height = "0px";
-    video.style.visibility = "hidden";
+    video.style.width = "16px";
+    video.style.height = "9px";
+    video.style.position = "absolute";
+    video.style.top = "0";
+    video.style.left = "0";
+    video.style.opacity = "0";
+    video.style.pointerEvents = "none"; // 비디오 요소가 클릭 이벤트를 받지 않도록 설정
     document.body.appendChild(video);
 
     filterRef.current = getFilterUniforms(filter);
