@@ -2,7 +2,7 @@
 import "@/app/components/blackBody.css";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import ExitInterviewModal from "../../../(components)/exitInterviewModal";
 import StatusBar from "../../../(components)/statusBar";
 import { Suspense } from "react";
@@ -10,6 +10,8 @@ import PrevButton from "@/app/interview/(components)/prevButton";
 import NextButton from "@/app/interview/(components)/nextButton";
 import { getCameraStream } from "@/app/interview/(components)/camera/cameraStream";
 import { FilteredCanvas } from "@/app/interview/(components)/camera/filteredCanvas";
+import { getPermissionGuideText } from "@/app/interview/(components)/getPermissionGuideText";
+import usePermissionReload from "@/app/interview/(components)/usePermissionReload";
 
 export default function Page() {
   return (
@@ -29,16 +31,23 @@ function Body() {
   const [stream, setStream] = useState<MediaStream | undefined>();
   const [streamReady, setStreamReady] = useState(false);
 
+  usePermissionReload("camera");
+  usePermissionReload("microphone");
+
   const onNextButtonClick = () =>
     router.replace(
       `/interview/setting/step4?storyboardId=${storyboardId}&aspect=${aspect}`
     );
 
   useEffect(() => {
-    getCameraStream().then((stream) => {
-      setStream(stream);
-      setStreamReady(true);
-    });
+    getCameraStream()
+      .then((stream) => {
+        setStream(stream);
+        setStreamReady(true);
+      })
+      .catch((error) => {
+        alert(getPermissionGuideText());
+      });
   }, []);
 
   return (
@@ -74,7 +83,9 @@ function Body() {
                   stream={stream}
                   overlay="/images/studio-lighting-fhd.png"
                 />
-              ) : <CanvasSkeleton />)}
+              ) : (
+                <CanvasSkeleton />
+              ))}
             <div className="absolute bottom-[32px] left-[32px] text-white">
               <div className="text-head3">질문 순서표시</div>
               <div className="text-head2 leading-1 mt-[8px]">
@@ -108,7 +119,9 @@ function Body() {
 }
 
 function CanvasSkeleton() {
-  return (<div className="absolute inset-0 bg-grayscale-900 animate-skeleton-wave">
-    <div className="absolute inset-0 bg-gradient-to-r from-grayscale-900 via-grayscale-700 to-grayscale-900 animate-skeleton-wave" />
-  </div>);
+  return (
+    <div className="absolute inset-0 bg-grayscale-900 animate-skeleton-wave">
+      <div className="absolute inset-0 bg-gradient-to-r from-grayscale-900 via-grayscale-700 to-grayscale-900 animate-skeleton-wave" />
+    </div>
+  );
 }

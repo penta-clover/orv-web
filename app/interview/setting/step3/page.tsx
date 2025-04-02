@@ -6,10 +6,11 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import ExitInterviewModal from "../../(components)/exitInterviewModal";
 import PrevButton from "../../(components)/prevButton";
 import StatusBar from "../../(components)/statusBar";
-import { cn } from "@/lib/utils";
 import { getCameraStream } from "../../(components)/camera/cameraStream";
 import { FilteredCanvas } from "../../(components)/camera/filteredCanvas";
 import { AspectPreview } from "./aspectPreview";
+import usePermissionReload from "../../(components)/usePermissionReload";
+import { getPermissionGuideText } from "../../(components)/getPermissionGuideText";
 
 export default function Page() {
   return (
@@ -29,6 +30,9 @@ function Body() {
   const [stream, setStream] = useState<MediaStream | undefined>();
   const [streamReady, setStreamReady] = useState(false);
 
+  usePermissionReload("camera");
+  usePermissionReload("microphone");
+
   useEffect(() => {
     getCameraStream()
       .then((stream) => {
@@ -36,7 +40,7 @@ function Body() {
         setStreamReady(true);
       })
       .catch((error) => {
-        console.error("카메라 스트림 초기화 오류:", error);
+        alert(getPermissionGuideText());
       });
   }, []);
 

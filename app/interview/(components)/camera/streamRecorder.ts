@@ -66,7 +66,7 @@ export class StreamRecorder {
         this.recording = true;
       })
       .catch((error) => {
-        console.error("오디오 스트림 가져오기 실패:", error);
+        throw new Error("녹화 시작에 실패했습니다. 마이크와 카메라 권한을 확인해주세요.");
       });
   }
 

@@ -15,6 +15,9 @@ import { useMemberRepository } from "@/providers/MemberRepositoryContext";
 import { MyInfo } from "@/domain/model/MyInfo";
 import Image from "next/image";
 import ExitInterviewModal from "../../(components)/exitInterviewModal";
+import { get } from "http";
+import { getPermissionGuideText } from "../../(components)/getPermissionGuideText";
+import usePermissionReload from "../../(components)/usePermissionReload";
 
 export default function Page() {
   return (
@@ -203,6 +206,9 @@ function CountdownComponent(props: {
   const [isEnd, setIsEnd] = useState<boolean>(false);
   const localVideoRef = useRef<HTMLVideoElement>(null);
 
+  usePermissionReload("camera");
+  usePermissionReload("microphone");
+
   useImperativeHandle(
     props.ref,
     () => localVideoRef.current as HTMLVideoElement
@@ -242,7 +248,7 @@ function CountdownComponent(props: {
           localVideoRef.current.srcObject = stream;
         }
       } catch (error) {
-        console.error("카메라 활성화 중 에러:", error);
+        alert(getPermissionGuideText());
       }
     };
 

@@ -23,6 +23,9 @@ import { isPreviewOverlay } from "../(components)/scene/renderingOptions/preview
 import { isKnowNextScene } from "../(components)/scene/renderingOptions/knowNextScene";
 import { isEnding } from "../(components)/scene/renderingOptions/ending";
 import InterviewContext from "../(components)/scene/interviewContext";
+import { getPermissionGuideText } from "../(components)/getPermissionGuideText";
+import usePermissionReload from "../(components)/usePermissionReload";
+import { error } from "console";
 
 interface QuestionContent {
   number: number;
@@ -63,29 +66,44 @@ function Body() {
   const storyboardRepository = useStoryboardRepository();
   const RECORDING_FPS = 24; // 녹화 프레임 레이트 설정
 
+  // 카메라/마이크 권한 허용되면 새로고침
+  usePermissionReload("microphone");
+  usePermissionReload("camera");
+
   useEffect(() => {
     streamRecorderRef.current = new StreamRecorder();
-    getCameraStream().then((stream) => {
-      storyboardRepository
-        .getStoryboardInfo(storyboardId)
-        .then((storyboard) => {
-          storyboardRepository
-            .getSceneInfo(storyboard.startSceneId)
-            .then((scene) => {
-              loadScene(scene.id, 1);
 
-              // 첫 질문이 로드될 때 인터뷰 시작 시간 기록
-              startTimeRef.current = Date.now();
-              if (!canvasRef.current) return;
+    // TODO: Promise.all로 최적화
+    getCameraStream()
+      .then((stream) => {
+        storyboardRepository
+          .getStoryboardInfo(storyboardId)
+          .then((storyboard) => {
+            storyboardRepository
+              .getSceneInfo(storyboard.startSceneId)
+              .then((scene) => {
+                loadScene(scene.id, 1);
 
-              const captureStream =
-                canvasRef.current!.captureStream(RECORDING_FPS);
-              streamRecorderRef.current?.startRecording(captureStream); // 녹화 시작
+                // 첫 질문이 로드될 때 인터뷰 시작 시간 기록
+                startTimeRef.current = Date.now();
+                if (!canvasRef.current) return;
 
-              setStream(stream);
-            });
-        });
-    });
+                const captureStream =
+                  canvasRef.current!.captureStream(RECORDING_FPS);
+
+                try {
+                  streamRecorderRef.current?.startRecording(captureStream); // 녹화 시작
+                } catch (error) {
+                  alert(getPermissionGuideText());
+                }
+
+                setStream(stream);
+              });
+          });
+      })
+      .catch((error) => {
+        alert(getPermissionGuideText());
+      });
   }, []);
 
   // 질문 불러오기
@@ -100,7 +118,7 @@ function Body() {
 
       // Strict Mode에서만 렌더링이 두 번 발생 > addScene이 두 번 호출됨
       // Production 환경에서는 문제가 없습니다.
-      interviewContext.current.addScene(newScene);  
+      interviewContext.current.addScene(newScene);
 
       if (isEnding(newScene)) {
         streamRecorderRef.current

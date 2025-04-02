@@ -3,7 +3,7 @@ import "@/app/components/blackBody.css";
 import Image from "next/image";
 import NextButton from "../../(components)/nextButton";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState, Suspense, use } from "react";
 import ExitInterviewModal from "../../(components)/exitInterviewModal";
 import PrevButton from "../../(components)/prevButton";
 import StatusBar from "../../(components)/statusBar";
@@ -11,6 +11,8 @@ import TipBox from "../../(components)/tipBox";
 import { cn } from "@/lib/utils";
 import { getCameraStream } from "@/app/interview/(components)/camera/cameraStream";
 import { FilteredCanvas } from "../../(components)/camera/filteredCanvas";
+import { getPermissionGuideText } from "../../(components)/getPermissionGuideText";
+import usePermissionReload from "../../(components)/usePermissionReload";
 
 export default function Page() {
   return (
@@ -30,15 +32,22 @@ function Body() {
   const [filter, setFilter] = useState<Filter>("default");
   const [stream, setStream] = useState<MediaStream | undefined>();
 
+  usePermissionReload("camera");
+  usePermissionReload("microphone");
+
   const onNextButtonClick = () =>
     router.replace(
       `/interview/setting/ready?storyboardId=${storyboardId}&aspect=${aspect}&filter=${filter}`
     );
 
   useEffect(() => {
-    getCameraStream().then((stream) => {
-      setStream(stream);
-    });
+    getCameraStream()
+      .then((stream) => {
+        setStream(stream);
+      })
+      .catch((error) => {
+        alert(getPermissionGuideText());
+      });
   }, []);
 
   return (

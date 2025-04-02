@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import audioContext from "../audioContext";
+import { getPermissionGuideText } from "../../(components)/getPermissionGuideText";
+import usePermissionReload from "../../(components)/usePermissionReload";
 
 export default function MicIndicator(props: {
   width: number;
@@ -13,13 +15,20 @@ export default function MicIndicator(props: {
     useState<NodeJS.Timeout | null>(null);
   const [value, setValue] = useState<number>(0);
 
+  // 권한 허용되면 새로고침
+  usePermissionReload("microphone");
+  usePermissionReload("camera");
+
   useEffect(() => {
     if (typeof window !== "undefined" && navigator.mediaDevices) {
+
+      // 마이크 권한 요청
       const enableMicrophone = async () => {
         try {
           const stream = await navigator.mediaDevices.getUserMedia({
             audio: true,
           });
+
           setStream(stream);
 
           const { analyser, bufferLength, dataArray } = audioContext(stream);
@@ -32,8 +41,7 @@ export default function MicIndicator(props: {
             }, interval)
           );
         } catch (error) {
-          console.error("마이크를 활성화하는 도중 에러 발생:", error);
-          //TODO: 마이크 활성화 실패 시 알림 표시
+          alert(getPermissionGuideText());
         }
       };
 
