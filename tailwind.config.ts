@@ -28,6 +28,7 @@ export default {
         "shake-1.2": "shake 1.2s ease-in-out",
         "shake-2": "shake 2s ease-in-out",
         updown: "updown 2s ease-in-out infinite",
+        "skeleton-wave": 'skeleton-wave 1.5s infinite',
       },
       colors: {
         background: "hsl(var(--background))",
@@ -222,7 +223,6 @@ export default {
             height: "0",
           },
         },
-
         shake: {
           "0%, 50%, 100%": { transform: "translateX(0) rotate(0deg)" },
           "12.5%, 62.5%": { transform: "translateX(-6px) rotate(3deg)" },
@@ -231,6 +231,10 @@ export default {
         },
         updown: {
           "50%": { transform: "translateY(-3px)" },
+        },
+        "skeleton-wave": {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' },
         },
       },
     },

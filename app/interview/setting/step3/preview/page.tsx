@@ -27,6 +27,7 @@ function Body() {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [stream, setStream] = useState<MediaStream | undefined>();
+  const [streamReady, setStreamReady] = useState(false);
 
   const onNextButtonClick = () =>
     router.replace(
@@ -36,6 +37,7 @@ function Body() {
   useEffect(() => {
     getCameraStream().then((stream) => {
       setStream(stream);
+      setStreamReady(true);
     });
   }, []);
 
@@ -66,12 +68,13 @@ function Body() {
 
         <div className="flex flex-col grow items-center justify-center">
           <div className="relative flex justify-center items-center h-[476px] w-[846px] bg-grayscale-900 rounded-[12px] overflow-hidden">
-            {aspect !== "none" && (
-              <FilteredCanvas
-                stream={stream}
-                overlay="/images/studio-lighting-fhd.png"
-              />
-            )}
+            {aspect !== "none" &&
+              (streamReady ? (
+                <FilteredCanvas
+                  stream={stream}
+                  overlay="/images/studio-lighting-fhd.png"
+                />
+              ) : <CanvasSkeleton />)}
             <div className="absolute bottom-[32px] left-[32px] text-white">
               <div className="text-head3">질문 순서표시</div>
               <div className="text-head2 leading-1 mt-[8px]">
@@ -102,4 +105,10 @@ function Body() {
       </div>
     </ExitInterviewModal>
   );
+}
+
+function CanvasSkeleton() {
+  return (<div className="absolute inset-0 bg-grayscale-900 animate-skeleton-wave">
+    <div className="absolute inset-0 bg-gradient-to-r from-grayscale-900 via-grayscale-700 to-grayscale-900 animate-skeleton-wave" />
+  </div>);
 }

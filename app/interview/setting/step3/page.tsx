@@ -9,6 +9,7 @@ import StatusBar from "../../(components)/statusBar";
 import { cn } from "@/lib/utils";
 import { getCameraStream } from "../../(components)/camera/cameraStream";
 import { FilteredCanvas } from "../../(components)/camera/filteredCanvas";
+import { AspectPreview } from "./aspectPreview";
 
 export default function Page() {
   return (
@@ -26,15 +27,25 @@ function Body() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedAspect, setSelectedAspect] = useState<Aspect>("frontal");
   const [stream, setStream] = useState<MediaStream | undefined>();
+  const [streamReady, setStreamReady] = useState(false);
 
   useEffect(() => {
-    getCameraStream().then((stream) => {
-      setStream(stream);
-    });
+    getCameraStream()
+      .then((stream) => {
+        setStream(stream);
+        setStreamReady(true);
+      })
+      .catch((error) => {
+        console.error("카메라 스트림 초기화 오류:", error);
+      });
   }, []);
 
   const onAspectClick = (aspect: Aspect) => {
     setSelectedAspect(aspect);
+
+    if (stream) {
+      stream.getTracks().forEach((track) => track.stop());
+    }
 
     router.replace(
       `/interview/setting/step3/preview?storyboardId=${storyboardId}&aspect=${aspect}`
@@ -74,6 +85,7 @@ function Body() {
             <AspectPreview
               selected={selectedAspect === "frontal"}
               onClick={() => onAspectClick("frontal")}
+              disabled={!streamReady}
             >
               <Image
                 src="/images/pose-guide-frontal.png"
@@ -93,6 +105,7 @@ function Body() {
             <AspectPreview
               selected={selectedAspect === "whole"}
               onClick={() => onAspectClick("whole")}
+              disabled={!streamReady}
             >
               <Image
                 src="/images/pose-guide-whole.png"
@@ -112,6 +125,7 @@ function Body() {
             <AspectPreview
               selected={selectedAspect === "side"}
               onClick={() => onAspectClick("side")}
+              disabled={!streamReady}
             >
               <Image
                 src="/images/pose-guide-side.png"
@@ -131,6 +145,7 @@ function Body() {
             <AspectPreview
               selected={selectedAspect === "none"}
               onClick={() => onAspectClick("none")}
+              disabled={!streamReady}
             >
               <div className="flex flex-col items-center justify-center gap-[8px] bg-grayscale-900 rounded-[12px] aspect-[16/9] cursor-pointer">
                 <div className="text-head2 text-grayscale-50">
@@ -159,22 +174,4 @@ function Body() {
   );
 }
 
-function AspectPreview(props: {
-  children: React.ReactNode;
-  selected: boolean;
-  onClick: () => void;
-}) {
-  const { children, selected, onClick } = props;
 
-  return (
-    <div
-      className={cn(
-        selected ? "border-main-lilac50" : "border-transparent",
-        "rounded-[12px] overflow-hidden border-[2px] aspect-[16/9] cursor-pointer relative"
-      )}
-      onClick={onClick}
-    >
-      {children}
-    </div>
-  );
-}
