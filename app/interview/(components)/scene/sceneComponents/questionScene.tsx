@@ -44,7 +44,7 @@ export default class QuestionScene
     return (
       <div className="absolute bottom-[32px] left-[32px] mr-[32px] text-white">
         <div className="text-head3">
-          {this.offset}
+          {toKoreanOrdinal(this.offset)}
           번째 질문
         </div>
         <div className="text-head2 leading-1 mt-[8px]">
@@ -59,4 +59,29 @@ export default class QuestionScene
   getNextSceneId(): string {
     return this.content.nextSceneId;
   }
+}
+
+export function toKoreanOrdinal(num: number): string {
+  if (num <= 0 || num > 100) return `${num}`; // 0 이하나 100 초과는 fallback
+
+  const irregular: { [key: number]: string } = {
+    1: "첫",
+  };
+
+  if (irregular[num]) return irregular[num];
+
+  const units: string[] = [
+    "", "한", "두", "세", "네", "다섯", "여섯", "일곱", "여덟", "아홉",
+  ];
+  const tens: string[] = [
+    "", "열", "스물", "서른", "마흔", "쉰", "예순", "일흔", "여든", "아흔",
+  ];
+
+  const ten = Math.floor(num / 10);
+  const unit = num % 10;
+
+  const tenWord = tens[ten];
+  const unitWord = units[unit];
+
+  return tenWord + unitWord;
 }
