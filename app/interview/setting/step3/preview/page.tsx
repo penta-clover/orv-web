@@ -2,13 +2,13 @@
 import "@/app/components/blackBody.css";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { use, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import ExitInterviewModal from "../../../(components)/exitInterviewModal";
 import StatusBar from "../../../(components)/statusBar";
 import { Suspense } from "react";
 import PrevButton from "@/app/interview/(components)/prevButton";
 import NextButton from "@/app/interview/(components)/nextButton";
-import { getCameraStream } from "@/app/interview/(components)/camera/cameraStream";
+import { getCameraStreamVideo } from "@/app/interview/(components)/camera/cameraStream";
 import { FilteredCanvas } from "@/app/interview/(components)/camera/filteredCanvas";
 import { getPermissionGuideText } from "@/app/interview/(components)/getPermissionGuideText";
 import usePermissionReload from "@/app/interview/(components)/usePermissionReload";
@@ -28,8 +28,7 @@ function Body() {
 
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [stream, setStream] = useState<MediaStream | undefined>();
-  const [streamReady, setStreamReady] = useState(false);
+  const [source, setSource] = useState<Source | undefined>();
 
   usePermissionReload("camera");
   usePermissionReload("microphone");
@@ -40,14 +39,18 @@ function Body() {
     );
 
   useEffect(() => {
-    getCameraStream()
-      .then((stream) => {
-        setStream(stream);
-        setStreamReady(true);
+    let clear: (() => void) | undefined;
+
+    getCameraStreamVideo()
+      .then(({ video, cleanup }) => {
+        setSource(video);
+        clear = cleanup;
       })
-      .catch((error) => {
+      .catch(() => {
         alert(getPermissionGuideText());
       });
+
+    return () => clear?.();
   }, []);
 
   return (
@@ -78,9 +81,9 @@ function Body() {
         <div className="flex flex-col grow items-center justify-center">
           <div className="relative flex justify-center items-center h-[476px] w-[846px] bg-grayscale-900 rounded-[12px] overflow-hidden">
             {aspect !== "none" &&
-              (streamReady ? (
+              (source ? (
                 <FilteredCanvas
-                  stream={stream}
+                  source={source}
                   overlay="/images/studio-lighting-fhd.png"
                 />
               ) : (

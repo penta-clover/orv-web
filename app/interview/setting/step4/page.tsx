@@ -9,7 +9,7 @@ import PrevButton from "../../(components)/prevButton";
 import StatusBar from "../../(components)/statusBar";
 import TipBox from "../../(components)/tipBox";
 import { cn } from "@/lib/utils";
-import { getCameraStream } from "@/app/interview/(components)/camera/cameraStream";
+import { getCameraStreamVideo } from "@/app/interview/(components)/camera/cameraStream";
 import { FilteredCanvas } from "../../(components)/camera/filteredCanvas";
 import { getPermissionGuideText } from "../../(components)/getPermissionGuideText";
 import usePermissionReload from "../../(components)/usePermissionReload";
@@ -30,7 +30,7 @@ function Body() {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [filter, setFilter] = useState<Filter>("default");
-  const [stream, setStream] = useState<MediaStream | undefined>();
+  const [source, setSource] = useState<Source | undefined>();
 
   usePermissionReload("camera");
   usePermissionReload("microphone");
@@ -41,13 +41,17 @@ function Body() {
     );
 
   useEffect(() => {
-    getCameraStream()
-      .then((stream) => {
-        setStream(stream);
+    let clear: (() => void) | undefined;
+    getCameraStreamVideo()
+      .then(({ video, cleanup }) => {
+        setSource(video);
+        clear = cleanup;
       })
-      .catch((error) => {
+      .catch(() => {
         alert(getPermissionGuideText());
       });
+
+    return () => clear?.();
   }, []);
 
   return (
@@ -80,7 +84,7 @@ function Body() {
             <div className="relative flex justify-center items-center h-[430px] w-[846px] bg-grayscale-900 rounded-[12px] overflow-hidden">
               {aspect !== "none" && (
                 <FilteredCanvas
-                  stream={stream}
+                  source={source}
                   filter={filter}
                   overlay="/images/studio-lighting-fhd.png"
                 />

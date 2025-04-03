@@ -2,11 +2,11 @@
 import "@/app/components/blackBody.css";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import ExitInterviewModal from "../../(components)/exitInterviewModal";
 import PrevButton from "../../(components)/prevButton";
 import StatusBar from "../../(components)/statusBar";
-import { getCameraStream } from "../../(components)/camera/cameraStream";
+import { getCameraStreamVideo } from "../../(components)/camera/cameraStream";
 import { FilteredCanvas } from "../../(components)/camera/filteredCanvas";
 import { AspectPreview } from "./aspectPreview";
 import usePermissionReload from "../../(components)/usePermissionReload";
@@ -27,29 +27,28 @@ function Body() {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedAspect, setSelectedAspect] = useState<Aspect>("frontal");
-  const [stream, setStream] = useState<MediaStream | undefined>();
-  const [streamReady, setStreamReady] = useState(false);
+  const [source, setSource] = useState<Source | undefined>();
 
   usePermissionReload("camera");
   usePermissionReload("microphone");
 
   useEffect(() => {
-    getCameraStream()
-      .then((stream) => {
-        setStream(stream);
-        setStreamReady(true);
+    let clear: (() => void) | undefined;
+
+    getCameraStreamVideo()
+      .then(({ video, cleanup }) => {
+        setSource(video);
+        clear = cleanup;
       })
-      .catch((error) => {
+      .catch(() => {
         alert(getPermissionGuideText());
       });
+
+    return () => clear?.();
   }, []);
 
   const onAspectClick = (aspect: Aspect) => {
     setSelectedAspect(aspect);
-
-    if (stream) {
-      stream.getTracks().forEach((track) => track.stop());
-    }
 
     router.replace(
       `/interview/setting/step3/preview?storyboardId=${storyboardId}&aspect=${aspect}`
@@ -89,7 +88,7 @@ function Body() {
             <AspectPreview
               selected={selectedAspect === "frontal"}
               onClick={() => onAspectClick("frontal")}
-              disabled={!streamReady}
+              disabled={!source}
             >
               <Image
                 src="/images/pose-guide-frontal.png"
@@ -101,7 +100,7 @@ function Body() {
               />
               <div className="absolute top-0 left-0 w-full h-full">
                 <FilteredCanvas
-                  stream={stream}
+                  source={source}
                   overlay="/images/studio-lighting-fhd.png"
                 />
               </div>
@@ -109,7 +108,7 @@ function Body() {
             <AspectPreview
               selected={selectedAspect === "whole"}
               onClick={() => onAspectClick("whole")}
-              disabled={!streamReady}
+              disabled={!source}
             >
               <Image
                 src="/images/pose-guide-whole.png"
@@ -121,7 +120,7 @@ function Body() {
               />
               <div className="absolute top-0 left-0 w-full h-full">
                 <FilteredCanvas
-                  stream={stream}
+                  source={source}
                   overlay="/images/studio-lighting-fhd.png"
                 />
               </div>
@@ -129,7 +128,7 @@ function Body() {
             <AspectPreview
               selected={selectedAspect === "side"}
               onClick={() => onAspectClick("side")}
-              disabled={!streamReady}
+              disabled={!source}
             >
               <Image
                 src="/images/pose-guide-side.png"
@@ -141,7 +140,7 @@ function Body() {
               />
               <div className="absolute top-0 left-0 w-full h-full">
                 <FilteredCanvas
-                  stream={stream}
+                  source={source}
                   overlay="/images/studio-lighting-fhd.png"
                 />
               </div>
@@ -149,7 +148,7 @@ function Body() {
             <AspectPreview
               selected={selectedAspect === "none"}
               onClick={() => onAspectClick("none")}
-              disabled={!streamReady}
+              disabled={!source}
             >
               <div className="flex flex-col items-center justify-center gap-[8px] bg-grayscale-900 rounded-[12px] aspect-[16/9] cursor-pointer">
                 <div className="text-head2 text-grayscale-50">
@@ -177,5 +176,3 @@ function Body() {
     </ExitInterviewModal>
   );
 }
-
-

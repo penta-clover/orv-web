@@ -18,3 +18,10 @@ type FilterData = {
   contrast: number;
   saturation: number;
 };
+
+type Source =
+  | HTMLImageElement
+  | HTMLVideoElement
+  | HTMLCanvasElement
+  | ImageBitmap
+  | OffscreenCanvas;

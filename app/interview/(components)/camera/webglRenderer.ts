@@ -270,7 +270,7 @@ export class WebGLRenderer {
     }
   }
 
-  draw(video: HTMLVideoElement, filter: FilterData) {
+  draw(source: Source, filter: FilterData) {
     if (
       !this.program ||
       !this.positionBuffer ||
@@ -279,7 +279,7 @@ export class WebGLRenderer {
       !this.overlayTexture ||
       !this.attributeLocations
     ) {
-      throw new Error("WebGL resources not initialized");
+      return;
     }
 
     this.gl.useProgram(this.program);
@@ -328,7 +328,7 @@ export class WebGLRenderer {
       this.gl.RGBA,
       this.gl.RGBA,
       this.gl.UNSIGNED_BYTE,
-      video
+      source
     );
 
     // 필터 uniform 설정

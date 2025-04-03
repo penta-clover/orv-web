@@ -10,12 +10,9 @@ import { useStoryboardRepository } from "@/providers/StoryboardRepositoryContext
 import TipBox from "../(components)/tipBox";
 import NextButton from "../(components)/nextButton";
 import { StreamRecorder } from "../(components)/camera/streamRecorder";
-import { getCameraStream } from "../(components)/camera/cameraStream";
+import { getCameraStreamVideo } from "../(components)/camera/cameraStream";
 import BackgroundMusic from "./backgroundMusic";
-import {
-  BlankCanvas,
-  FilteredCanvas,
-} from "../(components)/camera/filteredCanvas";
+import { FilteredCanvas } from "../(components)/camera/filteredCanvas";
 import Scene from "../(components)/scene/scene";
 import SceneFactory from "../(components)/scene/sceneFactory";
 import { isSubtitled } from "../(components)/scene/renderingOptions/subtitled";
@@ -25,14 +22,7 @@ import { isEnding } from "../(components)/scene/renderingOptions/ending";
 import InterviewContext from "../(components)/scene/interviewContext";
 import { getPermissionGuideText } from "../(components)/getPermissionGuideText";
 import usePermissionReload from "../(components)/usePermissionReload";
-import { error } from "console";
-
-interface QuestionContent {
-  number: number;
-  question: string;
-  hint: string;
-  nextSceneId?: string;
-}
+import { BlankCanvas } from "../(components)/camera/blankCanvas";
 
 export default function Page() {
   return (
@@ -54,7 +44,7 @@ function Body() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [showTip, setShowTip] = useState<boolean>(true);
   const [currentScene, setCurrentScene] = useState<Scene | undefined>();
-  const [stream, setStream] = useState<MediaStream | null>(null);
+  const [source, setSource] = useState<Source | null>(null);
 
   const streamRecorderRef = useRef<StreamRecorder | null>(null);
   const previewCanvasRef = useRef<HTMLCanvasElement | null>(null); // 녹화 중 사용자에게 표시되는 캔버스
@@ -71,11 +61,12 @@ function Body() {
   usePermissionReload("camera");
 
   useEffect(() => {
+    let clear: (() => void) | undefined;
     streamRecorderRef.current = new StreamRecorder();
 
     // TODO: Promise.all로 최적화
-    getCameraStream()
-      .then((stream) => {
+    getCameraStreamVideo()
+      .then(({ video, cleanup }) => {
         storyboardRepository
           .getStoryboardInfo(storyboardId)
           .then((storyboard) => {
@@ -97,13 +88,16 @@ function Body() {
                   alert(getPermissionGuideText());
                 }
 
-                setStream(stream);
+                setSource(video);
+                clear = cleanup;
               });
           });
       })
-      .catch((error) => {
+      .catch(() => {
         alert(getPermissionGuideText());
       });
+
+    return () => clear?.();
   }, []);
 
   // 질문 불러오기
@@ -179,7 +173,7 @@ function Body() {
               />
             ) : (
               <FilteredCanvas
-                stream={stream!}
+                source={source}
                 filter={filter}
                 ref={previewCanvasRef}
                 overlay="/images/studio-lighting-fhd.png"
@@ -187,7 +181,7 @@ function Body() {
             )}
             <SubtitleCanvas
               ref={canvasRef}
-              sourceCanvasRef={previewCanvasRef}
+              source={previewCanvasRef.current}
               subtitles={
                 isSubtitled(currentScene) ? currentScene.getSubtitles() : []
               }

@@ -1,13 +1,12 @@
 "use client";
 
 import React, { useEffect, useImperativeHandle, useRef } from "react";
+import { BaseCanvas, BaseCanvasProps } from "./baseCanvas";
 
-interface SubtitleCanvasProps {
-  sourceCanvasRef: React.RefObject<HTMLCanvasElement | null>;
+interface SubtitleCanvasProps extends BaseCanvasProps {
+  source?: Source | null;
   subtitles: Subtitle[];
   fps?: number;
-  className?: string;
-  style?: React.CSSProperties;
 }
 
 interface Subtitle {
@@ -25,17 +24,23 @@ export const SubtitleCanvas = React.forwardRef<
   HTMLCanvasElement,
   SubtitleCanvasProps
 >((props, ref) => {
+  const sourceRef = useRef<Source | null | undefined>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const subtitlesRef = useRef<Subtitle[]>([]);
   useImperativeHandle(ref, () => canvasRef.current as HTMLCanvasElement);
 
-  const { sourceCanvasRef, subtitles, className, style, fps } = props;
+  const { source, subtitles, fps, className, style } = props;
 
+  // Ref 쓰는 이유: 무한 재귀 도는 함수에 간섭할 수 있는 방법이 이거밖에 없음 ㅜㅜ
   useEffect(() => {
     if (subtitlesRef.current) {
       subtitlesRef.current = subtitles;
     }
   }, [subtitles]);
+
+  useEffect(() => {
+    sourceRef.current = source;
+  }, [source]);
 
   // 캔버스 설정
   useEffect(() => {
@@ -46,28 +51,22 @@ export const SubtitleCanvas = React.forwardRef<
     const frameInterval = 1000 / (fps || DEFAULT_FPS);
 
     const drawFrame = () => {
-      if (sourceCanvasRef.current) {
+      if (sourceRef.current && canvas) {
         if (
-          canvas.width !== sourceCanvasRef.current.width ||
-          canvas.height !== sourceCanvasRef.current.height
+          canvas.width !== sourceRef.current.width ||
+          canvas.height !== sourceRef.current.height
         ) {
-          canvas.width = sourceCanvasRef.current.width;
-          canvas.height = sourceCanvasRef.current.height;
+          canvas.width = sourceRef.current.width;
+          canvas.height = sourceRef.current.height;
         }
 
-        const ctx = canvas?.getContext("2d", {
+        const ctx = canvas.getContext("2d", {
           alpha: false,
         });
 
         if (ctx) {
           // 소스 캔버스 그리기
-          ctx.drawImage(
-            sourceCanvasRef.current,
-            0,
-            0,
-            canvas.width,
-            canvas.height
-          );
+          ctx.drawImage(sourceRef.current, 0, 0, canvas.width, canvas.height);
 
           // 자막 렌더링 품질 설정
           ctx.textRendering = "optimizeLegibility";
@@ -82,7 +81,6 @@ export const SubtitleCanvas = React.forwardRef<
           });
         }
       }
-
       frameId = window.setTimeout(drawFrame, frameInterval);
     };
 
@@ -95,17 +93,5 @@ export const SubtitleCanvas = React.forwardRef<
     };
   }, []);
 
-  return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        width: "100%",
-        aspectRatio: "16/9",
-        objectFit: "cover",
-        maxHeight: "100%",
-        ...style,
-      }}
-      className={className}
-    />
-  );
+  return <BaseCanvas ref={canvasRef} className={className} style={style} />;
 });

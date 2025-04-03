@@ -1,41 +1,35 @@
 import React, { useEffect, useImperativeHandle, useRef } from "react";
 import { WebGLRenderer } from "./webglRenderer";
+import { BaseCanvas, BaseCanvasProps } from "./baseCanvas";
 
-interface FilteredCanvasProps {
-  stream?: MediaStream;
+interface FilteredCanvasProps extends BaseCanvasProps {
+  source?: Source | null;
   filter?: Filter;
   overlay?: string;
-  className?: string;
-  style?: React.CSSProperties;
 }
 
 export const FilteredCanvas = React.forwardRef<
   HTMLCanvasElement,
   FilteredCanvasProps
 >((props, ref) => {
-  const { stream, filter = "default", overlay, style, className } = props;
+  const { source, filter = "default", overlay, className, style } = props;
+  const sourceRef = useRef<Source | null | undefined>(null);
   const filterRef = useRef<FilterData>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const frameId = useRef<number | null>(null);
+
   useImperativeHandle(ref, () => canvasRef.current as HTMLCanvasElement);
 
+  // Ref 쓰는 이유: 무한 재귀 도는 함수에 간섭할 수 있는 방법이 이거밖에 없음 ㅜㅜ
   useEffect(() => {
-    if (!stream) return;
+    filterRef.current = getFilterUniforms(filter);
+  }, [filter]);
 
-    // 비디오 요소 생성 및 설정
-    const video = document.createElement("video");
-    video.srcObject = stream;
-    video.autoplay = true;
-    video.playsInline = true;
-    video.muted = true;
-    video.style.width = "16px";
-    video.style.height = "9px";
-    video.style.position = "absolute";
-    video.style.top = "0";
-    video.style.left = "0";
-    video.style.opacity = "0";
-    video.style.pointerEvents = "none"; // 비디오 요소가 클릭 이벤트를 받지 않도록 설정
-    document.body.appendChild(video);
+  useEffect(() => {
+    sourceRef.current = source;
+  }, [source]);
 
+  useEffect(() => {
     filterRef.current = getFilterUniforms(filter);
 
     // WebGL 컨텍스트 초기화
@@ -70,94 +64,35 @@ export const FilteredCanvas = React.forwardRef<
     }
 
     const drawFrame = () => {
-      if (video.readyState === video.HAVE_ENOUGH_DATA) {
-        // 비디오 크기에 맞춰 캔버스 크기 조정
+      if (sourceRef.current && canvasRef.current) {
         if (
-          canvasRef.current &&
-          (video.videoWidth !== canvasRef.current!.width ||
-            video.videoHeight !== canvasRef.current!.height)
+          sourceRef.current.width !== canvasRef.current.width ||
+          sourceRef.current.height !== canvasRef.current.height
         ) {
-          canvasRef.current!.width = video.videoWidth;
-          canvasRef.current!.height = video.videoHeight;
-          gl.viewport(
-            0,
-            0,
-            canvasRef.current!.width,
-            canvasRef.current!.height
-          );
+          canvasRef.current.width = sourceRef.current.width;
+          canvasRef.current.height = sourceRef.current.height;
+          gl.viewport(0, 0, canvasRef.current.width, canvasRef.current.height);
         }
-        webglRenderer.draw(video, filterRef.current!);
-        requestAnimationFrame(drawFrame);
+        webglRenderer.draw(sourceRef.current, filterRef.current!);
       }
+      requestAnimationFrame(drawFrame);
     };
 
     const cleanup = () => {
       webglRenderer.cleanup();
-      video.srcObject = null;
+      if (frameId.current) {
+        cancelAnimationFrame(frameId.current);
+        frameId.current = null;
+      }
     };
 
-    // 비디오 메타데이터 로드 시 렌더링 시작
-    video.onloadedmetadata = () => {
-      // 초기 캔버스 크기 설정
-      canvasRef.current!.width = video.videoWidth;
-      canvasRef.current!.height = video.videoHeight;
-      gl.viewport(0, 0, canvasRef.current!.width, canvasRef.current!.height);
-      drawFrame();
-    };
-
-    // 에러 처리
-    video.onerror = (error) => {
-      console.error("Video error:", error);
-      cleanup();
-    };
-
-    stream.getTracks().forEach((track) => {
-      track.onended = () => cleanup();
-    });
+    drawFrame();
 
     return () => cleanup();
-  }, [stream]);
+  }, []);
 
-  useEffect(() => {
-    filterRef.current = getFilterUniforms(filter);
-  }, [filter]);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      style={style}
-      className={`${className ?? ""} w-full h-full object-cover`}
-    />
-  );
+  return <BaseCanvas ref={canvasRef} className={className} style={style} />;
 });
-
-export function BlankCanvas({
-  ref,
-  overlay,
-}: {
-  ref: React.RefObject<HTMLCanvasElement | null>;
-  overlay?: string;
-}) {
-  useEffect(() => {
-    const canvas = ref.current;
-    const ctx = canvas?.getContext("2d");
-    if (!ctx || !canvas) return;
-    ctx.fillStyle = "#1A1B1E";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    if (overlay) {
-      const overlayImage = new Image();
-      overlayImage.src = overlay;
-      overlayImage.onload = () => {
-        ctx.drawImage(overlayImage, 0, 0, canvas.width, canvas.height);
-      };
-    }
-  }, [overlay]);
-
-  return (
-    <canvas ref={ref} className="w-full h-full" width={1280} height={720} />
-  );
-}
 
 function getFilterUniforms(filter: Filter) {
   switch (filter) {
