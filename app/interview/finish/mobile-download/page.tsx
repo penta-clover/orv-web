@@ -29,25 +29,6 @@ function Body() {
     });
   }, []);
 
-  const handleDownload = async () => {
-    if (video?.videoUrl) {
-      try {
-        const response = await fetch(video.videoUrl);
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = video.title ? `${video.title}.mp4` : "video.mp4";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      } catch (error) {
-        console.error("다운로드 중 오류 발생", error);
-      }
-    }
-  };
-
   return (
     <div className="flex flex-col h-[100dvh]">
       <ActionBar />
@@ -81,12 +62,13 @@ function Body() {
         <div className="h-[34px]" />
 
         <div className="w-full px-[33px]">
-          <button
-            className="w-full h-[56px] rounded-[12px] text-head3 bg-main-lilac50 text-grayscale-800 bg-grayscale-800 text-grayscale-500 active:scale-95"
-            onClick={handleDownload}
+          <a
+            className={`w-full h-[56px] rounded-[12px] text-head3 bg-main-lilac50 text-grayscale-800 bg-grayscale-800 text-grayscale-500 active:scale-95 ${video?.videoUrl ? "" : "hidden"}`}
+            href={video?.videoUrl}
+            download={video?.title ? `${video.title}.mp4` : "video.mp4"}
           >
             인터뷰 영상 다운로드
-          </button>
+          </a>
         </div>
 
         <div className="h-[11px]" />
