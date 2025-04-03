@@ -19,6 +19,8 @@ function Body() {
   const [video, setVideo] = useState<Video | null>(null);
   const searchParams = useSearchParams();
   const videoId = searchParams.get("videoId")!;
+  const [downloadProgress, setDownloadProgress] = useState<number>(0);
+  const [isDownloading, setIsDownloading] = useState<boolean>(false);
   const router = useRouter();
 
   const archiveRepository = useArchiveRepository();
@@ -28,6 +30,58 @@ function Body() {
       setVideo(video);
     });
   }, []);
+
+  const handleDownload = async () => {
+    if (!video?.videoUrl) return;
+    setIsDownloading(true);
+    setDownloadProgress(0);
+    try {
+      const response = await fetch(video.videoUrl);
+      const contentLength = response.headers.get("content-length");
+
+      if (!contentLength) {
+        // content-length가 없으면 진행률 표시 없이 blob으로 처리
+        const blob = await response.blob();
+        triggerDownload(blob, video.title);
+        setDownloadProgress(100);
+        setIsDownloading(false);
+        return;
+      }
+
+      const total = parseInt(contentLength, 10);
+      let loaded = 0;
+      const reader = response.body!.getReader();
+      const chunks: Uint8Array[] = [];
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        if (value) {
+          chunks.push(value);
+          loaded += value.length;
+          const percent = Math.round((loaded / total) * 100);
+          setDownloadProgress(percent);
+        }
+      }
+      const blob = new Blob(chunks);
+      triggerDownload(blob, video.title);
+      setIsDownloading(false);
+    } catch (error) {
+      console.error("다운로드 중 오류 발생", error);
+      setIsDownloading(false);
+    }
+  };
+
+  const triggerDownload = (blob: Blob, title: string | undefined) => {
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = title ? `${title}.mp4` : "video.mp4";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="flex flex-col h-[100dvh]">
@@ -62,13 +116,15 @@ function Body() {
         <div className="h-[34px]" />
 
         <div className="w-full px-[33px]">
-          <a
-            className={`w-full h-[56px] rounded-[12px] text-head3 bg-main-lilac50 text-grayscale-800 bg-grayscale-800 text-grayscale-500 active:scale-95 ${video?.videoUrl ? "" : "hidden"}`}
-            href={video?.videoUrl}
-            download={video?.title ? `${video.title}.mp4` : "video.mp4"}
+          <button
+            className="w-full h-[56px] rounded-[12px] text-head3 bg-main-lilac50 text-grayscale-800 active:scale-95"
+            onClick={handleDownload}
+            disabled={isDownloading}
           >
-            인터뷰 영상 다운로드
-          </a>
+            {isDownloading
+              ? `다운로드 중... (${downloadProgress}%)`
+              : "인터뷰 영상 다운로드"}
+          </button>
         </div>
 
         <div className="h-[11px]" />
