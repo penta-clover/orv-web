@@ -37,6 +37,7 @@ export async function getCameraStream(
         }
       : false,
   });
+  
 
   return stream;
 }
