@@ -29,7 +29,13 @@ export async function getCameraStream(
       width: { ideal: idealWidth },
       height: { ideal: idealHeight },
     },
-    audio: useAudio,
+    audio: useAudio
+      ? {
+          echoCancellation: false,
+          noiseSuppression: false,
+          autoGainControl: false,
+        }
+      : false,
   });
 
   return stream;
