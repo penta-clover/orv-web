@@ -152,9 +152,9 @@ function Body() {
       setIsOpen={setIsModalOpen}
       onExitInterview={() => router.replace("/")}
     >
-      <div className="relative w-full h-[calc(100dvh)] flex flex-col items-center justify-start py-[20px] px-[48px]">
+      <div className="relative w-full h-[calc(100dvh)] flex flex-col items-center justify-start py-[20px] px-[48px] overflow-hidden">
         <div className="flex flex-col grow items-center justify-center">
-          <div className="w-[90vw] lg:w-[1200px] flex justify-end mb-[10px]">
+          <div className="w-[90dvw] md:w-[700px] lg:w-[800px] xl:w-[900px] flex justify-end mb-[10px]">
             <div
               className="w-[139px] h-[56px] flex items-center justify-center gap-[2px] bg-grayscale-50 rounded-[12px] self-end active:scale-95"
               onClick={() => setIsModalOpen(true)}
@@ -171,7 +171,7 @@ function Body() {
             </div>
           </div>
 
-          <div className="relative flex justify-center items-center w-[90vw] lg:w-[1200px] bg-grayscale-900 rounded-[12px] overflow-hidden">
+          <div className="relative flex justify-center items-center w-[90dvw] max-h-[85dvh] aspect-16/9 md:w-[700px] lg:w-[800px] xl:w-[900px] bg-grayscale-900 rounded-[12px] overflow-hidden">
             {aspect === "none" ? (
               <BlankCanvas
                 ref={previewCanvasRef}
