@@ -70,6 +70,21 @@ function Body() {
   usePermissionReload("microphone");
   usePermissionReload("camera");
 
+  const waitForCanvasReady = (cb: () => void) => {
+    const interval = setInterval(() => {
+      const canvas = canvasRef.current;
+      if (canvas && canvas.width !== 300 && canvas.height !== 150) {
+        console.log(`Canvas is ready (${canvas.width}x${canvas.height})`);
+        clearInterval(interval);
+        cb();
+      } else {
+        console.log(
+          `Waiting for canvas to be ready... (${canvas?.width}x${canvas?.height})`
+        );
+      }
+    }, 50); // 50ms 간격으로 체크
+  };
+
   useEffect(() => {
     streamRecorderRef.current = new StreamRecorder();
 
@@ -92,7 +107,12 @@ function Body() {
                   canvasRef.current!.captureStream(RECORDING_FPS);
 
                 try {
-                  streamRecorderRef.current?.startRecording(captureStream); // 녹화 시작
+                  console.log(`current canvas resolution: ${canvasRef.current.width}x${canvasRef.current.height}`);
+
+                  // 캔버스가 준비될 때까지 대기
+                  waitForCanvasReady(() => {
+                    streamRecorderRef.current?.startRecording(captureStream); // 녹화 시작
+                  });
                 } catch (error) {
                   alert(getPermissionGuideText());
                 }

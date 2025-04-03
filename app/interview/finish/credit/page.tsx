@@ -90,20 +90,15 @@ function Body() {
         console.log("   ✅ 파일 쓰기 완료");
 
         // ffmpeg를 이용한 코덱 및 확장자 전환
-        console.log("4️⃣ 변환 시작 (libx264 인코딩)");
+        console.log("4️⃣ 변환 시작");
         console.time("변환 시간");
+        
         await ffmpeg.exec([
           "-i",
           "input.webm",
-          "-vf",
-          "format=yuv420p",
-          "-c:v",
-          "libx264",
-          "-crf",
-          "23",
           "-preset",
           "veryfast",
-          "-c:a",
+          "-c",
           "copy",
           "-movflags",
           "faststart",

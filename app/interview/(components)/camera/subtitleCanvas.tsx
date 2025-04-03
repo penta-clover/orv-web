@@ -85,7 +85,7 @@ export const SubtitleCanvas = React.forwardRef<
 
       frameId = window.setTimeout(drawFrame, frameInterval);
     };
-
+    
     drawFrame();
 
     return () => {

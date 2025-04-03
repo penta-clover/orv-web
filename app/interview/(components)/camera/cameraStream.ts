@@ -32,12 +32,12 @@ export async function getCameraStream(
     audio: useAudio
       ? {
           echoCancellation: false,
-          noiseSuppression: false,
-          autoGainControl: false,
+          noiseSuppression: true,
+          autoGainControl: true,
         }
       : false,
   });
-  
+
 
   return stream;
 }
