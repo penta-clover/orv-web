@@ -107,7 +107,7 @@ function Body() {
             }
             useKeyboardShortcut
           >
-            뒤로가기
+            돌아가기
           </PrevButton>
           <NextButton
             className="fixed bottom-[45px] right-[45px]"
