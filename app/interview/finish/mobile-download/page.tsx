@@ -130,7 +130,7 @@ function Body() {
         <div className="h-[11px]" />
 
         <div className="text-body4 text-grayscale-100">
-          24시간 동안 동영상 다운로드가 가능합니다.
+          3시간 동안 동영상 다운로드가 가능합니다.
         </div>
       </div>
     </div>
