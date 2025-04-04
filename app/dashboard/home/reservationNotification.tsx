@@ -13,9 +13,9 @@ export default function ReservationNotification() {
 
   useEffect(() => {
     const now = new Date(Date.now());
-    const before2Hours = new Date(now.getTime() - 12 * 60 * 60 * 1000);
+    const before3Hours = new Date(now.getTime() - 3 * 60 * 60 * 1000);
 
-    reservationRepository.getForwardReservationsAfter(before2Hours).then((reservations) => {
+    reservationRepository.getForwardReservationsAfter(before3Hours).then((reservations) => {
       if (reservations !== null && reservations.length > 0) {
         const reservation = reservations[0];
         setReservation(reservation);
@@ -24,9 +24,9 @@ export default function ReservationNotification() {
         const reservationTime = new Date(reservation.scheduledAt);
         const diffInHours = (now.getTime() - reservationTime.getTime()) / (1000 * 60 * 60);
         
-        // 12시간 이내에 있는 예약인 경우에만 남은 시간 계산
-        if (diffInHours >= 0 && diffInHours < 12) {
-          setRemainingTime(12 - diffInHours);
+        // 3시간 이내에 있는 예약인 경우에만 남은 시간 계산
+        if (diffInHours >= 0 && diffInHours < 3) {
+          setRemainingTime(3 - diffInHours);
         } else {
           setRemainingTime(null);
         }
