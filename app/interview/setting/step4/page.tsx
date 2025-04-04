@@ -150,13 +150,15 @@ function Body() {
           }
           useKeyboardShortcut
         />
-        <div className="fixed bottom-[45px] right-[45px] flex flex-col items-end gap-[10px]">
+        <div className="fixed bottom-[105px] right-[45px]">
           <TipBox
             tag="Notice"
             text="인터뷰가 바로 시작돼요.\n이제 다음 단계로 넘어가면 다시 돌아올 수 없어요"
             tagColor="text-system-warning"
             dismissOnClick
           />
+        </div>
+        <div className="fixed bottom-[45px] right-[45px] flex flex-col items-end">
           <NextButton onClick={onNextButtonClick} useKeyboardShortcut />
         </div>
       </div>
