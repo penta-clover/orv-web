@@ -250,7 +250,7 @@ function Body() {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center">
           <div
             className={`flex flex-col items-end gap-[10px] transition-all ${
-              is25SecondsPassed
+              isUploaded && is25SecondsPassed
                 ? "opacity-100"
                 : "opacity-0 pointer-events-none"
             }`}

@@ -47,10 +47,10 @@ export default class QuestionScene
           {toKoreanOrdinal(this.offset)}
           번째 질문
         </div>
-        <div className="text-head2 leading-1 mt-[8px]">
-          {this.content.question}
+        <div className="mt-[8px]">
+          <span className="text-head2">{this.content.question}</span>
           <br />
-          {this.content.hint}
+          <span className="text-head2 font-normal">{this.content.hint}</span>
         </div>
       </div>
     );
