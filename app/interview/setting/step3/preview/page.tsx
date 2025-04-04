@@ -99,14 +99,16 @@ function Body() {
 
         <div className="w-full h-[104px]">
           <PrevButton
-            className="fixed bottom-[45px] left-[45px]"
+            className="fixed bottom-[45px] left-1/2 transform -translate-x-1/2 "
             onClick={() =>
               router.replace(
                 `/interview/setting/step3?storyboardId=${storyboardId}`
               )
             }
             useKeyboardShortcut
-          />
+          >
+            뒤로가기
+          </PrevButton>
           <NextButton
             className="fixed bottom-[45px] right-[45px]"
             onClick={onNextButtonClick}

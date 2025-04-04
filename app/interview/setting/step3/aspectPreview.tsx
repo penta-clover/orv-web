@@ -2,8 +2,8 @@ import { cn } from "@/lib/utils";
 
 export function AspectPreview(props: {
   children: React.ReactNode;
-  selected: boolean;
   onClick: () => void;
+  selected?: boolean;
   disabled?: boolean;
 }) {
   const { children, selected, onClick, disabled = false } = props;
@@ -12,7 +12,7 @@ export function AspectPreview(props: {
     <div
       className={cn(
         selected ? "border-main-lilac50" : "border-transparent",
-        "rounded-[12px] overflow-hidden border-[2px] aspect-[16/9] cursor-pointer relative"
+        "rounded-[12px] overflow-hidden border-[2px] aspect-[16/9] cursor-pointer relative hover:border-main-lilac50 transition-all"
       )}
       onClick={disabled ? undefined : onClick}
     >

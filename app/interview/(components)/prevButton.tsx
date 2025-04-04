@@ -6,6 +6,7 @@ export default function PrevButton(props: {
   onClick: () => void;
   useKeyboardShortcut: boolean;
   className?: string;
+  children?: React.ReactNode;
 }) {
   const { onClick, useKeyboardShortcut, className = "" } = props;
   const keyDownListener = (e: KeyboardEvent) => {
@@ -29,18 +30,22 @@ export default function PrevButton(props: {
     <button
       className={cn(
         className,
-        "pr-[24px] pl-[19px] py-[11px] bg-main-lilac50 text-head3 rounded-[10px] transition-all active:scale-95 flex flex-row items-center gap-[5px]"
+        "px-[24px] py-[11px] bg-main-lilac50 text-head3 rounded-[10px] transition-all active:scale-95 flex flex-row items-center gap-[5px]"
       )}
       onClick={onClick}
     >
-      <Image
-        unoptimized
-        src="/icons/left-arrow-black.svg"
-        alt="left arrow"
-        width={24}
-        height={24}
-      />
-      이전으로
+      {props.children || (
+        <>
+          <Image
+            unoptimized
+            src="/icons/left-arrow-black.svg"
+            alt="left arrow"
+            width={24}
+            height={24}
+          />
+          이전으로
+        </>
+      )}
     </button>
   );
 }

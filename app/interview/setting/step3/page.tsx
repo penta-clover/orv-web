@@ -87,7 +87,6 @@ function Body() {
               추천
             </div>
             <AspectPreview
-              selected={selectedAspect === "frontal"}
               onClick={() => onAspectClick("frontal")}
               disabled={!streamReady}
             >
@@ -107,7 +106,6 @@ function Body() {
               </div>
             </AspectPreview>
             <AspectPreview
-              selected={selectedAspect === "whole"}
               onClick={() => onAspectClick("whole")}
               disabled={!streamReady}
             >
@@ -127,7 +125,6 @@ function Body() {
               </div>
             </AspectPreview>
             <AspectPreview
-              selected={selectedAspect === "side"}
               onClick={() => onAspectClick("side")}
               disabled={!streamReady}
             >
@@ -147,7 +144,6 @@ function Body() {
               </div>
             </AspectPreview>
             <AspectPreview
-              selected={selectedAspect === "none"}
               onClick={() => onAspectClick("none")}
               disabled={!streamReady}
             >
@@ -172,6 +168,10 @@ function Body() {
             }
             useKeyboardShortcut
           />
+
+          <div className="fixed bottom-[56px] left-1/2 transform -translate-x-1/2 text-head2 text-grayscale-white">
+            원하는 화면 각도를 클릭해 크게 확인해보세요.
+          </div>
         </div>
       </div>
     </ExitInterviewModal>
