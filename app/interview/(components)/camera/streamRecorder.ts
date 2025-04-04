@@ -24,10 +24,42 @@ export class StreamRecorder {
   startRecording(stream: MediaStream) {
     // 오디오 트랙 추가
     navigator.mediaDevices
-      .getUserMedia({ audio: true })
+      .getUserMedia({
+        audio: {
+          sampleRate: 48000,
+          channelCount: 2,
+          echoCancellation: false,
+          noiseSuppression: false,
+          autoGainControl: true,
+        },
+      })
       .then((audioStream) => {
-        const audioTrack = audioStream.getAudioTracks()[0];
-        stream.addTrack(audioTrack);
+        const audioContext = new AudioContext();
+        const sourceNode = audioContext.createMediaStreamSource(audioStream);
+    
+        // 다이내믹 레인지 압축 노드: 목소리의 작은 소리를 키워주고 큰 소리는 줄여줌
+        const compressor = audioContext.createDynamicsCompressor();
+        compressor.threshold.value = -50; // 압축 시작 임계값 (상황에 따라 조절)
+        compressor.knee.value = 40;         // 부드러운 압축 적용 정도
+        compressor.ratio.value = 12;        // 압축 비율
+        compressor.attack.value = 0;        // 압축 시작 속도
+        compressor.release.value = 0.25;    // 압축 해제 속도
+    
+        // BiquadFilterNode: 특정 주파수 대역(예, 중음역)을 강조하여 음성을 더 선명하게 함
+        const biquadFilter = audioContext.createBiquadFilter();
+        biquadFilter.type = "peaking";
+        biquadFilter.frequency.value = 1000; // 대략 목소리의 중심 주파수 (상황에 따라 조절)
+        biquadFilter.gain.value = 3;           // 강조 정도 (dB 단위)
+    
+        // 노드 연결: source -> compressor -> filter -> destination
+        sourceNode.connect(compressor);
+        compressor.connect(biquadFilter);
+        const destination = audioContext.createMediaStreamDestination();
+        biquadFilter.connect(destination);
+    
+        // 후처리된 오디오 트랙을 기존의 녹화 스트림에 추가
+        const processedAudioTrack = destination.stream.getAudioTracks()[0];
+        stream.addTrack(processedAudioTrack);
 
         if (MediaRecorder.isTypeSupported("video/webm;codecs=h264,opus")) {
           this.mimetype = "video/webm;codecs=h264,opus";
@@ -66,7 +98,9 @@ export class StreamRecorder {
         this.recording = true;
       })
       .catch((error) => {
-        throw new Error("녹화 시작에 실패했습니다. 마이크와 카메라 권한을 확인해주세요.");
+        throw new Error(
+          "녹화 시작에 실패했습니다. 마이크와 카메라 권한을 확인해주세요."
+        );
       });
   }
 
