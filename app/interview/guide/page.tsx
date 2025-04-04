@@ -39,7 +39,7 @@ function Body() {
       setIsOpen={setIsModalOpen}
       onExitInterview={() => router.replace("/")}
     >
-      <div className="relative w-full h-[100vh] flex flex-col items-center justify-center gap-[36px]">
+      <div className="relative w-full h-[100vh] flex flex-col items-center justify-center">
         <Image
           unoptimized
           src="/icons/x.svg"
@@ -49,10 +49,13 @@ function Body() {
           onClick={() => setIsModalOpen(true)}
           className="fixed top-[10px] right-[10px] px-[16px] py-[12px] w-[64px] h-[56px] focus:outline-none cursor-pointer"
         />
-        <div className="font-semibold text-[30px] text-grayscale-white">
+        <div className="font-semibold text-[30px] text-grayscale-white mb-[44px]">
           인터뷰 시작 전 안내 드려요
         </div>
-        <div className="text-body0 text-grayscale-500 text-center">
+        
+        <div className="text-body0 text-grayscale-500 text-center mb-[124px]">
+          카카오톡으로 전달된 '질문 미리보기'는 확인하셨나요?
+          <br />
           인터뷰를 더 편하고 자연스럽게 진행하려면, 미리 질문을 충분히 고민해
           보는 게 좋아요.
           <br />
@@ -61,7 +64,7 @@ function Body() {
         </div>
         <label
           htmlFor="ready"
-          className="flex flex-row items-center h-[24px] gap-[6px] text-body2 text-grayscale-white mt-[36px]"
+          className="flex flex-row items-center h-[24px] gap-[6px] text-body2 text-grayscale-white"
         >
           <input
             id="ready"
