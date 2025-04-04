@@ -52,19 +52,33 @@ function Body() {
       let loaded = 0;
       const reader = response.body!.getReader();
       const chunks: Uint8Array[] = [];
+      let reachedNinetyNine = false;
 
       while (true) {
         const { done, value } = await reader.read();
-        if (done) break;
+        if (done) {
+          break;
+        }
+
         if (value) {
           chunks.push(value);
           loaded += value.length;
-          const percent = Math.round((loaded / total) * 100);
-          setDownloadProgress(percent);
+          let percent = Math.round((loaded / total) * 100);
+          // 다운로드 진행률이 99%에 도달했을 때 1초간 99% 상태 유지
+          if (percent === 99 && !reachedNinetyNine) {
+            setDownloadProgress(99);
+            reachedNinetyNine = true;
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+          } else {
+            setDownloadProgress(percent);
+          }
         }
       }
+      // 읽기 완료 후 100%로 업데이트
+      setDownloadProgress(100);
       const blob = new Blob(chunks);
       triggerDownload(blob, video.title);
+      await new Promise((resolve) => setTimeout(resolve, 1500)); // 다운로드 완료 후 1.5초 대기
       setIsDownloading(false);
     } catch (error) {
       console.error("다운로드 중 오류 발생", error);
@@ -84,53 +98,57 @@ function Body() {
   };
 
   return (
-    <div className="flex flex-col h-[100dvh]">
-      <ActionBar />
-      <div className="flex flex-col grow items-center justify-center pb-[182px]">
-        <div className="h-[43px] text-main-lilac50 text-head2 text-center">
-          나를 마주하는 시간, 오브
-        </div>
+    <div className="flex w-full h-full justify-center">
+      <div className="flex flex-col h-[100dvh] max-w-[600px] overflow-y-auto hide-scrollbar">
+        <ActionBar />
+        <div className="flex flex-col grow items-center justify-center">
+          <div className="h-[43px] text-main-lilac50 text-head2 text-center">
+            나를 마주하는 시간, 오브
+          </div>
 
-        <div className="h-[33px]" />
+          <div className="h-[33px]" />
 
-        <video
-          src={video?.videoUrl}
-          controls
-          autoPlay
-          muted
-          className="px-[33px]"
-        />
+          <video
+            src={video?.videoUrl}
+            controls
+            autoPlay
+            muted
+            className="px-[33px]"
+          />
 
-        <div className="h-[4px]" />
+          <div className="h-[4px]" />
 
-        <div className="text-grayscale-100 text-head3 h-[28px] w-full px-[33px]">
-          {video?.title}
-        </div>
+          <div className="text-grayscale-100 text-head3 h-[28px] w-full px-[33px]">
+            {video?.title}
+          </div>
 
-        <div className="h-[4px]" />
+          <div className="h-[4px]" />
 
-        <div className="text-grayscale-100 text-head3 h-[28px] w-full px-[33px]">
-          {video?.createdAt ? formatDate(new Date(video!.createdAt)) : ""}
-        </div>
+          <div className="text-grayscale-100 text-head3 h-[28px] w-full px-[33px]">
+            {video?.createdAt ? formatDate(new Date(video!.createdAt)) : ""}
+          </div>
 
-        <div className="h-[34px]" />
+          <div className="h-[34px]" />
 
-        <div className="w-full px-[33px]">
-          <button
-            className="w-full h-[56px] rounded-[12px] text-head3 bg-main-lilac50 text-grayscale-800 active:scale-95"
-            onClick={handleDownload}
-            disabled={isDownloading}
-          >
-            {isDownloading
-              ? `다운로드 중... (${downloadProgress}%)`
-              : "인터뷰 영상 다운로드"}
-          </button>
-        </div>
+          <div className="w-full px-[33px]">
+            <button
+              className={`w-full h-[56px] rounded-[12px] text-head3 text-grayscale-800 active:scale-95 duration-all ${isDownloading ? "bg-grayscale-50" : "bg-main-lilac50"}`}
+              onClick={handleDownload}
+              disabled={isDownloading}
+            >
+              {isDownloading
+                ? `다운로드 중... (${downloadProgress}%)`
+                : "인터뷰 영상 다운로드"}
+            </button>
+          </div>
 
-        <div className="h-[11px]" />
+          <div className="h-[11px]" />
 
-        <div className="text-body4 text-grayscale-100">
-          3시간 동안 동영상 다운로드가 가능합니다.
+          <div className="text-body4 text-grayscale-100">
+            3시간 동안 동영상 다운로드가 가능합니다.
+          </div>
+
+          <div className="grow"/>
         </div>
       </div>
     </div>
