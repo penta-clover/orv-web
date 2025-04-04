@@ -51,11 +51,11 @@ function Body() {
           className="fixed top-[10px] right-[10px] px-[16px] py-[12px] w-[64px] h-[56px] focus:outline-none cursor-pointer"
         />
 
-        <div className="h-[40px]" />
+        <div className="h-[20px]" />
 
         <StatusBar currentStep={1} />
 
-        <div className="h-[24px]" />
+        <div className="h-[15px]" />
 
         <hr className="border-grayscale-700 border-[0.5px] w-full" />
 

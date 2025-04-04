@@ -11,6 +11,11 @@ export default {
     extend: {
       screens: {
         "w-450": "450px",
+        h750: { raw: "(max-height: 750px)" },
+        h700: { raw: "(max-height: 700px)" },
+        h650: { raw: "(max-height: 650px)" },
+        h600: { raw: "(max-height: 600px)" },
+        h500: { raw: "(max-height: 500px)" },
       },
       animation: {
         "pulse-fast": "pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite",

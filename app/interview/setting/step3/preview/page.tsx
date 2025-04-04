@@ -67,16 +67,16 @@ function Body() {
           className="fixed top-[10px] right-[10px] px-[16px] py-[12px] w-[64px] h-[56px] focus:outline-none cursor-pointer"
         />
 
-        <div className="h-[40px]" />
+        <div className="h-[20px]" />
 
         <StatusBar currentStep={3} />
 
-        <div className="h-[24px]" />
+        <div className="h-[15px]" />
 
         <hr className="border-grayscale-700 border-[0.5px] w-full" />
 
         <div className="flex flex-col grow items-center justify-center">
-          <div className="relative flex justify-center items-center h-[476px] w-[846px] bg-grayscale-900 rounded-[12px] overflow-hidden">
+          <div className="relative flex justify-center items-center h650:h-[350px] h700:h-[400px] h750:h-[450px] h-[65dvh] aspect-16/9 bg-grayscale-900 rounded-[12px] overflow-hidden">
             {aspect !== "none" &&
               (streamReady ? (
                 <FilteredCanvas
