@@ -107,7 +107,9 @@ function Body() {
                   canvasRef.current!.captureStream(RECORDING_FPS);
 
                 try {
-                  console.log(`current canvas resolution: ${canvasRef.current.width}x${canvasRef.current.height}`);
+                  console.log(
+                    `current canvas resolution: ${canvasRef.current.width}x${canvasRef.current.height}`
+                  );
 
                   // 캔버스가 준비될 때까지 대기
                   waitForCanvasReady(() => {
@@ -167,107 +169,101 @@ function Body() {
   };
 
   return (
-    <ExitInterviewModal
-      isOpen={isModalOpen}
-      setIsOpen={setIsModalOpen}
-      onExitInterview={() => router.replace("/")}
-    >
-      <div className="relative w-full h-[calc(100dvh)] flex flex-col items-center justify-start py-[20px] px-[48px] overflow-hidden">
-        <div className="flex flex-col grow items-center justify-center">
-          <div className="w-[90dvw] md:w-[700px] lg:w-[800px] xl:w-[900px] flex justify-end mb-[10px]">
-            <div
-              className="w-[139px] h-[56px] flex items-center justify-center gap-[2px] bg-grayscale-50 rounded-[12px] self-end active:scale-95"
-              onClick={() => setIsModalOpen(true)}
+    <div className="relative w-full h-[calc(100dvh)] flex flex-col items-center justify-start py-[20px] px-[48px] overflow-hidden">
+      <div className="flex flex-col grow items-center justify-center">
+        <div className="w-[90dvw] md:w-[700px] max-w-[calc(80dvh*16/9)] lg:w-[800px] xl:w-[80dvw] flex justify-end mb-[10px]">
+          <div
+            className="w-[139px] h-[56px] flex items-center justify-center gap-[2px] bg-grayscale-50 rounded-[12px] self-end active:scale-95"
+            onClick={() => setIsModalOpen(true)}
+          >
+            <Image
+              unoptimized
+              src="/icons/x-grayscale-black.svg"
+              width={24}
+              height={24}
+              alt="close"
+              className="focus:outline-none cursor-pointer"
+            />
+            <span className="text-head3 text-grayscale-800">종료하기</span>
+          </div>
+        </div>
+
+        <div className="relative flex justify-center items-center w-[90dvw] max-h-[85dvh] max-w-[calc(80dvh*16/9)] aspect-16/9 md:w-[700px] lg:w-[800px] xl:w-[80dvw] bg-grayscale-900 rounded-[12px] overflow-hidden">
+          {aspect === "none" ? (
+            <BlankCanvas
+              ref={previewCanvasRef}
+              overlay="/images/studio-lighting-fhd.png"
+            />
+          ) : (
+            <FilteredCanvas
+              stream={stream!}
+              filter={filter}
+              ref={previewCanvasRef}
+              overlay="/images/studio-lighting-fhd.png"
+            />
+          )}
+          <SubtitleCanvas
+            ref={canvasRef}
+            sourceCanvasRef={previewCanvasRef}
+            subtitles={
+              isSubtitled(currentScene) ? currentScene.getSubtitles() : []
+            }
+            style={{
+              width: "0",
+              height: "0",
+              position: "absolute",
+              opacity: "0",
+              pointerEvents: "none",
+            }}
+            fps={RECORDING_FPS}
+          />
+
+          {isPreviewOverlay(currentScene) && currentScene.getOverlays()}
+
+          <div className="absolute bottom-[24.5px] right-[24.5px] flex flex-col items-end gap-[10px]">
+            {showTip && (
+              <TipBox
+                tag="Tip!"
+                text="마우스 클릭 혹은 방향키 좌우동작을\n통해 조작하세요!"
+                tagColor="text-main-lilac50"
+                dismissOnClick
+              />
+            )}
+            <NextButton
+              onClick={() => {
+                if (isKnowNextScene(currentScene)) {
+                  const nextSceneId = currentScene.getNextSceneId();
+                  loadScene(nextSceneId, 1);
+                }
+                setShowTip(false);
+              }}
+              useKeyboardShortcut
+              className="rounded-[28px] w-[48px] h-[48px] p-0 flex items-center justify-center"
             >
               <Image
                 unoptimized
-                src="/icons/x-grayscale-black.svg"
+                src="/icons/right-arrow-black.svg"
+                alt="right-arrow"
                 width={24}
                 height={24}
-                alt="close"
-                className="focus:outline-none cursor-pointer"
               />
-              <span className="text-head3 text-grayscale-800">종료하기</span>
-            </div>
+            </NextButton>
           </div>
 
-          <div className="relative flex justify-center items-center w-[90dvw] max-h-[85dvh] aspect-16/9 md:w-[700px] lg:w-[800px] xl:w-[900px] bg-grayscale-900 rounded-[12px] overflow-hidden">
-            {aspect === "none" ? (
-              <BlankCanvas
-                ref={previewCanvasRef}
-                overlay="/images/studio-lighting-fhd.png"
+          {isEnding(currentScene) && (
+            <div className="w-full h-full">
+              <Image
+                src="/icons/rolling-spinner-grayscale-white.gif"
+                alt="spinner"
+                width={48}
+                height={48}
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 "
+                style={{ color: "white" }}
               />
-            ) : (
-              <FilteredCanvas
-                stream={stream!}
-                filter={filter}
-                ref={previewCanvasRef}
-                overlay="/images/studio-lighting-fhd.png"
-              />
-            )}
-            <SubtitleCanvas
-              ref={canvasRef}
-              sourceCanvasRef={previewCanvasRef}
-              subtitles={
-                isSubtitled(currentScene) ? currentScene.getSubtitles() : []
-              }
-              style={{
-                width: "0",
-                height: "0",
-                position: "absolute",
-                opacity: "0",
-                pointerEvents: "none",
-              }}
-              fps={RECORDING_FPS}
-            />
-
-            {isPreviewOverlay(currentScene) && currentScene.getOverlays()}
-
-            <div className="absolute bottom-[24.5px] right-[24.5px] flex flex-col items-end gap-[10px]">
-              {showTip && (
-                <TipBox
-                  tag="Tip!"
-                  text="마우스 클릭 혹은 방향키 좌우동작을\n통해 조작하세요!"
-                  tagColor="text-main-lilac50"
-                  dismissOnClick
-                />
-              )}
-              <NextButton
-                onClick={() => {
-                  if (isKnowNextScene(currentScene)) {
-                    const nextSceneId = currentScene.getNextSceneId();
-                    loadScene(nextSceneId, 1);
-                  }
-                  setShowTip(false);
-                }}
-                useKeyboardShortcut
-                className="rounded-[28px] w-[48px] h-[48px] p-0 flex items-center justify-center"
-              >
-                <Image
-                  unoptimized
-                  src="/icons/right-arrow-black.svg"
-                  alt="right-arrow"
-                  width={24}
-                  height={24}
-                />
-              </NextButton>
             </div>
-
-            {isEnding(currentScene) && (
-              <div className="w-full h-full">
-                <Image
-                  src="/icons/rolling-spinner-grayscale-white.gif"
-                  alt="spinner"
-                  width={48}
-                  height={48}
-                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 "
-                  style={{ color: "white" }}
-                />
-              </div>
-            )}
-          </div>
+          )}
         </div>
       </div>
-    </ExitInterviewModal>
+    </div>
   );
 }
