@@ -11,6 +11,9 @@ export default {
     extend: {
       screens: {
         "w-450": "450px",
+        h1000: { raw: "(max-height: 1000px)" },
+        h900: { raw: "(max-height: 900px)" },
+        h800: { raw: "(max-height: 800px)" },
         h750: { raw: "(max-height: 750px)" },
         h700: { raw: "(max-height: 700px)" },
         h650: { raw: "(max-height: 650px)" },

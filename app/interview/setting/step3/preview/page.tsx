@@ -76,7 +76,7 @@ function Body() {
         <hr className="border-grayscale-700 border-[0.5px] w-full" />
 
         <div className="flex flex-col grow items-center justify-center">
-          <div className="relative flex justify-center items-center h650:h-[350px] h700:h-[400px] h750:h-[450px] h-[65dvh] aspect-16/9 bg-grayscale-900 rounded-[12px] overflow-hidden">
+          <div className="relative flex justify-center items-center h650:h-[350px] h650:w-[622px] h700:h-[400px] h700:w-[711px] h750:h-[450px] h750:w-[800px] h-[calc(65dvh)] w-[calc(65dvh*16/9)] aspect-16/9 bg-grayscale-900 rounded-[12px] overflow-hidden">
             {aspect !== "none" &&
               (streamReady ? (
                 <FilteredCanvas
