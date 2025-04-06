@@ -18,6 +18,7 @@ import { useStoryboardRepository } from "@/providers/StoryboardRepositoryContext
 import { Topic } from "@/domain/model/Topic";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile } from "@ffmpeg/util";
+import { useTempBlobRepository } from "@/providers/TempBlobRepositoryContext";
 
 export default function Page() {
   return (
@@ -29,7 +30,7 @@ export default function Page() {
 
 function Body() {
   const searchParams = useSearchParams();
-  const localVideoUrl = searchParams.get("videoUrl")!;
+  const blobKey = searchParams.get("blobKey")!;
   const storyboardId = searchParams.get("storyboardId")!;
   const totalInterviewTime = searchParams.get("totalInterviewTime")!;
   const topicId = searchParams.get("topicId")!;
@@ -45,34 +46,42 @@ function Body() {
   const [is30SecondsPassed, setIs30SecondsPassed] = useState<boolean>(false);
   const videoPlayerRef = useRef<HTMLVideoElement>(null);
   const [topic, setTopic] = useState<Topic | null>(null);
+  const [localVideoUrl, setLocalVideoUrl] = useState<string | null>(null);
 
   const archiveRepository = useArchiveRepository();
   const memberRepository = useMemberRepository();
   const reservationRepository = useReservationRepository();
   const storyboardRepository = useStoryboardRepository();
+  const tempBlobRepository = useTempBlobRepository();
 
-  // 중복 실행 방지
-  const didUploadRef = useRef(false);
+  const didProcessBlobRef = useRef(false);
+
   useEffect(() => {
-    if (!localVideoUrl) return;
-    if (didUploadRef.current) return;
-    didUploadRef.current = true;
+    if (!blobKey) return;
+    if (didProcessBlobRef.current) return;
+    didProcessBlobRef.current = true;
 
-    async function fetchAndUpload() {
+    async function processBlob() {
       try {
-        console.time("전체 변환 및 업로드 시간");
+        console.time("IndexedDB에서 Blob 가져오기 및 전체 변환/업로드 시간");
 
-        // localVideoUrl로부터 mp4 blob 파일을 가져옵니다.
-        console.log("1️⃣ blob 파일 다운로드 시작");
-        console.time("blob 다운로드 시간");
-        const response = await fetch(localVideoUrl);
-        const inputBlob = await response.blob();
-        console.timeEnd("blob 다운로드 시간");
+        console.log("0️⃣ IndexedDB에서 Blob 가져오기 시작 (key:", blobKey, ")");
+        console.time("IndexedDB 읽기 시간");
+        const inputBlob = await tempBlobRepository.getBlob(blobKey);
+        console.timeEnd("IndexedDB 읽기 시간");
+
+        if (!inputBlob) {
+          console.error("IndexedDB에서 Blob을 찾을 수 없습니다. key:", blobKey);
+          router.replace('/');
+          return;
+        }
         console.log(
-          `📊 blob 파일 크기: ${(inputBlob.size / (1024 * 1024)).toFixed(2)}MB`
+          `📊 가져온 blob 파일 크기: ${(inputBlob.size / (1024 * 1024)).toFixed(2)}MB`
         );
 
-        // ffmpeg.js 초기화 (최초 실행 시 로드)
+        const blobUrl = URL.createObjectURL(inputBlob);
+        setLocalVideoUrl(blobUrl);
+
         console.log("2️⃣ FFmpeg 초기화 시작");
         console.time("FFmpeg 초기화 시간");
         const ffmpeg = new FFmpeg();
@@ -81,18 +90,15 @@ function Body() {
         }
         console.timeEnd("FFmpeg 초기화 시간");
 
-        // ffmpeg 가상 파일 시스템에 webm 파일 작성
-        console.log("3️⃣ 가상 파일 시스템에 MP4 쓰기 시작");
+        console.log("3️⃣ 가상 파일 시스템에 파일 쓰기 시작");
         console.time("파일 쓰기 시간");
         const inputVideoData = await fetchFile(inputBlob);
         ffmpeg.writeFile("input.webm", inputVideoData);
         console.timeEnd("파일 쓰기 시간");
         console.log("   ✅ 파일 쓰기 완료");
 
-        // ffmpeg를 이용한 코덱 및 확장자 전환
         console.log("4️⃣ 변환 시작");
         console.time("변환 시간");
-        
         await ffmpeg.exec([
           "-i",
           "input.webm",
@@ -107,37 +113,55 @@ function Body() {
         console.timeEnd("변환 시간");
         console.log("✅ 변환 완료");
 
-        // 변환된 mp4 파일 읽어오기
         console.log("5️⃣ 변환된 MP4 파일 읽기");
         console.time("MP4 파일 읽기 시간");
         const mp4Data = await ffmpeg.readFile("output.mp4");
-        const mp4Blob = new Blob([mp4Data], {
-          type: "video/mp4",
-        });
+        const mp4Blob = new Blob([mp4Data], { type: "video/mp4" });
         console.timeEnd("MP4 파일 읽기 시간");
         console.log(
           `📊 MP4 파일 크기: ${(mp4Blob.size / (1024 * 1024)).toFixed(2)}MB`
         );
 
-        // mp4 Blob을 이용해 영상 업로드 요청
         console.log("6️⃣ 서버에 MP4 파일 업로드 시작");
         console.time("업로드 시간");
-        const videoId = await archiveRepository.uploadVideo(
+        const uploadedVideoId = await archiveRepository.uploadVideo(
           mp4Blob,
           storyboardId
         );
         console.timeEnd("업로드 시간");
 
         setIsUploaded(true);
-        setVideoId(videoId);
-        console.log("✅ 전체 프로세스 완료 - 비디오 업로드 성공:", videoId);
-        console.timeEnd("전체 변환 및 업로드 시간");
+        setVideoId(uploadedVideoId);
+        console.log("✅ 전체 프로세스 완료 - 비디오 업로드 성공:", uploadedVideoId);
+        console.timeEnd("IndexedDB에서 Blob 가져오기 및 전체 변환/업로드 시간");
+
+        console.log("7️⃣ IndexedDB에서 Blob 삭제 시작 (key:", blobKey, ")");
+        console.time("IndexedDB 삭제 시간");
+        await tempBlobRepository.deleteBlob(blobKey);
+        console.timeEnd("IndexedDB 삭제 시간");
+        console.log("✅ IndexedDB Blob 삭제 완료");
+
       } catch (error) {
-        console.error("비디오 업로드 중 에러 발생:", error);
+        console.error("Blob 처리 또는 업로드 중 에러 발생:", error);
+        try {
+            await tempBlobRepository.deleteBlob(blobKey);
+            console.log("오류 발생 후 IndexedDB Blob 삭제 시도 완료");
+        } catch (deleteError) {
+            console.error("오류 발생 후 IndexedDB Blob 삭제 중 추가 오류:", deleteError);
+        }
       }
     }
-    fetchAndUpload();
-  }, []);
+    
+    processBlob();
+
+    return () => {
+        if (localVideoUrl) {
+            URL.revokeObjectURL(localVideoUrl);
+            console.log("미리보기 Blob URL 해제됨");
+        }
+    }
+
+  }, [blobKey, tempBlobRepository, archiveRepository, storyboardId]);
 
   useEffect(() => {
     memberRepository
@@ -145,7 +169,6 @@ function Body() {
       .then((myInfo: MyInfo) => setNickname(myInfo.nickname));
   }, []);
 
-  // blob 영상 2배속 설정
   useEffect(() => {
     if (videoPlayerRef.current) {
       videoPlayerRef.current.playbackRate = 2;
@@ -191,11 +214,10 @@ function Body() {
           onClick={() => setIsModalOpen(true)}
           className="fixed top-[10px] right-[10px] px-[16px] py-[12px] w-[64px] h-[56px] focus:outline-none cursor-pointer"
         />
-        {/* 왼쪽 하단 blob 영상 */}
         <div className="fixed flex flex-col bottom-[24px] left-[24px] z-[2]">
           <video
             ref={videoPlayerRef}
-            src={localVideoUrl}
+            src={localVideoUrl ?? undefined}
             autoPlay
             loop
             muted
@@ -218,7 +240,6 @@ function Body() {
           </div>
         </div>
 
-        {/* 우측 하단 react-youtube 플레이어 */}
         <div
           style={{
             position: "fixed",
@@ -279,7 +300,6 @@ function Body() {
           </div>
         </div>
 
-        {/* 크레딧 애니메이션 영역 */}
         <div className="absolute top-0 left-0 creditsAnimation flex flex-col items-center h-[100dvh] overflow-hidden w-[100dvw]">
           <Roster
             myNickname={nickname}
@@ -303,16 +323,15 @@ function Roster(props: {
     const now = new Date();
 
     const year = now.getFullYear();
-    const month = now.getMonth() + 1; // 0부터 시작하므로 +1
+    const month = now.getMonth() + 1;
     const date = now.getDate();
     let hours = now.getHours();
     const minutes = now.getMinutes();
 
     const period = hours < 12 ? "오전" : "오후";
     hours = hours % 12;
-    hours = hours ? hours : 12; // 0이면 12로 표시
+    hours = hours ? hours : 12;
 
-    // 분이 한 자리이면 0을 붙임
     const paddedMinutes = minutes < 10 ? `0${minutes}` : minutes;
 
     const formatted = `${year}년 ${month}월 ${date}일 ${period} ${hours}시 ${paddedMinutes}분`;

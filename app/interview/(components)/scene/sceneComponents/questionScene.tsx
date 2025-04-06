@@ -4,6 +4,7 @@ import { Subtitle, Subtitled } from "../renderingOptions/subtitled";
 import { PreviewOverlay } from "../renderingOptions/previewOverlay";
 import { KnowNextScene } from "../renderingOptions/knowNextScene";
 import InterviewContext from "../interviewContext";
+import { evaluteTemplate } from "../evalutateTemplate";
 
 export default class QuestionScene
   extends Scene
@@ -31,7 +32,7 @@ export default class QuestionScene
         color: "white",
       },
       {
-        text: `${this.content.question}`,
+        text: `${evaluteTemplate(this.content.question, this.interviewContext.templateData)}`,
         x: 50,
         y: -60,
         fontSize: 30,
@@ -48,9 +49,9 @@ export default class QuestionScene
           번째 질문
         </div>
         <div className="mt-[8px]">
-          <span className="text-head2">{this.content.question}</span>
+          <span className="text-head2">{evaluteTemplate(this.content.question, this.interviewContext.templateData)}</span>
           <br />
-          <span className="text-head2 font-normal">{this.content.hint}</span>
+          <span className="text-head2 font-normal">{evaluteTemplate(this.content.hint, this.interviewContext.templateData)}</span>
         </div>
       </div>
     );

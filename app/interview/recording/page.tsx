@@ -26,6 +26,8 @@ import InterviewContext from "../(components)/scene/interviewContext";
 import { getPermissionGuideText } from "../(components)/getPermissionGuideText";
 import usePermissionReload from "../(components)/usePermissionReload";
 import { error } from "console";
+import { useTemplateService } from "@/providers/TemplateServiceContext";
+import { useTempBlobRepository } from "@/providers/TempBlobRepositoryContext";
 
 interface QuestionContent {
   number: number;
@@ -55,6 +57,7 @@ function Body() {
   const [showTip, setShowTip] = useState<boolean>(true);
   const [currentScene, setCurrentScene] = useState<Scene | undefined>();
   const [stream, setStream] = useState<MediaStream | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const streamRecorderRef = useRef<StreamRecorder | null>(null);
   const previewCanvasRef = useRef<HTMLCanvasElement | null>(null); // 녹화 중 사용자에게 표시되는 캔버스
@@ -64,6 +67,8 @@ function Body() {
   const router = useRouter();
 
   const storyboardRepository = useStoryboardRepository();
+  const templateService = useTemplateService();
+  const tempBlobRepository = useTempBlobRepository();
   const RECORDING_FPS = 24; // 녹화 프레임 레이트 설정
 
   // 카메라/마이크 권한 허용되면 새로고침
@@ -97,29 +102,33 @@ function Body() {
             storyboardRepository
               .getSceneInfo(storyboard.startSceneId)
               .then((scene) => {
-                loadScene(scene.id, 1);
+                templateService.getTemplateData().then((templateData) => {
+                  interviewContext.current.templateData = templateData;
 
-                // 첫 질문이 로드될 때 인터뷰 시작 시간 기록
-                startTimeRef.current = Date.now();
-                if (!canvasRef.current) return;
+                  loadScene(scene.id, 1);
 
-                const captureStream =
-                  canvasRef.current!.captureStream(RECORDING_FPS);
+                  // 첫 질문이 로드될 때 인터뷰 시작 시간 기록
+                  startTimeRef.current = Date.now();
+                  if (!canvasRef.current) return;
 
-                try {
-                  console.log(
-                    `current canvas resolution: ${canvasRef.current.width}x${canvasRef.current.height}`
-                  );
+                  const captureStream =
+                    canvasRef.current!.captureStream(RECORDING_FPS);
 
-                  // 캔버스가 준비될 때까지 대기
-                  waitForCanvasReady(() => {
-                    streamRecorderRef.current?.startRecording(captureStream); // 녹화 시작
-                  });
-                } catch (error) {
-                  alert(getPermissionGuideText());
-                }
+                  try {
+                    console.log(
+                      `current canvas resolution: ${canvasRef.current.width}x${canvasRef.current.height}`
+                    );
 
-                setStream(stream);
+                    // 캔버스가 준비될 때까지 대기
+                    waitForCanvasReady(() => {
+                      streamRecorderRef.current?.startRecording(captureStream); // 녹화 시작
+                    });
+                  } catch (error) {
+                    alert(getPermissionGuideText());
+                  }
+
+                  setStream(stream);
+                });
               });
           });
       })
@@ -147,123 +156,149 @@ function Body() {
           ?.stopRecording()
           .then(() => downloadRecording());
       }
+
+      setIsLoading(false);
     });
   };
 
   // 녹화된 파일 다운로드 함수
   // 녹화 정지 직후 호출시 recordedChunks가 비어있을 수 있음 (65번째줄 참고)
-  const downloadRecording = () => {
-    const url = streamRecorderRef.current?.getBlobUrl();
-    if (!url) return;
+  const downloadRecording = async () => {
+    console.log("downloadRecording");
+    try {
+      const blob = streamRecorderRef.current?.getBlob();
+      if (!blob) {
+        console.error("Blob 데이터를 가져오지 못했습니다.");
+        // TODO: 사용자에게 오류 알림
+        return;
+      }
 
-    // 인터뷰 전체 시간 계산 (초 단위)
-    const totalInterviewTime = Math.floor(
-      (Date.now() - startTimeRef.current) / 1000
-    );
+      const blobKey = await tempBlobRepository.saveBlob(blob);
+      // 인터뷰 전체 시간 계산 (초 단위)
+      const totalInterviewTime = Math.floor(
+        (Date.now() - startTimeRef.current) / 1000
+      );
 
-    router.replace(
-      `/interview/finish/credit?videoUrl=${url}&storyboardId=${storyboardId}&totalInterviewTime=${totalInterviewTime}`
-    );
+      // videoUrl 대신 blobKey 전달
+      router.replace(
+        `/interview/finish/credit?blobKey=${blobKey}&storyboardId=${storyboardId}&totalInterviewTime=${totalInterviewTime}`
+      );
 
-    streamRecorderRef.current?.reset();
+      streamRecorderRef.current?.reset();
+    } catch (error) {
+      console.error("IndexedDB 저장 또는 페이지 이동 중 오류:", error);
+      // TODO: 사용자에게 오류 알림
+    }
   };
 
   return (
-    <div className="relative w-full h-[calc(100dvh)] flex flex-col items-center justify-start py-[20px] px-[48px] overflow-hidden">
-      <div className="flex flex-col grow items-center justify-center">
-        <div className="w-[90dvw] md:w-[700px] max-w-[calc(80dvh*16/9)] lg:w-[800px] xl:w-[80dvw] flex justify-end mb-[10px]">
-          <div
-            className="w-[139px] h-[56px] flex items-center justify-center gap-[2px] bg-grayscale-50 rounded-[12px] self-end active:scale-95"
-            onClick={() => setIsModalOpen(true)}
-          >
-            <Image
-              unoptimized
-              src="/icons/x-grayscale-black.svg"
-              width={24}
-              height={24}
-              alt="close"
-              className="focus:outline-none cursor-pointer"
-            />
-            <span className="text-head3 text-grayscale-800">종료하기</span>
-          </div>
-        </div>
-
-        <div className="relative flex justify-center items-center w-[90dvw] max-h-[85dvh] max-w-[calc(80dvh*16/9)] aspect-16/9 md:w-[700px] lg:w-[800px] xl:w-[80dvw] bg-grayscale-900 rounded-[12px] overflow-hidden">
-          {aspect === "none" ? (
-            <BlankCanvas
-              ref={previewCanvasRef}
-              overlay="/images/studio-lighting-fhd.png"
-            />
-          ) : (
-            <FilteredCanvas
-              stream={stream!}
-              filter={filter}
-              ref={previewCanvasRef}
-              overlay="/images/studio-lighting-fhd.png"
-            />
-          )}
-          <SubtitleCanvas
-            ref={canvasRef}
-            sourceCanvasRef={previewCanvasRef}
-            subtitles={
-              isSubtitled(currentScene) ? currentScene.getSubtitles() : []
-            }
-            style={{
-              width: "0",
-              height: "0",
-              position: "absolute",
-              opacity: "0",
-              pointerEvents: "none",
-            }}
-            fps={RECORDING_FPS}
-          />
-
-          {isPreviewOverlay(currentScene) && currentScene.getOverlays()}
-
-          <div className="absolute bottom-[24.5px] right-[24.5px] flex flex-col items-end gap-[10px]">
-            {showTip && (
-              <TipBox
-                tag="Tip!"
-                text="마우스 클릭 혹은 방향키 좌우동작을\n통해 조작하세요!"
-                tagColor="text-main-lilac50"
-                dismissOnClick
-              />
-            )}
-            <NextButton
-              onClick={() => {
-                if (isKnowNextScene(currentScene)) {
-                  const nextSceneId = currentScene.getNextSceneId();
-                  loadScene(nextSceneId, 1);
-                }
-                setShowTip(false);
-              }}
-              useKeyboardShortcut
-              className="rounded-[28px] w-[48px] h-[48px] p-0 flex items-center justify-center"
+    <ExitInterviewModal
+      isOpen={isModalOpen}
+      setIsOpen={setIsModalOpen}
+      onExitInterview={() => router.replace("/")}
+    >
+      <div className="relative w-full h-[calc(100dvh)] flex flex-col items-center justify-start py-[20px] px-[48px] overflow-hidden">
+        <div className="flex flex-col grow items-center justify-center">
+          <div className="w-[90dvw] md:w-[700px] max-w-[calc(80dvh*16/9)] lg:w-[800px] xl:w-[80dvw] flex justify-end mb-[10px]">
+            <div
+              className="w-[139px] h-[56px] flex items-center justify-center gap-[2px] bg-grayscale-50 rounded-[12px] self-end active:scale-95"
+              onClick={() => setIsModalOpen(true)}
             >
               <Image
                 unoptimized
-                src="/icons/right-arrow-black.svg"
-                alt="right-arrow"
+                src="/icons/x-grayscale-black.svg"
                 width={24}
                 height={24}
+                alt="close"
+                className="focus:outline-none cursor-pointer"
               />
-            </NextButton>
+              <span className="text-head3 text-grayscale-800">종료하기</span>
+            </div>
           </div>
 
-          {isEnding(currentScene) && (
-            <div className="w-full h-full">
-              <Image
-                src="/icons/rolling-spinner-grayscale-white.gif"
-                alt="spinner"
-                width={48}
-                height={48}
-                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 "
-                style={{ color: "white" }}
+          <div className="relative flex justify-center items-center w-[90dvw] max-h-[85dvh] max-w-[calc(80dvh*16/9)] aspect-16/9 md:w-[700px] lg:w-[800px] xl:w-[80dvw] bg-grayscale-900 rounded-[12px] overflow-hidden">
+            {aspect === "none" ? (
+              <BlankCanvas
+                ref={previewCanvasRef}
+                overlay="/images/studio-lighting-fhd.png"
               />
+            ) : (
+              <FilteredCanvas
+                stream={stream!}
+                filter={filter}
+                ref={previewCanvasRef}
+                overlay="/images/studio-lighting-fhd.png"
+              />
+            )}
+            <SubtitleCanvas
+              ref={canvasRef}
+              sourceCanvasRef={previewCanvasRef}
+              subtitles={
+                isSubtitled(currentScene) ? currentScene.getSubtitles() : []
+              }
+              style={{
+                width: "0",
+                height: "0",
+                position: "absolute",
+                opacity: "0",
+                pointerEvents: "none",
+              }}
+              fps={RECORDING_FPS}
+            />
+
+            {isPreviewOverlay(currentScene) && currentScene.getOverlays()}
+
+            <div className="absolute bottom-[24.5px] right-[24.5px] flex flex-col items-end gap-[10px]">
+              {showTip && (
+                <TipBox
+                  tag="Tip!"
+                  text="마우스 클릭 혹은 방향키 좌우동작을\n통해 조작하세요!"
+                  tagColor="text-main-lilac50"
+                  dismissOnClick
+                />
+              )}
+              <NextButton
+                onClick={() => {
+                  if (isLoading) {
+                    return;
+                  }
+                  setIsLoading(true);
+
+                  if (isKnowNextScene(currentScene)) {
+                    const nextSceneId = currentScene.getNextSceneId();
+                    loadScene(nextSceneId, 1);
+                  }
+
+                  setShowTip(false);
+                }}
+                useKeyboardShortcut
+                className="rounded-[28px] w-[48px] h-[48px] p-0 flex items-center justify-center"
+              >
+                <Image
+                  unoptimized
+                  src="/icons/right-arrow-black.svg"
+                  alt="right-arrow"
+                  width={24}
+                  height={24}
+                />
+              </NextButton>
             </div>
-          )}
+
+            {isEnding(currentScene) && (
+              <div className="w-full h-full">
+                <Image
+                  src="/icons/rolling-spinner-grayscale-white.gif"
+                  alt="spinner"
+                  width={48}
+                  height={48}
+                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 "
+                  style={{ color: "white" }}
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </ExitInterviewModal>
   );
 }

@@ -121,4 +121,16 @@ export class StreamRecorder {
     const blob = new Blob(this.chunks, { type: this.mimetype });
     return URL.createObjectURL(blob);
   }
+
+  // Blob 객체를 직접 반환하는 메서드 추가
+  getBlob(): Blob {
+    if (this.chunksReadyPromise) {
+      throw new Error("녹화 데이터가 아직 준비되지 않았습니다.");
+    }
+    if (this.chunks.length === 0) {
+        throw new Error("녹화된 데이터가 없습니다.");
+    }
+    console.log("BlobType", this.mimetype);
+    return new Blob(this.chunks, { type: this.mimetype });
+  }
 }

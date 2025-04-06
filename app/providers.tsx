@@ -7,8 +7,10 @@ import { MemberRepositoryProvider } from "@/providers/MemberRepositoryContext";
 import { ReservationRepositoryProvider } from "@/providers/ReservationRepositoryContext";
 import { StorageProvider } from "@/providers/StorageContext";
 import { StoryboardRepositoryProvider } from "@/providers/StoryboardRepositoryContext";
+import { TemplateServiceProvider } from "@/providers/TemplateServiceContext";
 import { TermRepositoryProvider } from "@/providers/TermRepositoryContext";
 import { TopicRepositoryProvider } from "@/providers/TopicRepositoryContext";
+import { TempBlobRepositoryProvider } from "@/providers/TempBlobRepositoryContext";
 import { ReactNode } from "react";
 
 export default function Providers({ children }: { children: ReactNode }) {
@@ -24,7 +26,11 @@ export default function Providers({ children }: { children: ReactNode }) {
                     <TopicRepositoryProvider>
                       <StoryboardRepositoryProvider>
                         <ReservationRepositoryProvider>
-                          {children}
+                          <TemplateServiceProvider>
+                            <TempBlobRepositoryProvider>
+                              {children}
+                            </TempBlobRepositoryProvider>
+                          </TemplateServiceProvider>
                         </ReservationRepositoryProvider>
                       </StoryboardRepositoryProvider>
                     </TopicRepositoryProvider>
