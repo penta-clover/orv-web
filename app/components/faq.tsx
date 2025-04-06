@@ -2,15 +2,16 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 
 interface FAQProps {
     faqData: { question: string; answer: string }[];
+    title?: string;
 }
 
 export default function FAQ(props: FAQProps) {
-    const { faqData } = props;
+    const { faqData, title = "자주 묻는 질문" } = props;
   
     return (
       <div className="flex flex-col w-full px-[16px]">
         <h3 className="text-head4 mb-[16px] text-grayscale-300">
-          자주 묻는 질문
+          {title}
         </h3>
   
         {/* Accordion */}

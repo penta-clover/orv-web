@@ -6,6 +6,7 @@ import { Suspense, useEffect, useState } from "react";
 import Image from "next/image";
 import { useArchiveRepository } from "@/providers/ArchiveRepositoryContext";
 import { Video } from "@/domain/model/Video";
+import FAQ from "@/app/components/faq";
 
 export default function Page() {
   return (
@@ -98,23 +99,28 @@ function Body() {
   };
 
   return (
-    <div className="flex w-full h-full justify-center">
-      <div className="flex flex-col h-[100dvh] max-w-[600px] overflow-y-auto hide-scrollbar">
-        <ActionBar />
-        <div className="flex flex-col grow items-center justify-center">
+    <div className="flex w-full h-full justify-center bg-grayscale-black overflow-y-auto hide-scrollbar">
+      <div className="flex flex-col w-full max-w-[600px] bg-[#101212]">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 max-w-[600px] flex w-full justify-start">
+          <ActionBar />
+        </div>
+        <div className="flex flex-col items-center justify-center w-full max-w-[600px]">
+          <div className="h-[56px]" />
           <div className="h-[43px] text-main-lilac50 text-head2 text-center">
             나를 마주하는 시간, 오브
           </div>
 
           <div className="h-[33px]" />
 
-          <video
-            src={video?.videoUrl}
-            controls
-            autoPlay
-            muted
-            className="px-[33px]"
-          />
+          <div className="w-full self-center">
+            <video
+              src={video?.videoUrl}
+              controls
+              autoPlay
+              muted
+              className="px-[33px] w-full"
+            />
+          </div>
 
           <div className="h-[4px]" />
 
@@ -124,7 +130,7 @@ function Body() {
 
           <div className="h-[4px]" />
 
-          <div className="text-grayscale-100 text-head3 h-[28px] w-full px-[33px]">
+          <div className="text-grayscale-100 text-body2 h-[28px] w-full px-[33px]">
             {video?.createdAt ? formatDate(new Date(video!.createdAt)) : ""}
           </div>
 
@@ -132,7 +138,9 @@ function Body() {
 
           <div className="w-full px-[33px]">
             <button
-              className={`w-full h-[56px] rounded-[12px] text-head3 text-grayscale-800 active:scale-95 duration-all ${isDownloading ? "bg-grayscale-50" : "bg-main-lilac50"}`}
+              className={`w-full h-[56px] rounded-[12px] text-head3 text-grayscale-800 active:scale-95 duration-all ${
+                isDownloading ? "bg-grayscale-50" : "bg-main-lilac50"
+              }`}
               onClick={handleDownload}
               disabled={isDownloading}
             >
@@ -148,7 +156,11 @@ function Body() {
             3시간 동안 동영상 다운로드가 가능합니다.
           </div>
 
-          <div className="grow"/>
+          <div className="h-[36px]" />
+
+          <div className="w-[calc(100%-34px)] h-[300px] self-center">
+            <FAQ faqData={faqData()} title="다운로드 참고사항" />
+          </div>
         </div>
       </div>
     </div>
@@ -171,4 +183,24 @@ function formatDate(date: Date): string {
     "." +
     String(date.getDate()).padStart(2, "0")
   );
+}
+
+function faqData() {
+  return [
+    {
+      question: "버튼 클릭 후 다운로드가 안되는 경우",
+      answer:
+        "다운로드 버튼을 클릭한 이후에도 다운로드 안내가 뜨지 않는다면 지금 화면에서 새로고침을 한번 진행해주세요. 그럼에도 안될 경우 바로 1:1 문의를 통해 연락 부탁드립니다.",
+    },
+    {
+      question: "인터뷰 영상에서 소리가 들리지 않을 경우",
+      answer:
+        "미리보기 영상 및 실제 다운로드된 영상에서 소리가 들리지 않는 경우 바로 1:1 문의를 통해 연락 부탁드립니다.",
+    },
+    {
+      question: "그 외 오류가 있는 경우",
+      answer:
+        "1:1 문의를 통해 설명해주시면 빠르게 문제해결을 도와드리겠습니다.",
+    },
+  ];
 }
