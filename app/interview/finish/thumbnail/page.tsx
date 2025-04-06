@@ -64,25 +64,25 @@ function Body() {
           onClick={() => setIsModalOpen(true)}
           className="fixed top-[10px] right-[10px] px-[16px] py-[12px] w-[64px] h-[56px] focus:outline-none cursor-pointer"
         />
-        <div className="flex flex-col grow items-center justify-center pb-[10px]">
+        <div className="flex flex-col items-center justify-center w-full">
+          <div className="h-[80px]" />
           <div className="text-white font-semibold text-[40px] leading-[44px]">
             마지막으로 오늘을 기념할 사진 한장을 남길게요
           </div>
 
-          <div className="h-[44px]" />
+          <div className="h-[62px]" />
 
-          <div className="text-grayscale-500 text-center font-medium text-[24px] leading-[36px]">
-            인터뷰 썸네일 그리고 인터뷰 Recap에 들어가는 사진이에요.
-            <br />
-            아래 버튼을 누르면 {nickname}님의 모습이 화면에 나오고 5초 뒤에
-            사진이 찍혀요.
-          </div>
-
-          <div className="h-[56px]" />
-
-          <div className="flex flex-col justify-start w-full h-[536px]">
+          <div className="flex flex-col justify-start w-full h-full">
             {progress === "ready" ? (
-              <div className="flex justify-center items-center h-[476px] w-[846px] bg-grayscale-900 rounded-[12px]">
+              <div className="flex flex-col justify-center items-center h-[calc(55dvh)] w-full max-w-[calc(55dvh*16/9)] self-center bg-grayscale-900 rounded-[12px]">
+                <div className="text-grayscale-500 text-center font-medium text-[16px] leading-[26px] xl:text-[18px] xl:leading-[28px]">
+                  인터뷰 썸네일 그리고 인터뷰 Recap에 들어가는 사진이에요.
+                  <br />
+                  아래 버튼을 누르면 {nickname}님의 모습이 화면에 나오고 5초
+                  뒤에 사진이 찍혀요.
+                </div>
+
+                <div className="h-[24px]" />
                 <button
                   className="w-[91px] h-[56px] bg-grayscale-50 text-grayscale-800 rounded-[12px] text-head3 transition-all active:scale-95"
                   onClick={() => {
@@ -98,6 +98,7 @@ function Body() {
 
             {progress === "countdown" ? (
               <CountdownComponent
+                className="h-[calc(55dvh)] w-full max-w-[calc(55dvh*16/9)] self-center"
                 onComplete={() => {
                   if (videoRef.current) {
                     const video = videoRef.current;
@@ -140,13 +141,14 @@ function Body() {
             )}
 
             {progress === "flash" ? (
-              <div className="flex justify-center items-center h-[476px] w-[846px] bg-grayscale-white rounded-[12px]"></div>
+              <div className="flex justify-center items-center h-[calc(55dvh)] w-full max-w-[calc(55dvh*16/9)] self-center w-full bg-grayscale-white rounded-[12px]"></div>
             ) : (
               <></>
             )}
 
             {progress === "complete" ? (
               <ResultPreview
+                className="h-[calc(55dvh)] w-full max-w-[calc(55dvh*16/9)] self-center w-full"
                 capturedImage={capturedImage}
                 onClickAgain={() => {
                   setProgress("countdown");
@@ -201,6 +203,7 @@ function Body() {
 function CountdownComponent(props: {
   onComplete: () => void;
   ref: React.ForwardedRef<HTMLVideoElement>;
+  className?: string;
 }) {
   const [second, setSecond] = useState<number>(5);
   const [isEnd, setIsEnd] = useState<boolean>(false);
@@ -265,7 +268,9 @@ function CountdownComponent(props: {
   }, []);
 
   return (
-    <div className="relative flex justify-center items-center h-[476px] w-[846px] bg-grayscale-900 rounded-[12px]">
+    <div
+      className={`relative flex justify-center items-center bg-grayscale-900 rounded-[12px] ${props.className}`}
+    >
       <video
         ref={localVideoRef}
         autoPlay
@@ -290,10 +295,13 @@ function ResultPreview(props: {
   capturedImage: Blob | null;
   onClickAgain: () => void;
   onClickConfirm: () => void;
+  className?: string;
 }) {
   return (
     <div className="flex flex-col">
-      <div className="flex justify-center items-center h-[476px] w-[846px] bg-grayscale-900 rounded-[12px]">
+      <div
+        className={`flex justify-center items-center bg-grayscale-900 rounded-[12px] ${props.className}`}
+      >
         {props.capturedImage ? (
           <img
             src={URL.createObjectURL(props.capturedImage)}
@@ -310,7 +318,7 @@ function ResultPreview(props: {
 
       <div className="h-[16px]" />
 
-      <div className="flex flex-row gap-[10px] justify-end">
+      <div className="flex flex-row gap-[10px] justify-end w-full max-w-[calc(55dvh*16/9)] self-center">
         <button
           className="w-[88px] h-[44px] text-grayscale-50 bg-grayscale-600 text-head4 rounded-[10px] transition-all active:scale-95"
           onClick={props.onClickAgain}
