@@ -16,6 +16,7 @@ export default class DefaultScene extends Scene {
         priorScenes: [],
         interviewStartDate: dayjs(),
         addScene: () => {},
+        templateData: [],
       }
     );
   }

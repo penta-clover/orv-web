@@ -5,7 +5,7 @@ export class TempBlobRepositoryImpl implements TempBlobRepository {
   async saveBlob(blob: Blob): Promise<string> {
     const key = crypto.randomUUID();
     const tx = await getTransaction('readwrite');
-    if (tx.store) {
+    if (tx.store && tx.store.put) {
       await tx.store.put({ id: key, blob });
     }
     await tx.done;
@@ -20,7 +20,7 @@ export class TempBlobRepositoryImpl implements TempBlobRepository {
 
   async deleteBlob(key: string): Promise<void> {
     const tx = await getTransaction('readwrite');
-    if (tx.store) {
+    if (tx.store && tx.store.delete) {
       await tx.store.delete(key);
     }
     await tx.done;
