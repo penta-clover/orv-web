@@ -31,6 +31,7 @@ function Body() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [filter, setFilter] = useState<Filter>("default");
   const [stream, setStream] = useState<MediaStream | undefined>();
+  const [streamReady, setStreamReady] = useState<boolean>(false);
 
   usePermissionReload("camera");
   usePermissionReload("microphone");
@@ -44,6 +45,7 @@ function Body() {
     getCameraStream()
       .then((stream) => {
         setStream(stream);
+        setStreamReady(true);
       })
       .catch((error) => {
         alert(getPermissionGuideText());
@@ -78,13 +80,16 @@ function Body() {
         <div className="flex flex-col grow items-center justify-center mb-[104px]">
           <div className="flex flex-col gap-[20px] items-center">
             <div className="relative flex justify-center items-center h650:h-[300px] h650:w-[533px] h750:h-[350px] h750:w-[622px] h800:h-[400px] h800:w-[711px] h900:h-[500px] h900:w-[888px] h1000:h-[600px] h1000:w-[1066px] h-[650px] w-[1155px] aspect-16/9 bg-grayscale-900 rounded-[12px] overflow-hidden">
-              {aspect !== "none" && (
-                <FilteredCanvas
-                  stream={stream}
-                  filter={filter}
-                  overlay="/images/studio-lighting-fhd.png"
-                />
-              )}
+              {aspect !== "none" &&
+                (streamReady ? (
+                  <FilteredCanvas
+                    stream={stream}
+                    filter={filter}
+                    overlay="/images/studio-lighting-fhd.png"
+                  />
+                ) : (
+                  <CanvasSkeleton />
+                ))}
               <div className="absolute top-[16px] right-[16px] text-head4 text-white">
                 필터 미리보기
               </div>
@@ -184,5 +189,13 @@ function FilterButton(props: {
     >
       {children}
     </button>
+  );
+}
+
+function CanvasSkeleton() {
+  return (
+    <div className="absolute inset-0 bg-grayscale-900 animate-skeleton-wave">
+      <div className="absolute inset-0 bg-gradient-to-r from-grayscale-900 via-grayscale-700 to-grayscale-900 animate-skeleton-wave" />
+    </div>
   );
 }

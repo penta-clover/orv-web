@@ -46,6 +46,7 @@ function Body() {
 
   const onAspectClick = (aspect: Aspect) => {
     setSelectedAspect(aspect);
+    setStreamReady(false);
 
     if (stream) {
       stream.getTracks().forEach((track) => track.stop());
@@ -91,14 +92,15 @@ function Body() {
               disabled={!streamReady}
             >
               <Image
-                src="/images/pose-guide-frontal.png"
+                src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/frontal-contour.svg"
+                unoptimized
                 width={100}
                 height={100}
                 alt="frontal"
-                className="w-full h-full object-cover absolute z-10"
+                className="absolute bottom-[0] w-full h-[87%] object-contain z-10"
                 draggable={false}
               />
-              <div className="absolute top-0 left-0 w-full h-full">
+              <div className="absolute top-0 left-0 w-full h-full opacity-50">
                 <FilteredCanvas
                   stream={stream}
                   overlay="/images/studio-lighting-fhd.png"
@@ -110,14 +112,15 @@ function Body() {
               disabled={!streamReady}
             >
               <Image
-                src="/images/pose-guide-whole.png"
+                src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/whole-contour.svg"
+                unoptimized
                 width={100}
                 height={100}
                 alt="whole"
-                className="w-full h-full object-cover absolute z-10"
+                className="absolute bottom-[0] w-full h-[87%] object-contain z-10"
                 draggable={false}
               />
-              <div className="absolute top-0 left-0 w-full h-full">
+              <div className="absolute top-0 left-0 w-full h-full opacity-50">
                 <FilteredCanvas
                   stream={stream}
                   overlay="/images/studio-lighting-fhd.png"
@@ -129,14 +132,15 @@ function Body() {
               disabled={!streamReady}
             >
               <Image
-                src="/images/pose-guide-side.png"
+                src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/side-contour.svg"
+                unoptimized
                 width={100}
                 height={100}
                 alt="side"
-                className="w-full h-full object-cover absolute z-10"
+                className="absolute bottom-[0] w-full h-[78%] object-contain z-10"
                 draggable={false}
               />
-              <div className="absolute top-0 left-0 w-full h-full">
+              <div className="absolute top-0 left-0 w-full h-full opacity-50">
                 <FilteredCanvas
                   stream={stream}
                   overlay="/images/studio-lighting-fhd.png"
