@@ -6,6 +6,7 @@ import { StoryboardPreview } from "@/domain/model/StoryboardPreview";
 import { StoryboardInfo } from "@/domain/model/StoryboardInfo";
 import { SceneInfo } from "@/domain/model/SceneInfo";
 import { Topic } from "@/domain/model/Topic";
+import Scene from "@/app/interview/(components)/scene/scene";
 
 export class StoryboardRepositoryImpl implements StoryboardRepository {
   constructor(private api: Api, private storage: Storage) {}
@@ -18,6 +19,21 @@ export class StoryboardRepositoryImpl implements StoryboardRepository {
       }
     );
 
+
+    if (result.statusCode !== "200") {
+      throw new Error(result.message);
+    }
+
+    return result.data!;
+  }
+
+  async getScenesByStoryboardId(storyboardId: string): Promise<Scene[]> {
+    const result = await this.api.get<Scene[]>(
+      `/storyboard/${storyboardId}/scene/all`,
+      {
+        Authorization: `Bearer ${this.storage.getAuthToken()}`,
+      }
+    );
 
     if (result.statusCode !== "200") {
       throw new Error(result.message);

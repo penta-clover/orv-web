@@ -29,6 +29,21 @@ export class ReservationRepositoryImpl implements ReservationRepository {
     return result.data;
   }
 
+  async getReservation(reservationId: string): Promise<Reservation | null> {
+    const result = await this.api.get<Reservation>(
+      `/reservation/interview/${reservationId}`,
+      {
+        Authorization: `Bearer ${this.storage.getAuthToken()}`,
+      }
+    );
+
+    if (result.statusCode !== "200") {
+      throw new Error(result.message);
+    }
+
+    return result.data;
+  }
+
   async getForwardReservations(): Promise<Reservation[] | null> {
     const result = await this.api.get<Reservation[]>("/reservation/interview/forward", {
       Authorization: `Bearer ${this.storage.getAuthToken()}`,
