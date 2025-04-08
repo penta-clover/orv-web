@@ -1,5 +1,6 @@
-import { landingHandler } from '@/middleware/landingHandler';
-import { LinkHandler } from './linkHandler';
+import { LinkHandler } from '@/middleware/linkHandler';
+import { landingHandler } from '@/middleware/handlers/landingHandler';
+import { letterHandler } from '@/middleware/handlers/letterHandler';
 
 interface LinkConfig {
   pattern: RegExp;
@@ -8,4 +9,5 @@ interface LinkConfig {
 
 export const linkConfigs: LinkConfig[] = [
   { pattern: /^\/landing/, handler: landingHandler },
+  { pattern: /^\/letter\/vQf3Rv/, handler: letterHandler },
 ];
