@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useArchiveRepository } from "@/providers/ArchiveRepositoryContext";
 import { Video } from "@/domain/model/Video";
 import FAQ from "@/app/components/faq";
+import { VideoMetadata } from "@/domain/model/VideoMetadata";
 
 export default function Page() {
   return (
@@ -22,14 +23,30 @@ function Body() {
   const videoId = searchParams.get("videoId")!;
   const [downloadProgress, setDownloadProgress] = useState<number>(0);
   const [isDownloading, setIsDownloading] = useState<boolean>(false);
+  const [isNotFound, setIsNotFound] = useState<boolean>();
+  const [isExpired, setIsExpired] = useState<boolean>();
   const router = useRouter();
 
   const archiveRepository = useArchiveRepository();
 
   useEffect(() => {
-    archiveRepository.getVideo(videoId).then((video) => {
-      setVideo(video);
-    });
+    archiveRepository
+      .getVideo(videoId)
+      .then((video: VideoMetadata) => {
+        if (!video) {
+          setIsNotFound(true);
+          return;
+        }
+
+        setIsExpired(
+          new Date(video.createdAt) < new Date(Date.now() - 1000 * 60 * 60 * 3)
+        );
+        
+        setVideo(video);
+      })
+      .catch(() => {
+        setIsNotFound(true);
+      });
   }, []);
 
   const handleDownload = async () => {
@@ -98,6 +115,53 @@ function Body() {
     window.URL.revokeObjectURL(url);
   };
 
+  if (video === null || isNotFound || isExpired) {
+    return (
+      <div className="flex w-full h-[calc(100vh)] justify-center bg-grayscale-black overflow-y-auto hide-scrollbar">
+        <div className="flex flex-col w-full max-w-[600px] bg-[#101212] items-center">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 max-w-[600px] flex w-full justify-start">
+            <ActionBar />
+          </div>
+          <div className="flex flex-col items-center justify-center h-[calc(100vh)] w-full">
+            <Image
+              src="/icons/logo.svg"
+              alt="orv logo"
+              width={120}
+              height={57}
+              className="mb-[40px]"
+            />
+
+            {(isNotFound || isExpired) ? (
+              <div className="h-[100px] flex flex-col justify-center">
+                <div className="text-grayscale-white text-head1 text-center">
+                  영상을 찾을 수 없습니다
+                </div>
+                <div className="text-grayscale-400 text-body3 text-center">
+                  올바른 링크인지 다시 확인해주세요.
+                </div>
+              </div>
+            ) : (
+              <div className="h-[100px] flex items-center">
+                <Image
+                  src="/icons/rolling-spinner-grayscale-white.gif"
+                  alt="loading"
+                  width={24}
+                  height={24}
+                />
+              </div>
+            )}
+
+            <div className="h-[100px]" />
+
+            <div className="w-[calc(100%)] h-[300px] self-center">
+              <FAQ faqData={faqData()} title="다운로드 참고사항" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex w-full h-full justify-center bg-grayscale-black overflow-y-auto hide-scrollbar">
       <div className="flex flex-col w-full max-w-[600px] bg-[#101212]">
@@ -118,25 +182,25 @@ function Body() {
               controls
               autoPlay
               muted
-              className="px-[33px] w-full"
+              className="px-[16px] w-full"
             />
           </div>
 
           <div className="h-[4px]" />
 
-          <div className="text-grayscale-100 text-head3 h-[28px] w-full px-[33px]">
+          <div className="text-grayscale-100 text-head3 h-[28px] w-full px-[16px]">
             {video?.title}
           </div>
 
           <div className="h-[4px]" />
 
-          <div className="text-grayscale-100 text-body2 h-[28px] w-full px-[33px]">
+          <div className="text-grayscale-100 text-body2 h-[28px] w-full px-[16px]">
             {video?.createdAt ? formatDate(new Date(video!.createdAt)) : ""}
           </div>
 
           <div className="h-[34px]" />
 
-          <div className="w-full px-[33px]">
+          <div className="w-full px-[16px]">
             <button
               className={`w-full h-[56px] rounded-[12px] text-head3 text-grayscale-800 active:scale-95 duration-all ${
                 isDownloading ? "bg-grayscale-50" : "bg-main-lilac50"
@@ -158,7 +222,7 @@ function Body() {
 
           <div className="h-[36px]" />
 
-          <div className="w-[calc(100%-34px)] h-[300px] self-center">
+          <div className="w-[calc(100%)] h-[300px] self-center">
             <FAQ faqData={faqData()} title="다운로드 참고사항" />
           </div>
         </div>
