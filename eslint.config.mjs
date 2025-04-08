@@ -23,6 +23,7 @@ const eslintConfig = [
       "@typescript-eslint/no-non-null-asserted-optional-chain": "off", // 옵셔널 체이닝 후 non-null assertion 관련 경고 무시
       "react/jsx-no-comment-textnodes": "off", // JSX 내부 주석 관련 경고 무시
       "@next/next/no-img-element": "off", // img 태그 사용 관련 경고 무시
+      "@typescript-eslint/no-unused-expressions": "off", // 사용하지 않는 표현식 무시
     },
   },
 ];
