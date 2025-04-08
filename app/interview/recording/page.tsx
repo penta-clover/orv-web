@@ -157,7 +157,7 @@ function Body() {
         sum += Math.abs(dataArray[i] - 128);
       }
       const avg = sum / bufferLength;
-      const THRESHOLD = 2.5; // 임계값 (필요에 따라 조정)
+      const THRESHOLD = 2.2; // 임계값 (필요에 따라 조정)
 
       console.log("avg: " + avg);
       if (avg < THRESHOLD) {
