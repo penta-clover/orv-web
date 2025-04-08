@@ -59,7 +59,7 @@ function Body() {
 
         <hr className="border-grayscale-700 border-[0.5px] w-full" />
 
-        <div className="flex flex-col grow items-center justify-center">
+        <div className="flex flex-col grow items-center justify-center mb-[100px] h700:mb-[50px] h650:mb-[0px]">
           <div className="flex flex-row gap-[30px] px-[20px]">
             <ImageCard
               src="/images/setting-place-guide-1.jpg"
@@ -89,7 +89,7 @@ function Body() {
             혼자만의 환경을 준비했어요
           </label>
         </div>
-        <div className="w-full h-[104px]">
+        <div className="absolute bottom-0 w-full h-[104px]">
           <PrevButton
             className="fixed bottom-[45px] left-[45px]"
             onClick={() =>
@@ -113,15 +113,17 @@ function Body() {
 function ImageCard(props: { src: string; alt: string; text: string }) {
   const { src, alt, text } = props;
   return (
-    <div className="w-[100%] md:w-[400px] p-[16px] bg-grayscale-800 rounded-[12px] flex flex-col items-center gap-[14px]">
+    <div className="w-[100%] w700:w-[350px] max-w-[461px] h-[490px] h800:h-[440px] h750:h-[390px] p-[18px] bg-grayscale-800 rounded-[12px] flex flex-col items-center">
       <Image
         src={src}
         alt={alt}
-        width={425}
-        height={320}
-        className="rounded-[8px]"
+        width={0}
+        height={0}
+        className="rounded-[8px] w-full h-[320px] h800:h-[280px] h750:h-[230px]"
       />
-      <div className="w-[100%] text-body2 text-grayscale-300 whitespace-pre-wrap">
+
+      <div className="h-[14px]" />
+      <div className="w-full text-body2 text-grayscale-300 whitespace-pre-wrap">
         {text.replaceAll("\\n", "\n")}
       </div>
     </div>

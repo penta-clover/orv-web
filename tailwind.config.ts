@@ -19,6 +19,13 @@ export default {
         h650: { raw: "(max-height: 650px)" },
         h600: { raw: "(max-height: 600px)" },
         h500: { raw: "(max-height: 500px)" },
+
+        w800: { raw: "(max-width: 800px)" },
+        w750: { raw: "(max-width: 750px)" },
+        w700: { raw: "(max-width: 700px)" },
+        w650: { raw: "(max-width: 650px)" },
+        w600: { raw: "(max-width: 600px)" },
+        w500: { raw: "(max-width: 500px)" },
       },
       animation: {
         "pulse-fast": "pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite",
