@@ -25,7 +25,6 @@ function Body() {
   const [isDownloading, setIsDownloading] = useState<boolean>(false);
   const [isNotFound, setIsNotFound] = useState<boolean>();
   const [isExpired, setIsExpired] = useState<boolean>();
-  const router = useRouter();
 
   const archiveRepository = useArchiveRepository();
 
@@ -41,7 +40,7 @@ function Body() {
         setIsExpired(
           new Date(video.createdAt) < new Date(Date.now() - 1000 * 60 * 60 * 3)
         );
-        
+
         setVideo(video);
       })
       .catch(() => {
@@ -81,7 +80,7 @@ function Body() {
         if (value) {
           chunks.push(value);
           loaded += value.length;
-          let percent = Math.round((loaded / total) * 100);
+          const percent = Math.round((loaded / total) * 100);
           // 다운로드 진행률이 99%에 도달했을 때 1초간 99% 상태 유지
           if (percent === 99 && !reachedNinetyNine) {
             setDownloadProgress(99);

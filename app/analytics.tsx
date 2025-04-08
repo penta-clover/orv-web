@@ -41,7 +41,7 @@ export default function Analytics() {
 
   if (process.env.NEXT_PUBLIC_SMARTLOOK_TRACKING_ENABLED === "true") {
     scripts.push(
-      <Script type="text/javascript" strategy="afterInteractive">
+      <Script id="smartlook-init" type="text/javascript" strategy="afterInteractive">
         {`window.smartlook||(function(d) {
         var o=smartlook=function(){ o.api.push(arguments)},h=d.getElementsByTagName('head')[0];
         var c=d.createElement('script');o.api=new Array();c.async=true;c.type='text/javascript';

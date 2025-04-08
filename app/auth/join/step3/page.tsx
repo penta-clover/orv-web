@@ -26,7 +26,7 @@ function Body() {
   };
   
   const onNextClicked = async () => {
-    for (let policy of essentialPolicies) {
+    for (const policy of essentialPolicies) {
       if (!checked.includes(policy)) {
         alert("모든 필수 약관에 동의해주세요.");
         return;

@@ -26,9 +26,7 @@ const Typewriter: React.FC<TypewriterProps> = ({
       // 텍스트 전체가 표시되면 인터벌 종료 후 딜레이 후 onComplete 호출
       if (currentIndex === text.length) {
         clearInterval(intervalId);
-        setTimeout(() => {
-          onComplete && onComplete();
-        }, 500);
+        setTimeout(() => onComplete?.(), 500);
       }
     }, speed);
 
