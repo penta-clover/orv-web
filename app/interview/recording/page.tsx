@@ -58,6 +58,7 @@ function Body() {
   const [currentScene, setCurrentScene] = useState<Scene | undefined>();
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLowMicVolume, setIsLowMicVolume] = useState(false);
 
   const streamRecorderRef = useRef<StreamRecorder | null>(null);
   const previewCanvasRef = useRef<HTMLCanvasElement | null>(null); // 녹화 중 사용자에게 표시되는 캔버스
@@ -94,48 +95,91 @@ function Body() {
     streamRecorderRef.current = new StreamRecorder();
 
     // TODO: Promise.all로 최적화
-    getCameraStream()
-      .then((stream) => {
-        storyboardRepository
-          .getStoryboardInfo(storyboardId)
-          .then((storyboard) => {
-            storyboardRepository
-              .getSceneInfo(storyboard.startSceneId)
-              .then((scene) => {
-                templateService.getTemplateData().then((templateData) => {
-                  interviewContext.current.templateData = templateData;
+    getCameraStream({ useAudio: true })
+      .then(async (originalStream) => {
+        const storyboard = await storyboardRepository.getStoryboardInfo(
+          storyboardId
+        );
+        const scene = await storyboardRepository.getSceneInfo(
+          storyboard.startSceneId
+        );
+        const templateData = await templateService.getTemplateData();
+        interviewContext.current.templateData = templateData;
 
-                  loadScene(scene.id, 1);
+        loadScene(scene.id, 1);
 
-                  // 첫 질문이 로드될 때 인터뷰 시작 시간 기록
-                  startTimeRef.current = Date.now();
-                  if (!canvasRef.current) return;
+        // 첫 질문이 로드될 때 인터뷰 시작 시간 기록
+        startTimeRef.current = Date.now();
+        if (!canvasRef.current) return;
 
-                  const captureStream =
-                    canvasRef.current!.captureStream(RECORDING_FPS);
+        const captureStream = canvasRef.current!.captureStream(RECORDING_FPS);
+        originalStream.getAudioTracks().forEach((track) => {
+          captureStream.addTrack(track);
+        });
 
-                  try {
-                    console.log(
-                      `current canvas resolution: ${canvasRef.current.width}x${canvasRef.current.height}`
-                    );
+        try {
+          console.log(
+            `current canvas resolution: ${canvasRef.current.width}x${canvasRef.current.height}`
+          );
 
-                    // 캔버스가 준비될 때까지 대기
-                    waitForCanvasReady(() => {
-                      streamRecorderRef.current?.startRecording(captureStream); // 녹화 시작
-                    });
-                  } catch (error) {
-                    alert(getPermissionGuideText());
-                  }
-
-                  setStream(stream);
-                });
-              });
+          // 캔버스가 준비될 때까지 대기
+          waitForCanvasReady(() => {
+            streamRecorderRef.current?.startRecording(captureStream); // 녹화 시작
           });
+        } catch (error) {
+          alert(getPermissionGuideText());
+        }
+
+        setStream(originalStream);
       })
       .catch((error) => {
         alert(getPermissionGuideText());
       });
   }, []);
+
+  // stream이 설정된 후, 오디오 볼륨 모니터링
+  useEffect(() => {
+    if (!stream) return;
+    const audioContext = new AudioContext();
+    const source = audioContext.createMediaStreamSource(stream);
+    const analyser = audioContext.createAnalyser();
+    analyser.fftSize = 2048;
+    source.connect(analyser);
+
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+    let lowVolumeStart: number | null = null;
+
+    const volumeMonitor = setInterval(() => {
+      analyser.getByteTimeDomainData(dataArray);
+      let sum = 0;
+      for (let i = 0; i < bufferLength; i++) {
+        sum += Math.abs(dataArray[i] - 128);
+      }
+      const avg = sum / bufferLength;
+      const THRESHOLD = 2.5; // 임계값 (필요에 따라 조정)
+
+      console.log("avg: " + avg);
+      if (avg < THRESHOLD) {
+        if (lowVolumeStart === null) {
+          lowVolumeStart = Date.now();
+        } else if (Date.now() - lowVolumeStart >= 10000) {
+          // 경고 메시지가 중복으로 뜨지 않도록 lowVolumeStart를 갱신
+          lowVolumeStart = Date.now();
+          setIsLowMicVolume(true);
+        }
+      } else {
+        lowVolumeStart = null;
+        setIsLowMicVolume(false);
+      }
+    }, 500);
+
+    // 컴포넌트 언마운트 시 클리어
+    return () => {
+      clearInterval(volumeMonitor);
+      audioContext.close();
+    };
+  }, [stream]);
 
   // 질문 불러오기
   const loadScene = (sceneId: string, number: number) => {
@@ -200,6 +244,26 @@ function Body() {
       <div className="relative w-full h-[calc(100dvh)] flex flex-col items-center justify-start py-[20px] px-[48px] overflow-hidden">
         <div className="flex flex-col grow items-center justify-center">
           <div className="w-[90dvw] md:w-[700px] max-w-[calc(80dvh*16/9)] lg:w-[800px] xl:w-[80dvw] flex justify-end mb-[10px]">
+            <div
+              className="w-full flex items-center justify-self-start active:scale-95"
+              onClick={() => setIsModalOpen(true)}
+            >
+              {isLowMicVolume && (
+                <div className="h-[44px] bg-grayscale-800 rounded-[12px] flex items-center self-end gap-[4px] p-[12px]">
+                  <Image
+                    unoptimized
+                    src="/icons/mic-off-grayscale-white.svg"
+                    width={24}
+                    height={24}
+                    alt="close"
+                    className="focus:outline-none cursor-pointer"
+                  />
+                  <span className="text-head3 text-grayscale-50">
+                    목소리가 너무 작아요. 더 크게 말해주세요.
+                  </span>
+                </div>
+              )}
+            </div>
             <div
               className="w-[139px] h-[56px] flex items-center justify-center gap-[2px] bg-grayscale-50 rounded-[12px] self-end active:scale-95"
               onClick={() => setIsModalOpen(true)}

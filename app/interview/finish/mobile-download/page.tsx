@@ -38,7 +38,7 @@ function Body() {
         }
 
         setIsExpired(
-          new Date(video.createdAt) < new Date(Date.now() - 1000 * 60 * 60 * 3)
+          new Date(video.createdAt) < new Date(Date.now() - 1000 * 60 * 60 * 3 - 1000 * 60 * 60 * 9)
         );
 
         setVideo(video);
@@ -113,6 +113,10 @@ function Body() {
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
   };
+
+  console.log(video);
+  console.log(isNotFound);
+  console.log(isExpired);
 
   if (video === null || isNotFound || isExpired) {
     return (

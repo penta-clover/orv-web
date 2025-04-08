@@ -32,7 +32,7 @@ export async function getCameraStream(
     audio: useAudio
       ? {
           echoCancellation: false,
-          noiseSuppression: true,
+          noiseSuppression: false,
           autoGainControl: true,
         }
       : false,
