@@ -1,12 +1,14 @@
 import StartButton from "./startButton";
 import Sidebar from "./sidebar";
 import Popup from "./popup";
+import MobileNotSupported from "./home/mobileNotSupported";
 
 export default function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <Popup>
       <div className="flex flex-row h-[100dvh] w-[calc(100dvw)]">

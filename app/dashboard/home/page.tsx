@@ -5,9 +5,17 @@ import VideoList from "./videoList";
 import TopicList from "./topicList";
 import { usePopup } from "../popup";
 import ReservationNotification from "./reservationNotification";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Page() {
-  const { showPopup, hidePopup } = usePopup();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (window !== undefined && window.innerWidth < 500) {
+      router.replace("/error/mobile-not-supported");
+    }
+  }, []);
 
   return (
     <div className="relative text-grayscale-white w-full h-full pt-[78px] overflow-scroll hide-scrollbar">
