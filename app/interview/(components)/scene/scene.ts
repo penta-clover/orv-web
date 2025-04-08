@@ -5,7 +5,7 @@ export default class Scene {
     id: string;
     name: string;
     sceneType: string;
-    content: any;
+    content: Record<string, any>;
     storyboardId: string;
     interviewContext: InterviewContext;
 

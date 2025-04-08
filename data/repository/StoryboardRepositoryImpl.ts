@@ -1,4 +1,3 @@
-
 import { StoryboardRepository } from "@/domain/repository/StoryboardRepository";
 import { Api } from "../Api";
 import { Storage } from "../Storage";
@@ -56,6 +55,12 @@ export class StoryboardRepositoryImpl implements StoryboardRepository {
       );
     }
 
+    result.data!.forEach((scene) => {
+      if (typeof scene.content === "string") {
+        scene.content = JSON.parse(scene.content);
+      }
+    });
+
     return result.data!;
   }
 
@@ -104,6 +109,9 @@ export class StoryboardRepositoryImpl implements StoryboardRepository {
       );
     }
 
+    if (typeof result.data.content === "string") {
+      result.data.content = JSON.parse(result.data.content);
+    }
     return result.data;
   }
 

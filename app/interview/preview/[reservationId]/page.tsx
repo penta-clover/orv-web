@@ -108,7 +108,7 @@ function Body({ params }: { params: Promise<{ reservationId: string }> }) {
 
             {sceneToList(scenes!, storyboardInfo!.startSceneId).map(
               (scene: SceneInfo, index: number) => {
-                const content = JSON.parse(scene.content);
+                const content = scene.content;
 
                 return (
                   <div key={scene.id}>
@@ -147,7 +147,7 @@ function sceneToList(scenes: SceneInfo[], startSceneId: string) {
 
   while (true) {
     const lastScene = sceneList[sceneList.length - 1];
-    const nextSceneId = JSON.parse(lastScene.content).nextSceneId;
+    const nextSceneId = lastScene.content.nextSceneId;
     const nextScene = scenes.find(
       (scene) => scene.id.toUpperCase() === nextSceneId.toUpperCase()
     );
