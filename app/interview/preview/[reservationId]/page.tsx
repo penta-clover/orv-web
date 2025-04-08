@@ -1,16 +1,9 @@
 "use client";
 
 import { Reservation } from "@/domain/model/Reservation";
-import { Storyboard } from "@/domain/model/Storyboard";
 import { StoryboardPreview } from "@/domain/model/StoryboardPreview";
-import { Video } from "@/domain/model/Video";
-import { useArchiveRepository } from "@/providers/ArchiveRepositoryContext";
 import { useReservationRepository } from "@/providers/ReservationRepositoryContext";
-import {
-  StoryboardRepositoryProvider,
-  useStoryboardRepository,
-} from "@/providers/StoryboardRepositoryContext";
-import { useRouter } from "next/navigation";
+import { useStoryboardRepository } from "@/providers/StoryboardRepositoryContext";
 import { Suspense, useEffect, useState } from "react";
 import Scene from "../../(components)/scene/scene";
 import { StoryboardInfo } from "@/domain/model/StoryboardInfo";
@@ -18,9 +11,9 @@ import { Topic } from "@/domain/model/Topic";
 import Image from "next/image";
 
 import "@/app/components/blackBody.css";
-import { useMemberRepository } from "@/providers/MemberRepositoryContext";
 import { useTemplateService } from "@/providers/TemplateServiceContext";
 import { evaluteTemplate } from "../../(components)/scene/evalutateTemplate";
+import { SceneInfo } from "@/domain/model/SceneInfo";
 
 export default function Page({
   params,
@@ -42,9 +35,11 @@ function Body({ params }: { params: Promise<{ reservationId: string }> }) {
   const [storyboardPreview, setStoryboardPreview] =
     useState<StoryboardPreview | null>(null);
   const [topic, setTopic] = useState<Topic | null>(null);
-  const [scenes, setScenes] = useState<Scene[] | null>(null);
+  const [scenes, setScenes] = useState<SceneInfo[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [templateData, setTemplateData] = useState<{ key: string; value: string }[] | null>(null);
+  const [templateData, setTemplateData] = useState<
+    { key: string; value: string }[] | null
+  >(null);
 
   const reservationRepository = useReservationRepository();
   const storyboardRepository = useStoryboardRepository();
@@ -112,16 +107,23 @@ function Body({ params }: { params: Promise<{ reservationId: string }> }) {
             <div className="h-[20px]" />
 
             {sceneToList(scenes!, storyboardInfo!.startSceneId).map(
-              (scene: Scene, index: number) => {
+              (scene: SceneInfo, index: number) => {
                 const content = JSON.parse(scene.content);
 
                 return (
                   <div key={scene.id}>
-                    <QuestionComponent
-                      question={evaluteTemplate(content.question, templateData!)}
-                      order={index + 1}
-                      hint={evaluteTemplate(content.hint, templateData!)}
-                    />
+                    {scene.content.isHiddenQuestion ? (
+                      <HiddenQuestionComponent order={index + 1} />
+                    ) : (
+                      <QuestionComponent
+                        question={evaluteTemplate(
+                          content.question,
+                          templateData!
+                        )}
+                        order={index + 1}
+                        hint={evaluteTemplate(content.hint, templateData!)}
+                      />
+                    )}
                     <div className="h-[20px]" />
                   </div>
                 );
@@ -134,7 +136,7 @@ function Body({ params }: { params: Promise<{ reservationId: string }> }) {
   );
 }
 
-function sceneToList(scenes: Scene[], startSceneId: string) {
+function sceneToList(scenes: SceneInfo[], startSceneId: string) {
   const startScene = scenes.find((scene) => scene.id === startSceneId);
 
   if (!startScene || startScene.sceneType !== "QUESTION") {
@@ -180,6 +182,20 @@ function QuestionComponent({
   );
 }
 
+function HiddenQuestionComponent({ order }: { order: number }) {
+  return (
+    <div className="flex flex-col">
+      <div className="text-body4 text-grayscale-300">{`${numberToKorean(
+        order
+      )} 질문`}</div>
+      <div className="text-body3 text-grayscale-300">
+        인터뷰 때 즉석으로 공유되는 질문이에요. 때로는 준비되지 않은 답변이 가장
+        속마음에 가까울 수 있어요.
+      </div>
+    </div>
+  );
+}
+
 function numberToKorean(number: number) {
   const korean = [
     "첫",
@@ -207,24 +223,26 @@ function numberToKorean(number: number) {
 }
 
 function Skeleton() {
-  return (<div className="flex flex-col px-[17px]">
-    <div className="w-[200px] h-[32px] bg-grayscale-100 rounded-md animate-pulse" />
-    
-    <div className="h-[16px]" />
-    
-    <div className="flex">
-      <div className="h-full w-[2px] mr-[11px] bg-grayscale-600" />
-      <div className="w-[250px] h-[48px] bg-grayscale-100 rounded-md animate-pulse" />
-    </div>
-    
-    <div className="h-[20px]" />
-    
-    {[1, 2, 3].map((_, index) => (
-      <div key={index} className="mb-[20px]">
-        <div className="w-[80px] h-[16px] bg-grayscale-100 rounded-md animate-pulse mb-[8px]" />
-        <div className="w-full h-[24px] bg-grayscale-100 rounded-md animate-pulse mb-[8px]" />
-        <div className="w-[180px] h-[20px] bg-grayscale-100 rounded-md animate-pulse" />
+  return (
+    <div className="flex flex-col px-[17px]">
+      <div className="w-[200px] h-[32px] bg-grayscale-100 rounded-md animate-pulse" />
+
+      <div className="h-[16px]" />
+
+      <div className="flex">
+        <div className="h-full w-[2px] mr-[11px] bg-grayscale-600" />
+        <div className="w-[250px] h-[48px] bg-grayscale-100 rounded-md animate-pulse" />
       </div>
-    ))}
-  </div>);
+
+      <div className="h-[20px]" />
+
+      {[1, 2, 3].map((_, index) => (
+        <div key={index} className="mb-[20px]">
+          <div className="w-[80px] h-[16px] bg-grayscale-100 rounded-md animate-pulse mb-[8px]" />
+          <div className="w-full h-[24px] bg-grayscale-100 rounded-md animate-pulse mb-[8px]" />
+          <div className="w-[180px] h-[20px] bg-grayscale-100 rounded-md animate-pulse" />
+        </div>
+      ))}
+    </div>
+  );
 }

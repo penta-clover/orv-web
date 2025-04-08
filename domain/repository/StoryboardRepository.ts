@@ -9,5 +9,5 @@ export interface StoryboardRepository {
   getSceneInfo(sceneId: string): Promise<SceneInfo>;
   getStoryboardPreview(storyboardId: string): Promise<StoryboardPreview>;
   getTopicOfStoryboard(storyboardId: string): Promise<Topic[]>;
-  getScenesByStoryboardId(storyboardId: string): Promise<Scene[]>;
+  getScenesByStoryboardId(storyboardId: string): Promise<SceneInfo[]>;
 }

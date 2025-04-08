@@ -18,9 +18,17 @@ export class ArchiveRepositoryImpl implements ArchiveRepository {
     );
 
     if (result.statusCode !== "200" || result.data === null) {
-      throw new Error(result.message);
+      throw new Error(
+        `[API Error] ArchiveRepositoryImpl.getVideo\n` +
+          `Headers:\n` +
+          `  - Authorization: ${this.storage.getAuthToken()}\n` +
+          `Parameters:\n` +
+          `  - videoId: ${videoId}\n` +
+          `Response:\n` +
+          `  - Status: ${result.statusCode}\n` +
+          `  - Message: ${result.message}`
+      );
     }
-
     return result.data;
   }
 
@@ -39,7 +47,17 @@ export class ArchiveRepositoryImpl implements ArchiveRepository {
     );
 
     if (result.statusCode !== "201" || result.data === null) {
-      throw new Error(result.message);
+      throw new Error(
+        `[API Error] ArchiveRepositoryImpl.uploadVideo\n` +
+          `Headers:\n` +
+          `  - Authorization: ${this.storage.getAuthToken()}\n` +
+          `Parameters:\n` +
+          `  - video: ${video}\n` +
+          `  - storyboardId: ${storyboardId}\n` +
+          `Response:\n` +
+          `  - Status: ${result.statusCode}\n` +
+          `  - Message: ${result.message}`
+      );
     }
 
     return result.data;
@@ -56,7 +74,17 @@ export class ArchiveRepositoryImpl implements ArchiveRepository {
     );
 
     if (result.statusCode !== "200") {
-      throw new Error(result.message);
+      throw new Error(
+        `[API Error] ArchiveRepositoryImpl.renameVideo\n` +
+          `Headers:\n` +
+          `  - Authorization: ${this.storage.getAuthToken()}\n` +
+          `Parameters:\n` +
+          `  - videoId: ${videoId}\n` +
+          `  - title: ${title}\n` +
+          `Response:\n` +
+          `  - Status: ${result.statusCode}\n` +
+          `  - Message: ${result.message}`
+      );
     }
   }
 
@@ -75,7 +103,17 @@ export class ArchiveRepositoryImpl implements ArchiveRepository {
     );
 
     if (result.statusCode !== "200") {
-      throw new Error(result.message);
+      throw new Error(
+        `[API Error] ArchiveRepositoryImpl.updateThumbnail\n` +
+          `Headers:\n` +
+          `  - Authorization: ${this.storage.getAuthToken()}\n` +
+          `Parameters:\n` +
+          `  - videoId: ${videoId}\n` +
+          `  - capturedImage: ${capturedImage}\n` +
+          `Response:\n` +
+          `  - Status: ${result.statusCode}\n` +
+          `  - Message: ${result.message}`
+      );
     }
   }
 
@@ -90,7 +128,14 @@ export class ArchiveRepositoryImpl implements ArchiveRepository {
     );
 
     if (result.statusCode !== "200") {
-      throw new Error(result.message);
+      throw new Error(
+        `[API Error] ArchiveRepositoryImpl.getMyVideos\n` +
+          `Headers:\n` +
+          `  - Authorization: ${this.storage.getAuthToken()}\n` +
+          `Response:\n` +
+          `  - Status: ${result.statusCode}\n` +
+          `  - Message: ${result.message}`
+      );
     }
 
     return result.data!;

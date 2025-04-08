@@ -19,15 +19,23 @@ export class StoryboardRepositoryImpl implements StoryboardRepository {
       }
     );
 
-
     if (result.statusCode !== "200") {
-      throw new Error(result.message);
+      throw new Error(
+        `[API Error] StoryboardRepositoryImpl.getStoryboardPreview\n` +
+          `Headers:\n` +
+          `  - Authorization: ${this.storage.getAuthToken()}\n` +
+          `Parameters:\n` +
+          `  - storyboardId: ${storyboardId}\n` +
+          `Response:\n` +
+          `  - Status: ${result.statusCode}\n` +
+          `  - Message: ${result.message}`
+      );
     }
 
     return result.data!;
   }
 
-  async getScenesByStoryboardId(storyboardId: string): Promise<Scene[]> {
+  async getScenesByStoryboardId(storyboardId: string): Promise<SceneInfo[]> {
     const result = await this.api.get<Scene[]>(
       `/storyboard/${storyboardId}/scene/all`,
       {
@@ -36,7 +44,16 @@ export class StoryboardRepositoryImpl implements StoryboardRepository {
     );
 
     if (result.statusCode !== "200") {
-      throw new Error(result.message);
+      throw new Error(
+        `[API Error] StoryboardRepositoryImpl.getScenesByStoryboardId\n` +
+          `Headers:\n` +
+          `  - Authorization: ${this.storage.getAuthToken()}\n` +
+          `Parameters:\n` +
+          `  - storyboardId: ${storyboardId}\n` +
+          `Response:\n` +
+          `  - Status: ${result.statusCode}\n` +
+          `  - Message: ${result.message}`
+      );
     }
 
     return result.data!;
@@ -51,8 +68,18 @@ export class StoryboardRepositoryImpl implements StoryboardRepository {
     );
 
     if (result.statusCode !== "200" || result.data === null) {
-      throw new Error(result.message);
+      throw new Error(
+        `[API Error] StoryboardRepositoryImpl.getStoryboardInfo\n` +
+          `Headers:\n` +
+          `  - Authorization: ${this.storage.getAuthToken()}\n` +
+          `Parameters:\n` +
+          `  - storyboardId: ${storyboardId}\n` +
+          `Response:\n` +
+          `  - Status: ${result.statusCode}\n` +
+          `  - Message: ${result.message}`
+      );
     }
+
     return result.data;
   }
 
@@ -63,12 +90,18 @@ export class StoryboardRepositoryImpl implements StoryboardRepository {
         Authorization: `Bearer ${this.storage.getAuthToken()}`,
       }
     );
-    if (result.statusCode !== "200" || result.data === null) {
-      throw new Error(result.message);
-    }
 
-    if (result.data.content) {
-      result.data.content = JSON.parse(result.data.content);
+    if (result.statusCode !== "200" || result.data === null) {
+      throw new Error(
+        `[API Error] StoryboardRepositoryImpl.getSceneInfo\n` +
+          `Headers:\n` +
+          `  - Authorization: ${this.storage.getAuthToken()}\n` +
+          `Parameters:\n` +
+          `  - sceneId: ${sceneId}\n` +
+          `Response:\n` +
+          `  - Status: ${result.statusCode}\n` +
+          `  - Message: ${result.message}`
+      );
     }
 
     return result.data;
@@ -83,7 +116,16 @@ export class StoryboardRepositoryImpl implements StoryboardRepository {
     );
 
     if (result.statusCode !== "200" || result.data === null) {
-      throw new Error(result.message);
+      throw new Error(
+        `[API Error] StoryboardRepositoryImpl.getTopicOfStoryboard\n` +
+          `Headers:\n` +
+          `  - Authorization: ${this.storage.getAuthToken()}\n` +
+          `Parameters:\n` +
+          `  - storyboardId: ${storyboardId}\n` +
+          `Response:\n` +
+          `  - Status: ${result.statusCode}\n` +
+          `  - Message: ${result.message}`
+      );
     }
 
     return result.data;

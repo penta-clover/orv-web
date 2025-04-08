@@ -14,17 +14,35 @@ export class MemberRepositoryImpl implements MemberRepository {
     });
 
     if (result.statusCode !== "200" || result.data === null) {
-      throw new Error(result.message);
+      throw new Error(
+        `[API Error] MemberRepositoryImpl.getMyInfo\n` +
+          `Headers:\n` +
+          `  - Authorization: ${this.storage.getAuthToken()}\n` +
+          `Response:\n` +
+          `  - Status: ${result.statusCode}\n` +
+          `  - Message: ${result.message}`
+      );
     }
-
+    
     return result.data;
   }
 
   async getMemberProfile(memberId: string): Promise<MemberProfile> {
-    const result = await this.api.get<MemberProfile>(`/member/${memberId}/profile`);
+    const result = await this.api.get<MemberProfile>(`/member/${memberId}/profile`, {
+      Authorization: `Bearer ${this.storage.getAuthToken()}`,
+    });
 
     if (result.statusCode !== "200" || result.data === null) {
-      throw new Error(result.message);
+      throw new Error(
+        `[API Error] MemberRepositoryImpl.getMemberProfile\n` +
+          `Headers:\n` +
+          `  - Authorization: ${this.storage.getAuthToken()}\n` +
+          `Parameters:\n` +
+          `  - memberId: ${memberId}\n` +
+          `Response:\n` +
+          `  - Status: ${result.statusCode}\n` +
+          `  - Message: ${result.message}`
+      );
     }
 
     return result.data;

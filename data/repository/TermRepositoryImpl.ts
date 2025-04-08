@@ -18,7 +18,17 @@ export class TermRepositoryImpl implements TermRepository {
     );
 
     if (result.statusCode !== "201" || result.data === null) {
-      throw new Error(result.message);
+      throw new Error(
+        `[API Error] TermRepositoryImpl.updateTermAgreement\n` +
+          `Headers:\n` +
+          `  - Authorization: ${this.storage.getAuthToken()}\n` +
+          `Parameters:\n` +
+          `  - term: ${term}\n` +
+          `  - agreement: ${agreement}\n` +
+          `Response:\n` +
+          `  - Status: ${result.statusCode}\n` +
+          `  - Message: ${result.message}`
+      );
     }
 
     return result.data;

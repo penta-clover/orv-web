@@ -14,19 +14,37 @@ export class AuthRepositoryImpl implements AuthRepository {
       'Authorization': `Bearer ${this.storage.getAuthToken()}`
     });
 
-    if (result.statusCode !== '200') {
-      throw new Error(result.message);
+    if (result.statusCode !== "200") {
+      throw new Error(
+        `[API Error] AuthRepositoryImpl.validateNickname\n` +
+          `Headers:\n` +
+          `  - Authorization: ${this.storage.getAuthToken()}\n` +
+          `Parameters:\n` +
+          `  - nickname: ${nickname}\n` +
+          `Response:\n` +
+          `  - Status: ${result.statusCode}\n` +
+          `  - Message: ${result.message}`
+      );
     }
     return result.data!;
   }
-  
+
   async join(info: JoinInfo): Promise<boolean> {
     const result = await this.api.post<boolean>(`/auth/join`, info, {
       'Authorization': `Bearer ${this.storage.getAuthToken()}`
     });
 
-    if (result.statusCode !== '200') {
-      throw new Error(result.message);
+    if (result.statusCode !== "200") {
+      throw new Error(
+        `[API Error] AuthRepositoryImpl.join\n` +
+          `Headers:\n` +
+          `  - Authorization: ${this.storage.getAuthToken()}\n` +
+          `Parameters:\n` +
+          `  - info: ${info}\n` +
+          `Response:\n` +
+          `  - Status: ${result.statusCode}\n` +
+          `  - Message: ${result.message}`
+      );
     }
     return result.data!;
   }

@@ -23,7 +23,17 @@ export class ReservationRepositoryImpl implements ReservationRepository {
     );
 
     if (result.statusCode !== "201" || result.data === null) {
-      throw new Error(result.message);
+      throw new Error(
+        `[API Error] ReservationRepositoryImpl.reserveInterview\n` +
+        `Headers:\n` +
+        `  - Authorization: ${this.storage.getAuthToken()}\n` +
+        `Parameters:\n` +
+        `  - storyboardId: ${storyboardId}\n` +
+        `  - scheduledAt: ${scheduledAt}\n` +
+        `Response:\n` +
+        `  - Status: ${result.statusCode}\n` +
+        `  - Message: ${result.message}`
+      );
     }
 
     return result.data;
@@ -38,7 +48,16 @@ export class ReservationRepositoryImpl implements ReservationRepository {
     );
 
     if (result.statusCode !== "200") {
-      throw new Error(result.message);
+      throw new Error(
+        `[API Error] ReservationRepositoryImpl.getReservation\n` +
+        `Headers:\n` +
+        `  - Authorization: ${this.storage.getAuthToken()}\n` +
+        `Parameters:\n` +
+        `  - reservationId: ${reservationId}\n` +
+        `Response:\n` +
+        `  - Status: ${result.statusCode}\n` +
+        `  - Message: ${result.message}`
+      );
     }
 
     return result.data;
@@ -50,7 +69,14 @@ export class ReservationRepositoryImpl implements ReservationRepository {
     });
 
     if (result.statusCode !== "200") {
-      throw new Error(result.message);
+      throw new Error(
+        `[API Error] ReservationRepositoryImpl.getForwardReservations\n` +
+        `Headers:\n` +
+        `  - Authorization: ${this.storage.getAuthToken()}\n` +
+        `Response:\n` +
+        `  - Status: ${result.statusCode}\n` +
+        `  - Message: ${result.message}`
+      );
     }
 
     return result.data;
@@ -62,7 +88,16 @@ export class ReservationRepositoryImpl implements ReservationRepository {
     });
 
     if (result.statusCode !== "200") {
-      throw new Error(result.message);
+      throw new Error(
+        `[API Error] ReservationRepositoryImpl.getForwardReservationsAfter\n` +
+        `Headers:\n` +
+        `  - Authorization: ${this.storage.getAuthToken()}\n` +
+        `Parameters:\n` +
+        `  - from: ${from}\n` +
+        `Response:\n` +
+        `  - Status: ${result.statusCode}\n` +
+        `  - Message: ${result.message}`
+      );
     }
 
     return result.data;
@@ -78,9 +113,17 @@ export class ReservationRepositoryImpl implements ReservationRepository {
     );
 
     if (result.statusCode !== "200") {
-      throw new Error(result.message);
+      throw new Error(
+        `[API Error] ReservationRepositoryImpl.changeInterviewReservationStatusAsDone\n` +
+        `Headers:\n` +
+        `  - Authorization: ${this.storage.getAuthToken()}\n` +
+        `Parameters:\n` +
+        `  - reservationId: ${reservationId}\n` +
+        `Response:\n` +
+        `  - Status: ${result.statusCode}\n` +
+        `  - Message: ${result.message}`
+      );
     }
-
     return true;
   }
 
@@ -100,7 +143,17 @@ export class ReservationRepositoryImpl implements ReservationRepository {
     );
 
     if (result.statusCode !== "201" || result.data === null) {
-      throw new Error(result.message);
+      throw new Error(
+        `[API Error] ReservationRepositoryImpl.reserveVideoRecap\n` +
+        `Headers:\n` +
+        `  - Authorization: ${this.storage.getAuthToken()}\n` +
+        `Parameters:\n` +
+        `  - videoId: ${videoId}\n` +
+        `  - scheduledAt: ${scheduledAt}\n` +
+        `Response:\n` +
+        `  - Status: ${result.statusCode}\n` +
+        `  - Message: ${result.message}`
+      );
     }
 
     return result.data;

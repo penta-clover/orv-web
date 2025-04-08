@@ -14,9 +14,15 @@ export class TopicRepositoryImpl implements TopicRepository {
         });
 
         if (result.statusCode != '200') {
-            throw new Error(result.message);
+            throw new Error(
+                `[API Error] TopicRepositoryImpl.getTopics\n` +
+                `Headers:\n` +
+                `  - Authorization: ${this.storage.getAuthToken()}\n` +
+                `Response:\n` +
+                `  - Status: ${result.statusCode}\n` +
+                `  - Message: ${result.message}`
+            );
         }
-
         return result.data!;
     }
 
@@ -27,9 +33,17 @@ export class TopicRepositoryImpl implements TopicRepository {
         });
         
         if (result.statusCode != '200') {
-            throw new Error(result.message);
+            throw new Error(
+                `[API Error] TopicRepositoryImpl.getStoryboardOfTopic\n` +
+                `Headers:\n` +
+                `  - Authorization: ${this.storage.getAuthToken()}\n` +
+                `Parameters:\n` +
+                `  - topicId: ${topicId}\n` +
+                `Response:\n` +
+                `  - Status: ${result.statusCode}\n` +
+                `  - Message: ${result.message}`
+            );
         }
-
         return result.data!;
     }
 
@@ -40,9 +54,18 @@ export class TopicRepositoryImpl implements TopicRepository {
         });
 
         if (result.statusCode != '200') {
-            throw new Error(result.message);
+            throw new Error(
+                `[API Error] TopicRepositoryImpl.getTopicById\n` +
+                `Headers:\n` +
+                `  - Authorization: ${this.storage.getAuthToken()}\n` +
+                `Parameters:\n` +
+                `  - topicId: ${topicId}\n` +
+                `Response:\n` +
+                `  - Status: ${result.statusCode}\n` +
+                `  - Message: ${result.message}`
+            );
         }
-
+        
         return result.data!;
     }
 }
