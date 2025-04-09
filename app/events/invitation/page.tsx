@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import "@/app/components/blackBody.css";
 import Image from "next/image";
@@ -20,9 +20,25 @@ function Body() {
   const from = searchParams.get("f");
   const categoryCode = searchParams.get("c");
 
+  const [isMount, setIsMount] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
+
+
+  useEffect(() => {
+    setIsMount(true);
+  }, []);
+
+  useEffect(() => {
+    if (window !== undefined && window.innerWidth < 500) {
+      router.replace("/error/mobile-not-supported");
+    }
+  }, []);
+
+  if (!isMount) {
+    return null;
+  }
 
   if (!to || !from) {
     return (
