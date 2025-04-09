@@ -77,7 +77,7 @@ function Body() {
 
           <label
             htmlFor="ready"
-            className="flex flex-row items-center h-[24px] gap-[6px] text-body2 text-grayscale-white"
+            className="flex flex-row items-center h-[24px] gap-[6px] text-body2 text-grayscale-white z-10"
           >
             <input
               id="ready"
