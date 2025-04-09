@@ -25,7 +25,6 @@ function Body() {
 
   const router = useRouter();
 
-
   useEffect(() => {
     setIsMount(true);
   }, []);
@@ -180,8 +179,41 @@ function Body() {
 
 function toMapper(to: string): { name: string } {
   const data: any = {
-    EfrqF4: {
-      name: "aaa",
+    a1kwAc: {
+      name: "시월필름",
+    },
+    a2kwAc: {
+      name: "도르미",
+    },
+    a3kwAc: {
+      name: "윤렌지",
+    },
+    a4kwAc: {
+      name: "조서연",
+    },
+    a5kwAc: {
+      name: "녹두",
+    },
+    a6kwAc: {
+      name: "하나부터두열까지",
+    },
+    a7kwAc: {
+      name: "쇼갱",
+    },
+    a8kwAc: {
+      name: "손수아",
+    },
+    a9kwAc: {
+      name: "장클로에피",
+    },
+    a10wAc: {
+      name: "에비",
+    },
+    a11wAc: {
+      name: "캐딜로그",
+    },
+    a12wAc: {
+      name: "은지니",
     },
   };
 
