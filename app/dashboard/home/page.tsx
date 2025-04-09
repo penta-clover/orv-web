@@ -3,12 +3,10 @@
 import "@/app/components/blackBody.css";
 import VideoList from "./videoList";
 import TopicList from "@/app/components/topicList";
-import { usePopup } from "../popup";
 import ReservationNotification from "./reservationNotification";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useMemberRepository } from "@/providers/MemberRepositoryContext";
-import { useTopicRepository } from "@/providers/TopicRepositoryContext";
 import { useAuthRepository } from "@/providers/AuthRepositoryContext";
 
 export default function Page() {
