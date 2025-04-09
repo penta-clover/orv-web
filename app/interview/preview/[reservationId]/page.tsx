@@ -12,7 +12,7 @@ import Image from "next/image";
 
 import "@/app/components/blackBody.css";
 import { useTemplateService } from "@/providers/TemplateServiceContext";
-import { evaluteTemplate } from "../../../components/scene/evalutateTemplate";
+import { evaluateTemplate } from "../../../components/scene/evaluateTemplate";
 import { SceneInfo } from "@/domain/model/SceneInfo";
 
 export default function Page({
@@ -116,12 +116,12 @@ function Body({ params }: { params: Promise<{ reservationId: string }> }) {
                       <HiddenQuestionComponent order={index + 1} />
                     ) : (
                       <QuestionComponent
-                        question={evaluteTemplate(
+                        question={evaluateTemplate(
                           content.question,
                           templateData!
                         )}
                         order={index + 1}
-                        hint={evaluteTemplate(content.hint, templateData!)}
+                        hint={evaluateTemplate(content.hint, templateData!)}
                       />
                     )}
                     <div className="h-[20px]" />

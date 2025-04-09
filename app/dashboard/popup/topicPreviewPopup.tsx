@@ -8,7 +8,7 @@ import ExampleQuestions from "../topic/exampleQuestions";
 import Image from "next/image";
 import { usePopup } from "../popup";
 import { useTemplateService } from "@/providers/TemplateServiceContext";
-import { evaluateTemplate } from "@/app/components/scene/evalutateTemplate";
+import { evaluateTemplate } from "@/app/components/scene/evaluateTemplate";
 
 export default function TopicPreviewPopup(props: {
   topic: Topic;
