@@ -18,13 +18,11 @@ export default function Page() {
   const authRepository = useAuthRepository();
 
   useEffect(() => {
-    authRepository.isAuthTokenValid().then((isValid) => {
-      if (!isValid) {
-        router.replace("/");
-      }
-    })
+    const isTokenValid = authRepository.isTokenValid();
+    if (!isTokenValid) {
+      router.replace("/");
+    }
   }, []);
-
 
   useEffect(() => {
     if (window !== undefined && window.innerWidth < 500) {
