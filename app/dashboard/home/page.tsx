@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useMemberRepository } from "@/providers/MemberRepositoryContext";
 import { useTopicRepository } from "@/providers/TopicRepositoryContext";
+import { useAuthRepository } from "@/providers/AuthRepositoryContext";
 
 export default function Page() {
   const router = useRouter();
@@ -16,6 +17,16 @@ export default function Page() {
   const [hiddenCategoryCodes, setHiddenCategoryCodes] = useState<string[]>([]);
 
   const memberRepository = useMemberRepository();
+  const authRepository = useAuthRepository();
+
+  useEffect(() => {
+    authRepository.isAuthTokenValid().then((isValid) => {
+      if (!isValid) {
+        router.replace("/");
+      }
+    })
+  }, []);
+
 
   useEffect(() => {
     if (window !== undefined && window.innerWidth < 500) {

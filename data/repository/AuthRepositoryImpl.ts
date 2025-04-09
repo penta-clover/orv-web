@@ -3,6 +3,7 @@ import { Api } from "../Api";
 import { Storage } from "../Storage";
 import { NicknameValidation } from "@/domain/model/NicknameValidation";
 import { JoinInfo } from "@/domain/model/JoinInfo";
+import { jwtDecode } from 'jwt-decode';
 
 // TODO: 예외 처리
 export class AuthRepositoryImpl implements AuthRepository {
@@ -55,5 +56,22 @@ export class AuthRepositoryImpl implements AuthRepository {
   
   setAuthToken(authToken: string) {
     this.storage.setAuthToken(authToken);
+  }
+
+  isTokenValid(): boolean {
+    const token: string | null = this.storage.getAuthToken();
+
+    if (token === null) {
+      return false;
+    }
+
+    const decodedToken = jwtDecode(token);
+
+    if (decodedToken === undefined || decodedToken.exp === undefined) {
+      return false;
+    }
+
+    const currentTime = Date.now() / 1000;
+    return decodedToken.exp > currentTime;
   }
 }

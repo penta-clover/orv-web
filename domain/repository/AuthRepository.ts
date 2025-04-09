@@ -6,4 +6,5 @@ export interface AuthRepository {
   join(info: JoinInfo): Promise<boolean>;
   getAuthToken(): string | null;
   setAuthToken(authToken: string): void;
+  isAuthTokenValid(): Promise<boolean>;
 }
