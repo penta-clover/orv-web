@@ -39,6 +39,36 @@ export class ReservationRepositoryImpl implements ReservationRepository {
     return result.data;
   }
 
+  async reserveInstantInterview(
+    storyboardId: string
+  ): Promise<Reservation> {
+    const result = await this.api.post<Reservation>(
+      "/reservation/interview?startNow=true",
+      {
+        storyboardId: storyboardId,
+      },
+      {
+        Authorization: `Bearer ${this.storage.getAuthToken()}`,
+      }
+    );
+
+    if (result.statusCode !== "201" || result.data === null) {
+      throw new Error(
+        `[API Error] ReservationRepositoryImpl.reserveInstantInterview\n` +
+        `Headers:\n` +
+        `  - Authorization: ${this.storage.getAuthToken()}\n` +
+        `Parameters:\n` +
+        `  - storyboardId: ${storyboardId}\n` +
+        `Response:\n` +
+        `  - Status: ${result.statusCode}\n` +
+        `  - Message: ${result.message}`
+      );
+    }
+
+    return result.data;
+  }
+
+
   async getReservation(reservationId: string): Promise<Reservation | null> {
     const result = await this.api.get<Reservation>(
       `/reservation/interview/${reservationId}`,

@@ -66,8 +66,9 @@ export default function TopicList() {
               content: { topicItem: popupState.content.topicItem },
             });
           }}
-          onClickStart={() => {
+          onClickStart={async () => {
             hidePopup();
+            reservationRepository.reserveInstantInterview(popupState.content.topicItem.preview.storyboardId);
             router.push(
               `/interview/guide?storyboardId=${popupState.content.topicItem.preview.storyboardId}`
             );
