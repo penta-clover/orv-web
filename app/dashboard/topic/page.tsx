@@ -89,6 +89,8 @@ function Body() {
       <div className="h-[276px] w-full">
         <TopicList title="기본 주제" categoryCode="DEFAULT" />
       </div>
+
+      <div className="h-[104px]" />
     </div>
   );
 }
