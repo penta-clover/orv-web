@@ -115,6 +115,7 @@ function ImageCard(props: { src: string; alt: string; text: string }) {
   return (
     <div className="w-[100%] w700:w-[350px] max-w-[461px] h-[490px] h800:h-[440px] h750:h-[390px] p-[18px] bg-grayscale-800 rounded-[12px] flex flex-col items-center">
       <Image
+        unoptimized
         src={src}
         alt={alt}
         width={0}
