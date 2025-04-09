@@ -2,16 +2,16 @@ import { Topic } from "@/domain/model/Topic";
 import { useStoryboardRepository } from "@/providers/StoryboardRepositoryContext";
 import { useTopicRepository } from "@/providers/TopicRepositoryContext";
 import { useEffect, useState } from "react";
-import { usePopup } from "../popup";
-import TopicPreviewPopup from "../popup/topicPreviewPopup";
+import { usePopup } from "../dashboard/popup";
+import TopicPreviewPopup from "../dashboard/popup/topicPreviewPopup";
 import { useRouter } from "next/navigation";
 import { StoryboardPreview } from "@/domain/model/StoryboardPreview";
-import ReservationPopup from "../popup/reservationPopup";
-import CompletePopup from "../popup/completePopup";
+import ReservationPopup from "../dashboard/popup/reservationPopup";
+import CompletePopup from "../dashboard/popup/completePopup";
 import { useReservationRepository } from "@/providers/ReservationRepositoryContext";
 import DragScroll from "react-indiana-drag-scroll";
 
-export default function TopicList() {
+export default function TopicList(props: { title: string, categoryCode: string }) {
   const topicRepository = useTopicRepository();
   const storyboardRepository = useStoryboardRepository();
   const reservationRepository = useReservationRepository();
@@ -26,15 +26,7 @@ export default function TopicList() {
   } | null>(null);
 
   useEffect(() => {
-    topicRepository.getTopics().then((topics: Topic[]) => {
-      topics.map((topic: Topic) => {
-        return { topic: topic, questionCount: null };
-      });
-    });
-  }, []);
-
-  useEffect(() => {
-    topicRepository.getTopics().then(async (topics: Topic[]) => {
+    topicRepository.getTopicByCategoryCode(props.categoryCode).then(async (topics: Topic[]) => {
       const items = await Promise.all(
         topics.map(async (topic) => {
           const storyboard = await topicRepository.getStoryboardOfTopic(
@@ -119,7 +111,7 @@ export default function TopicList() {
     return (
       <div className="flex flex-col">
         <span className="text-head3 text-grayscale-100 ml-[40px] mb-[12px]">
-          기본 주제
+          {props.title}
         </span>
       </div>
     );
@@ -128,7 +120,7 @@ export default function TopicList() {
   return (
     <div className="flex flex-col">
       <span className="text-head3 text-grayscale-100 ml-[40px] mb-[12px]">
-        기본 주제
+        {props.title}
       </span>
       <DragScroll
         style={{ overflowX: "scroll" }}

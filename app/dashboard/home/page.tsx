@@ -2,18 +2,34 @@
 
 import "@/app/components/blackBody.css";
 import VideoList from "./videoList";
-import TopicList from "./topicList";
+import TopicList from "@/app/components/topicList";
 import { usePopup } from "../popup";
 import ReservationNotification from "./reservationNotification";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useMemberRepository } from "@/providers/MemberRepositoryContext";
+import { useTopicRepository } from "@/providers/TopicRepositoryContext";
 
 export default function Page() {
   const router = useRouter();
+  const [userName, setUserName] = useState("");
+  const [hiddenCategoryCodes, setHiddenCategoryCodes] = useState<string[]>([]);
+
+  const memberRepository = useMemberRepository();
 
   useEffect(() => {
     if (window !== undefined && window.innerWidth < 500) {
       router.replace("/error/mobile-not-supported");
+    }
+
+    memberRepository.getMyInfo().then((res) => {
+      setUserName(res.nickname);
+    });
+
+    // localstorage에서 hidden-category-codes가져오기
+    const hiddenCategoryCodes = localStorage.getItem("hidden-category-codes");
+    if (hiddenCategoryCodes) {
+      setHiddenCategoryCodes(JSON.parse(hiddenCategoryCodes));
     }
   }, []);
 
@@ -25,10 +41,22 @@ export default function Page() {
         <VideoList />
       </div>
 
+      {userName && hiddenCategoryCodes.length > 0 && (
+        <>
+          <div className="h-[48px]" />
+          <div className="h-[280px] w-full">
+            <TopicList
+              title={`${userName}님만을 위한 특별 주제`}
+              categoryCode={hiddenCategoryCodes[0]}
+            />
+          </div>
+        </>
+      )}
+
       <div className="h-[48px]" />
 
       <div className="h-[280px] w-full">
-        <TopicList />
+        <TopicList title="주제 보기" categoryCode="DEFAULT" />
       </div>
 
       <div className="h-[104px]" />

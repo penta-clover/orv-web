@@ -68,4 +68,26 @@ export class TopicRepositoryImpl implements TopicRepository {
         
         return result.data!;
     }
+
+    async getTopicByCategoryCode(categoryCode: string): Promise<Topic[]> {
+        const requestPath = `/topic/list?category=${categoryCode}`;
+        const result = await this.api.get<Topic[]>(requestPath, {
+            'Authorization': `Bearer ${this.storage.getAuthToken()}`
+        });
+
+        if (result.statusCode != '200') {
+            throw new Error(
+                `[API Error] TopicRepositoryImpl.getTopicByCategoryCode\n` +
+                `Headers:\n` +
+                `  - Authorization: ${this.storage.getAuthToken()}\n` +
+                `Parameters:\n` +
+                `  - categoryCode: ${categoryCode}\n` +
+                `Response:\n` +
+                `  - Status: ${result.statusCode}\n` +
+                `  - Message: ${result.message}`
+            );
+        }
+
+        return result.data!;
+    }
 }

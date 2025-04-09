@@ -1,12 +1,13 @@
 "use client";
 
 import "@/app/components/blackBody.css";
-import TopicList from "./topicList";
+import TopicList from "../../components/topicList";
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { usePopup } from "../popup";
 import NewbiewGuidePopup from "../popup/newbieGuidePopup";
 import SelectGuidePopup from "../popup/selectGuidePopup";
+import { useMemberRepository } from "@/providers/MemberRepositoryContext";
 
 export default function Page() {
   return (
@@ -20,6 +21,22 @@ function Body() {
   const searchParams = useSearchParams();
   const guidePopupOption = searchParams.get("guide-popup");
   const { showPopup, hidePopup } = usePopup();
+  const [userName, setUserName] = useState("");
+  const [hiddenCategoryCodes, setHiddenCategoryCodes] = useState<string[]>([]);
+
+  const memberRepository = useMemberRepository();
+
+  useEffect(() => {
+    memberRepository.getMyInfo().then((res) => {
+      setUserName(res.nickname);
+    });
+
+    // localstorage에서 hidden-category-codes가져오기
+    const hiddenCategoryCodes = localStorage.getItem("hidden-category-codes");
+    if (hiddenCategoryCodes) {
+      setHiddenCategoryCodes(JSON.parse(hiddenCategoryCodes));
+    }
+  }, []);
 
   useEffect(() => {
     if (guidePopupOption === "first") {
@@ -56,8 +73,21 @@ function Body() {
         인터뷰 주제
       </h1>
 
+      {userName && hiddenCategoryCodes.length > 0 && (
+        <>
+          <div className="h-[280px] w-full">
+            <TopicList
+              title={`${userName}님만을 위한 특별 주제`}
+              categoryCode={hiddenCategoryCodes[0]}
+            />
+          </div>
+
+          <div className="h-[48px]" />
+        </>
+      )}
+
       <div className="h-[276px] w-full">
-        <TopicList />
+        <TopicList title="기본 주제" categoryCode="DEFAULT" />
       </div>
     </div>
   );
