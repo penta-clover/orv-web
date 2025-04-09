@@ -48,7 +48,7 @@ export default function TopicPreviewPopup(props: {
         인터뷰 주제 : {props.topic.name}
       </span>
       <span className="text-body2 text-grayscale-100">
-        <NL2BR>{evaluateTemplate(props.topic.description.replace("\\n", "\n"), templateData)}</NL2BR>
+        <NL2BR>{props.topic.description.replace("\\n", "\n")}</NL2BR>
       </span>
 
       <div className="h-[24px]" />
@@ -59,7 +59,7 @@ export default function TopicPreviewPopup(props: {
 
       <div className="h-[8px]" />
 
-      <ExampleQuestions questions={questionExamples} />
+      <ExampleQuestions questions={questionExamples.map((question) => evaluateTemplate(question, templateData))} />
 
       <div className="h-[16px]" />
 
