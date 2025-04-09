@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import ExampleQuestions from "../topic/exampleQuestions";
 import Image from "next/image";
 import { usePopup } from "../popup";
+import { useTemplateService } from "@/providers/TemplateServiceContext";
+import { evaluateTemplate } from "@/app/components/scene/evalutateTemplate";
 
 export default function TopicPreviewPopup(props: {
   topic: Topic;
@@ -16,9 +18,18 @@ export default function TopicPreviewPopup(props: {
 }) {
   const storyboardRepository = useStoryboardRepository();
   const topicRepository = useTopicRepository();
+  const templateService = useTemplateService();
+  
   const [questionCount, setQuestionCount] = useState<number>(0);
   const [questionExamples, setQuestionExamples] = useState<string[]>([]);
   const { showPopup, hidePopup } = usePopup();
+  const [templateData, setTemplateData] = useState<{ key: string; value: string }[]>([]);
+
+  useEffect(() => {
+    templateService.getTemplateData().then((templateData) => {
+      setTemplateData(templateData);
+    });
+  }, []);
 
   useEffect(() => {
     topicRepository
@@ -37,7 +48,7 @@ export default function TopicPreviewPopup(props: {
         인터뷰 주제 : {props.topic.name}
       </span>
       <span className="text-body2 text-grayscale-100">
-        <NL2BR>{props.topic.description.replace("\\n", "\n")}</NL2BR>
+        <NL2BR>{evaluateTemplate(props.topic.description.replace("\\n", "\n"), templateData)}</NL2BR>
       </span>
 
       <div className="h-[24px]" />

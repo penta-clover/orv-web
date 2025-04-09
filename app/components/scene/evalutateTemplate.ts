@@ -6,7 +6,7 @@
  * @param replacements - 변수명과 치환할 값을 가진 객체 예: { name: "현준", favoriteFood: "김치찌개" }
  * @returns 치환된 문자열
  */
-export function evaluteTemplate(
+export function evaluateTemplate(
   input: string,
   replacements: { key: string; value: string }[]
 ): string {

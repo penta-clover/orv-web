@@ -16,13 +16,13 @@ import {
   BlankCanvas,
   FilteredCanvas,
 } from "../(components)/camera/filteredCanvas";
-import Scene from "../(components)/scene/scene";
-import SceneFactory from "../(components)/scene/sceneFactory";
-import { isSubtitled } from "../(components)/scene/renderingOptions/subtitled";
-import { isPreviewOverlay } from "../(components)/scene/renderingOptions/previewOverlay";
-import { isKnowNextScene } from "../(components)/scene/renderingOptions/knowNextScene";
-import { isEnding } from "../(components)/scene/renderingOptions/ending";
-import InterviewContext from "../(components)/scene/interviewContext";
+import Scene from "../../components/scene/scene";
+import SceneFactory from "../../components/scene/sceneFactory";
+import { isSubtitled } from "../../components/scene/renderingOptions/subtitled";
+import { isPreviewOverlay } from "../../components/scene/renderingOptions/previewOverlay";
+import { isKnowNextScene } from "../../components/scene/renderingOptions/knowNextScene";
+import { isEnding } from "../../components/scene/renderingOptions/ending";
+import InterviewContext from "../../components/scene/interviewContext";
 import { getPermissionGuideText } from "../(components)/getPermissionGuideText";
 import usePermissionReload from "../(components)/usePermissionReload";
 import { error } from "console";

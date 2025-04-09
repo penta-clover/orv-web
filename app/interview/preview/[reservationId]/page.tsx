@@ -5,14 +5,14 @@ import { StoryboardPreview } from "@/domain/model/StoryboardPreview";
 import { useReservationRepository } from "@/providers/ReservationRepositoryContext";
 import { useStoryboardRepository } from "@/providers/StoryboardRepositoryContext";
 import { Suspense, useEffect, useState } from "react";
-import Scene from "../../(components)/scene/scene";
+import Scene from "../../../components/scene/scene";
 import { StoryboardInfo } from "@/domain/model/StoryboardInfo";
 import { Topic } from "@/domain/model/Topic";
 import Image from "next/image";
 
 import "@/app/components/blackBody.css";
 import { useTemplateService } from "@/providers/TemplateServiceContext";
-import { evaluteTemplate } from "../../(components)/scene/evalutateTemplate";
+import { evaluteTemplate } from "../../../components/scene/evalutateTemplate";
 import { SceneInfo } from "@/domain/model/SceneInfo";
 
 export default function Page({

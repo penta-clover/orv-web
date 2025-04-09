@@ -5,7 +5,7 @@ import { StoryboardPreview } from "@/domain/model/StoryboardPreview";
 import { StoryboardInfo } from "@/domain/model/StoryboardInfo";
 import { SceneInfo } from "@/domain/model/SceneInfo";
 import { Topic } from "@/domain/model/Topic";
-import Scene from "@/app/interview/(components)/scene/scene";
+import Scene from "@/app/components/scene/scene";
 
 export class StoryboardRepositoryImpl implements StoryboardRepository {
   constructor(private api: Api, private storage: Storage) {}

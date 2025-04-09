@@ -2,7 +2,7 @@ import { StoryboardPreview } from "../model/StoryboardPreview";
 import { SceneInfo } from "../model/SceneInfo";
 import { StoryboardInfo } from "../model/StoryboardInfo";
 import { Topic } from "../model/Topic";
-import Scene from "@/app/interview/(components)/scene/scene";
+import Scene from "@/app/components/scene/scene";
 
 export interface StoryboardRepository {
   getStoryboardInfo(storyboardId: string): Promise<StoryboardInfo>;

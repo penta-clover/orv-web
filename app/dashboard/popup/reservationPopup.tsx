@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Spinner from "./spinner";
+import { useTemplateService } from "@/providers/TemplateServiceContext";
 
 export default function ReservationPopup(props: {
   topicId: string;
