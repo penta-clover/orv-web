@@ -49,7 +49,7 @@ export default function TopicPreviewPopup(props: {
         인터뷰 주제 : {props.topic.name}
       </span>
       <span className="text-body2 text-grayscale-100">
-        {encode(props.topic.description.replace("\\n", "\r"))}
+        {props.topic.description.replace("\\n", "\r")}
       </span>
 
       <div className="h-[24px]" />
