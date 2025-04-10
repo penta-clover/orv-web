@@ -43,7 +43,7 @@ export default function Sidebar() {
           alt="profile"
         />
 
-        <span className="text-body1">{`${
+        <span className="text-body1 break-keep">{`${
           myInfo?.nickname ?? ""
         }님의 스튜디오`}</span>
       </div>

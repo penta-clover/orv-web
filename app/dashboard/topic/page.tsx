@@ -78,7 +78,7 @@ function Body() {
           <div className="h-[280px] w-full">
             <TopicList
               title={`${userName}님만을 위한 특별 주제`}
-              categoryCode={hiddenCategoryCodes[0]}
+              categoryCode={hiddenCategoryCodes}
             />
           </div>
 
@@ -87,7 +87,7 @@ function Body() {
       )}
 
       <div className="h-[276px] w-full">
-        <TopicList title="기본 주제" categoryCode="DEFAULT" />
+        <TopicList title="기본 주제" categoryCode={["DEFAULT"]} />
       </div>
 
       <div className="h-[104px]" />

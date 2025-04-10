@@ -54,7 +54,7 @@ export default function Page() {
           <div className="h-[280px] w-full">
             <TopicList
               title={`${userName}님만을 위한 특별 주제`}
-              categoryCode={hiddenCategoryCodes[0]}
+              categoryCode={hiddenCategoryCodes}
             />
           </div>
         </>
@@ -63,7 +63,7 @@ export default function Page() {
       <div className="h-[48px]" />
 
       <div className="h-[280px] w-full">
-        <TopicList title="주제 보기" categoryCode="DEFAULT" />
+        <TopicList title="주제 보기" categoryCode={["DEFAULT"]} />
       </div>
 
       <div className="h-[104px]" />

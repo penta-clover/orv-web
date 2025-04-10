@@ -11,7 +11,10 @@ import CompletePopup from "../dashboard/popup/completePopup";
 import { useReservationRepository } from "@/providers/ReservationRepositoryContext";
 import DragScroll from "react-indiana-drag-scroll";
 
-export default function TopicList(props: { title: string, categoryCode: string }) {
+export default function TopicList(props: {
+  title: string;
+  categoryCode: string[];
+}) {
   const topicRepository = useTopicRepository();
   const storyboardRepository = useStoryboardRepository();
   const reservationRepository = useReservationRepository();
@@ -26,7 +29,16 @@ export default function TopicList(props: { title: string, categoryCode: string }
   } | null>(null);
 
   useEffect(() => {
-    topicRepository.getTopicByCategoryCode(props.categoryCode).then(async (topics: Topic[]) => {
+    async function fetchTopics() {
+      const topics: Topic[] = (await Promise.all(
+        props.categoryCode.map(async (categoryCode) => {
+          const topics: Topic[] = await topicRepository.getTopicByCategoryCode(
+            categoryCode
+          );
+          return topics;
+        })
+      )).flat();
+
       const items = await Promise.all(
         topics.map(async (topic) => {
           const storyboard = await topicRepository.getStoryboardOfTopic(
@@ -39,7 +51,9 @@ export default function TopicList(props: { title: string, categoryCode: string }
         })
       );
       setTopicItems(items);
-    });
+    }
+
+    fetchTopics();
   }, [topicRepository, storyboardRepository]);
 
   useEffect(() => {
@@ -60,7 +74,9 @@ export default function TopicList(props: { title: string, categoryCode: string }
           }}
           onClickStart={() => {
             hidePopup();
-            reservationRepository.reserveInstantInterview(popupState.content.topicItem.preview.storyboardId);
+            reservationRepository.reserveInstantInterview(
+              popupState.content.topicItem.preview.storyboardId
+            );
             router.push(
               `/interview/guide?storyboardId=${popupState.content.topicItem.preview.storyboardId}`
             );

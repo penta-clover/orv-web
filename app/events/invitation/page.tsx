@@ -39,7 +39,7 @@ function Body() {
     return null;
   }
 
-  if (!to || !from) {
+  if (!to || !from || !categoryCode) {
     return (
       <div className="flex flex-col justify-center items-center w-[calc(100dvw)] h-[calc(100dvh)] bg-grayscale-white">
         <Image
@@ -57,8 +57,9 @@ function Body() {
 
   const toData = toMapper(to);
   const fromData = fromMapper(from);
+  const topicData = topicMapper(categoryCode);
 
-  if (!toData || !fromData) {
+  if (!toData || !fromData || !topicData) {
     return (
       <div className="flex flex-col justify-center items-center w-[calc(100dvw)] h-[calc(100dvh)] bg-grayscale-white">
         <Image
@@ -119,10 +120,8 @@ function Body() {
           <p>
             이 링크로 가입하시면 무료로 2주간 서비스를 사용할 수 있어요. 또한{" "}
             {fromData.name}님이 {toData.name}님에게 추천하는 특별한 주제로
-            인터뷰에 참여하실 수 있어요. {fromData.name}님은 같은 주제의 질문 중
-            “유튜브를 운영하며 가장 힘들었던 점은 무엇인가요?”라는 질문에
-            “열심히 만든 영상이었는데 사람들이 반응이 나타나지 않을 때”라고
-            답변했어요. {toData.name}님은 어떤 답변이 떠오르시나요?
+            인터뷰에 참여하실 수 있어요. {fromData.name}님은 {topicData.text}
+            했어요. {toData.name}님은 어떤 답변이 떠오르시나요?
           </p>
           <br />
           <p>
@@ -236,4 +235,14 @@ function fromMapper(from: string): { name: string; elapsedDate: number } {
   };
 
   return data[from];
+}
+
+function topicMapper(topic: string): { text: string } {
+  const data: any = {
+    HIDDEN_3fEMQ1: {
+      text: "같은 주제의 질문 중 “유튜브를 운영하며 가장 힘들었던 점은 무엇인가요?”라는 질문에 “열심히 만든 영상이었는데 사람들이 반응이 나타나지 않을 때”라고 답변",
+    },
+  };
+
+  return data[topic];
 }
