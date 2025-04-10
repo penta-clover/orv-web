@@ -9,6 +9,7 @@ import Image from "next/image";
 import { usePopup } from "../popup";
 import { useTemplateService } from "@/providers/TemplateServiceContext";
 import { evaluateTemplate } from "@/app/components/scene/evaluateTemplate";
+import { encode } from "html-entities";
 
 export default function TopicPreviewPopup(props: {
   topic: Topic;
@@ -48,7 +49,7 @@ export default function TopicPreviewPopup(props: {
         인터뷰 주제 : {props.topic.name}
       </span>
       <span className="text-body2 text-grayscale-100">
-        <NL2BR>{props.topic.description.replace("\\n", "\n")}</NL2BR>
+        {encode(props.topic.description.replace("\\n", "\r"))}
       </span>
 
       <div className="h-[24px]" />

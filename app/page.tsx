@@ -15,9 +15,9 @@ export default function Page() {
 function Body() {
   const authRepository = useAuthRepository();
   useEffect(() => {
-    const authToken = authRepository.getAuthToken();
+    const isTokenValid = authRepository.isTokenValid();
 
-    if (authToken) {
+    if (isTokenValid) {
       redirect(`/dashboard/home`);
     } else {
       redirect(`/auth/desktop`);
