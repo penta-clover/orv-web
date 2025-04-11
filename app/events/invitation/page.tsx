@@ -213,6 +213,9 @@ function toMapper(to: string): { name: string } {
     a12wAc: {
       name: "은지니",
     },
+    a13wAc: {
+      name: "학회원",
+    }
   };
 
   return data[to];
@@ -241,6 +244,9 @@ function topicMapper(topic: string): { text: string } {
   const data: any = {
     HIDDEN_3fEMQ1: {
       text: "같은 주제의 질문 중 “유튜브를 운영하며 가장 힘들었던 점은 무엇인가요?”라는 질문에 “열심히 만든 영상이었는데 사람들이 반응이 나타나지 않을 때”라고 답변",
+    },
+    HIDDEN_3fEMQ2: {
+      text: "같은 주제의 질문 중 “지금까지의 HySpark 활동 중 가장 기억에 남는 활동은 무엇인가요?”라는 질문에 “10만원톤이 가장 기억에 남아요”라고 답변",
     },
   };
 
