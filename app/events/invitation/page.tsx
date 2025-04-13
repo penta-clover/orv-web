@@ -118,7 +118,7 @@ function Body() {
           </p>
           <br />
           <p>
-            이 링크로 가입하시면 무료로 2주간 서비스를 사용할 수 있어요. 또한{" "}
+            이 링크로 가입하시면{" "}
             {fromData.name}님이 {toData.name}님에게 추천하는 특별한 주제로
             인터뷰에 참여하실 수 있어요. {fromData.name}님은 {topicData.text}
             했어요. {toData.name}님은 어떤 답변이 떠오르시나요?
