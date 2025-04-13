@@ -1,10 +1,9 @@
-// app/layout.tsx
 import "./globals.css";
 import Providers from "./providers";
 import { Metadata } from "next";
 import ClientSideComponents from "./clientSideComponent"; // 클라이언트 전용 작업을 모아둔 컴포넌트
 
-// 서버 컴포넌트에서는 "use client" 없이 metadata export 가능
+
 export const metadata: Metadata = {
   title: "나를 마주하는 시간 오브",
   description: "나를 마주할 기회를 선물하는 곳",
