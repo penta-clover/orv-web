@@ -45,7 +45,7 @@ export default function Page() {
 
   return (
     <div className="flex flex-col h-[calc(100dvh)] justify-center items-center">
-      <div className="h-[8dvh]" />
+      <div className="h-[8dvh] shrink" />
 
       <Image
         src={"/icons/logo-main-lilac50.svg"}
@@ -54,7 +54,7 @@ export default function Page() {
         height={61}
       />
 
-      <div className="h-[37px]" />
+      <div className="h-[37px] shrink" />
 
       <div className="text-head2 text-grayscale-white">
         당신만의 인터뷰 지금 시작하세요
@@ -91,7 +91,7 @@ export default function Page() {
         나만의 인터뷰 영상을 남겨보기
       </div>
 
-      <div className="h-[94px]" />
+      <div className="h-[94px] shrink" />
 
       <div className="flex flex-col space-y-[12px] items-center max-w-[532px] w-full">
         <div className="flex flex-row w-full justify-center px-[24px]">
@@ -122,6 +122,7 @@ export default function Page() {
             <span>Google 계정으로 계속하기</span>
           </Link>
         </div>
+        <div className="h-[16px]" />
       </div>
     </div>
   );
