@@ -27,12 +27,6 @@ function Body() {
   }, []);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && window.innerWidth < 500) {
-      router.replace("/error/mobile-not-supported");
-    }
-  }, [router]);
-
-  useEffect(() => {
     const storedCategoryCodes = localStorage.getItem("hidden-category-codes");
     const parsedCategoryCodes = storedCategoryCodes ? JSON.parse(storedCategoryCodes) : [];
     if (!parsedCategoryCodes.includes(categoryCode)) {
