@@ -10,10 +10,12 @@ import ReservationPopup from "../dashboard/popup/reservationPopup";
 import CompletePopup from "../dashboard/popup/completePopup";
 import { useReservationRepository } from "@/providers/ReservationRepositoryContext";
 import DragScroll from "react-indiana-drag-scroll";
+import { cn } from "@/lib/utils";
 
 export default function TopicList(props: {
   title: string;
   categoryCode: string[];
+  itemClassName?: string;
 }) {
   const topicRepository = useTopicRepository();
   const storyboardRepository = useStoryboardRepository();
@@ -145,7 +147,7 @@ export default function TopicList(props: {
         {topicItems.map((topicItem) => (
           <div
             key={topicItem.topic.id}
-            className="flex flex-col flex-shrink-0 justify-start items-start w-[200px] h-[240px] p-[12px] rounded-[8.32px] bg-grayscale-800 transition-all active:scale-95"
+            className={cn("flex flex-col flex-shrink-0 justify-start items-start w-[200px] h-[240px] p-[12px] rounded-[8.32px] bg-grayscale-800 transition-all active:scale-95", props.itemClassName)}
             onClick={() => {
               setPopupState({ name: "preview", content: { topicItem } });
             }}

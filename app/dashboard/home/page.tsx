@@ -55,6 +55,7 @@ export default function Page() {
             <TopicList
               title={`${userName}님만을 위한 특별 주제`}
               categoryCode={hiddenCategoryCodes}
+              itemClassName="border-[1.5px] border-main-lilac50"
             />
           </div>
         </>
