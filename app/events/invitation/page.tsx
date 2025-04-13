@@ -13,7 +13,7 @@ export async function generateMetadata(
   return {
     openGraph: {
       title: "오브를 즐겨쓰는 친구가 초대했어요.",
-      description: "친구가 추천하는 주제로 참여가능해요.",
+      description: "노트북으로 입장해주세요.",
       images: [
         "http://d3bdjeyz3ry3pi.cloudfront.net/static/images/invitation-og.png",
       ],
