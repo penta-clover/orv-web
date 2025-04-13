@@ -198,7 +198,7 @@ function topicMapper(topic: string): {
         "http://d3bdjeyz3ry3pi.cloudfront.net/static/images/invitation-og.png",
     },
     HIDDEN_3fEMQ2: {
-      text: "같은 주제의 질문 중 “지금까지의 HySpark 활동 중 가장 기억에 남는 활동은 무엇인가요?”라는 질문에 “10만원톤이 가장 기억에 남아요”라고 답변",
+      text: "같은 주제의 질문 중 “왜 HySpark에 들어 오려고 했나요?”라는 질문에 “언젠가 죽는 날이 다가왔을 때 그때 해볼 걸이라고 후회할 것 같아서 모든 것을 해보겠다는 마음으로 지원했습니다.”라고 답변",
       ogTitle: "오브를 즐겨쓰는 친구가 초대했어요.",
       ogDescription: "친구가 추천하는 주제로 참여가능해요.",
       ogImage:
