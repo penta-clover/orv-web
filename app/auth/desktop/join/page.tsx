@@ -49,7 +49,7 @@ export default function Page() {
         회원 가입을 위한 정보를 입력해주세요.
       </div>
 
-      <div className="h-[56px]" />
+      <div className="h-[56px] shrink" />
 
       <div className="w-full max-w-[532px]">
         <InputForm
@@ -60,7 +60,7 @@ export default function Page() {
         />
       </div>
 
-      <div className="h-[112px]" />
+      <div className="h-[112px] shrink" />
 
       <span className="text-head3 text-grayscale-300 text-center">
         로그인 시 <span className="font-bold">이용약관</span>과{" "}
@@ -97,6 +97,8 @@ export default function Page() {
       >
         회원가입 후 오브 시작하기
       </button>
+
+      <div className="h-[16px]" />
     </div>
   );
 }
