@@ -158,6 +158,24 @@ export default function TopicList(props: {
             <span className="text-body4 text-grayscale-500">
               질문 {topicItem.preview.questionCount}개
             </span>
+
+            <div className="grow"/>
+
+            <div className="flex flex-row items-center justify-start gap-[3px]">
+              {
+                topicItem.topic.hashtags.map((hashtag, index) => {
+                  return <span
+                    key={index}
+                    className="text-caption1 text-grayscale-500 mr-[4px] h-[22px] px-[9px] rounded-[11px] bg-grayscale-600"
+                    style={{
+                      color: `${hashtag.color}`,
+                    }}
+                  >
+                    {`#${hashtag.name}`}
+                  </span>
+                })
+              }
+            </div>
           </div>
         ))}
       </DragScroll>
