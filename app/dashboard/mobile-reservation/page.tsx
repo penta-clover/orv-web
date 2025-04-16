@@ -136,7 +136,7 @@ function Body() {
 
 function CTA(props: { text: string; onClick: () => void; className?: string }) {
   return (
-    <div className="w-full flex justify-center">
+    <div className="w-full flex justify-center text-grayscale-800">
       <button
         style={{ boxShadow: "0px 0px 12px rgba(197, 209, 255, 0.6)" }}
         className={cn(
