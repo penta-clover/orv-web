@@ -25,9 +25,10 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
-    if (window !== undefined && window.innerWidth < 500) {
-      router.replace("/error/mobile-not-supported");
-    }
+    // 모바일 미지원 해제
+    // if (window !== undefined && window.innerWidth < 500) {
+    //   router.replace("/error/mobile-not-supported");
+    // }
 
     memberRepository.getMyInfo().then((res) => {
       setUserName(res.nickname);

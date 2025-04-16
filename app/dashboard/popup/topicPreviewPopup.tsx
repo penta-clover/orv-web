@@ -44,9 +44,9 @@ export default function TopicPreviewPopup(props: {
   }, []);
 
   return (
-    <div className="relative flex flex-col w-[548px] h-[400px] bg-grayscale-800 rounded-[14px] p-[24px]">
+    <div className="relative flex flex-col w-[548px] max-w-[calc(97dvw)] xs:h-[400px] bg-grayscale-800 rounded-[14px] p-[18px] xs:p-[24px]">
       <span className="text-head1 text-main-lilac50">
-        인터뷰 주제 : {props.topic.name}
+        <span className="hidden xs:inline">인터뷰 주제 : </span>{props.topic.name}
       </span>
       <span className="text-body2 text-grayscale-100">
         {props.topic.description.replace("\\n", "\r")}
@@ -80,7 +80,7 @@ export default function TopicPreviewPopup(props: {
           인터뷰 예약하기
         </div>
         <div
-          className="flex flex-row justify-center items-center w-[113px] h-[44px] bg-main-lilac50 text-grayscale-800 text-head4 rounded-[10px] transition-all active:scale-95"
+          className="flex flex-row justify-center items-center w-[113px] h-[44px] bg-main-lilac50 text-grayscale-800 text-head4 rounded-[10px] transition-all active:scale-95  hidden xs:flex"
           onClick={props.onClickStart}
         >
           지금 시작하기

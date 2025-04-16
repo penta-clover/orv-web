@@ -26,6 +26,8 @@ export default {
         w650: { raw: "(max-width: 650px)" },
         w600: { raw: "(max-width: 600px)" },
         w500: { raw: "(max-width: 500px)" },
+
+        xs: { raw: "(min-width: 30rem)" },
       },
       animation: {
         "pulse-fast": "pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite",

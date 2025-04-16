@@ -1,6 +1,7 @@
 "use client";
 
 import "@/app/components/blackBody.css";
+import useAuthRedirect from "@/app/components/hooks/useAuthRedirect";
 import { useAuthRepository } from "@/providers/AuthRepositoryContext";
 import { useTermRepository } from "@/providers/TermRepositoryContext";
 import Image from "next/image";
@@ -16,6 +17,8 @@ export default function Page() {
 
   const authRepository = useAuthRepository();
   const termRepository = useTermRepository();
+  
+    const handleRedirect = useAuthRedirect({authRepository: authRepository});
 
   const router = useRouter();
 
@@ -92,7 +95,7 @@ export default function Page() {
             termRepository.updateTermAgreement("enhance250301", true),
           ]);
 
-          router.push("/");
+          handleRedirect();
         }}
       >
         회원가입 후 오브 시작하기

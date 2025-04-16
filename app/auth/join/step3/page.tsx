@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import JoinStep3Presentation, { POLICIES } from "./JoinStep3Presentation"; 
 import { useAuthRepository } from "@/providers/AuthRepositoryContext";
 import { useTermRepository } from "@/providers/TermRepositoryContext";
+import useAuthRedirect from "@/app/components/hooks/useAuthRedirect";
 
 function Body() {
 	const router = useRouter();
@@ -14,6 +15,7 @@ function Body() {
   const [checked, setChecked] = useState<string[]>([]);
   
   const essentialPolicies = ["age", "term", "privacy"];
+  const handleRedirect = useAuthRedirect({authRepository: authRepository});
   
   const isChecked = (name: string) => checked.includes(name);
   const onCheckAllChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,7 +53,7 @@ function Body() {
     ]);
 
     alert("회원 가입이 완료되었습니다.");
-    router.push("/");
+    handleRedirect();
   };
   
   return <JoinStep3Presentation

@@ -9,8 +9,9 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import ChannelTalkButton from "../components/channelTalkButtonV2";
 import { useStorage } from "@/providers/StorageContext";
+import { cn } from "@/lib/utils";
 
-export default function Sidebar() {
+export default function Sidebar({ className }: { className?: string }) {
   const memberRepository: MemberRepository = useMemberRepository();
   const storage = useStorage();
   const [myInfo, setMyInfo] = useState<MyInfo | null>(null);
@@ -26,7 +27,7 @@ export default function Sidebar() {
   }, []);
 
   return (
-    <div className="flex flex-col h-[100dvh] w-[240px] bg-grayscale-900 text-grayscale-white">
+    <div className={cn("flex flex-col h-[100dvh] w-[240px] bg-grayscale-900 text-grayscale-white", className)}>
       <div className="h-[24px]" />
 
       <div className="h-[64px] pl-[24px] flex items-center">
