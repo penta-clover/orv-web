@@ -4,6 +4,7 @@ import Popup from "./popup";
 import MobileNotSupported from "./home/mobileNotSupported";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 export default function Layout({
   children,
@@ -32,6 +33,7 @@ export default function Layout({
 }
 
 function ActionBar({ className }: { className?: string }) {
+  const router = useRouter();
   return (
     <div
       className={cn(
@@ -39,7 +41,7 @@ function ActionBar({ className }: { className?: string }) {
         className
       )}
     >
-      <div className="h-[56px] w-[74px] flex items-center justify-center">
+      <div className="h-[56px] w-[74px] flex items-center justify-center" onClick={() => router.push("/dashboard/home")}>
         <Image
           unoptimized
           src="/icons/logo.svg"
