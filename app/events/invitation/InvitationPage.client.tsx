@@ -6,9 +6,11 @@ import Image from "next/image";
 import "@/app/components/blackBody.css";
 
 export default function InvitationPage() {
-  return <Suspense>
-    <Body />
-  </Suspense>
+  return (
+    <Suspense>
+      <Body />
+    </Suspense>
+  );
 }
 
 function Body() {
@@ -28,10 +30,15 @@ function Body() {
 
   useEffect(() => {
     const storedCategoryCodes = localStorage.getItem("hidden-category-codes");
-    const parsedCategoryCodes = storedCategoryCodes ? JSON.parse(storedCategoryCodes) : [];
+    const parsedCategoryCodes = storedCategoryCodes
+      ? JSON.parse(storedCategoryCodes)
+      : [];
     if (!parsedCategoryCodes.includes(categoryCode)) {
       parsedCategoryCodes.push(categoryCode);
-      localStorage.setItem("hidden-category-codes", JSON.stringify(parsedCategoryCodes));
+      localStorage.setItem(
+        "hidden-category-codes",
+        JSON.stringify(parsedCategoryCodes)
+      );
     }
   }, [categoryCode]);
 
@@ -98,17 +105,21 @@ function Body() {
 
         <div className="text-body2 text-grayscale-black px-[19px] w-full">
           <p>
-            오브는 주어지는 질문에 답변하고 이 모습을 기록하는 온라인 셀프 인터뷰 서비스입니다. 오브의 사용자분들은
-            쉽게 ‘인생네컷의 온라인 영상 버전’이라고 설명하고는 해요.
+            오브는 주어지는 질문에 답변하고 이 모습을 기록하는 온라인 셀프
+            인터뷰 서비스입니다. 오브의 사용자분들은 쉽게 ‘인생네컷의 온라인
+            영상 버전’이라고 설명하고는 해요.
           </p>
           <br />
           <p>
-            이 링크로 가입하시면 {fromData.name}님이 {toData.name}님에게 추천하는 특별한 주제로 인터뷰에 참여하실 수 있어요. {fromData.name}님은{" "}
-            {topicData.text} 했어요. {toData.name}님은 어떤 답변이 떠오르시나요?
+            이 링크로 가입하시면 {fromData.name}님이 {toData.name}님에게
+            추천하는 특별한 주제로 인터뷰에 참여하실 수 있어요. {fromData.name}
+            님은 {topicData.text} 했어요. {toData.name}님은 어떤 답변이
+            떠오르시나요?
           </p>
           <br />
           <p>
-            오브에서 {toData.name}님만의 이야기를 들려주세요. 이용권은 가입일로부터 2주간 유효합니다.
+            오브에서 {toData.name}님만의 이야기를 들려주세요. 이용권은
+            가입일로부터 2주간 유효합니다.
           </p>
         </div>
 
@@ -170,6 +181,7 @@ function toMapper(to: string): { name: string } {
     a11wAc: { name: "캐딜로그" },
     a12wAc: { name: "은지니" },
     a13wAc: { name: "학회원" },
+    a14wAc: { name: "최예진" },
   };
   return data[to];
 }
@@ -199,6 +211,13 @@ function topicMapper(topic: string): {
     },
     HIDDEN_3fEMQ2: {
       text: "같은 주제의 질문 중 “왜 HySpark에 들어 오려고 했나요?”라는 질문에 “언젠가 죽는 날이 다가왔을 때 그때 해볼 걸이라고 후회할 것 같아서 모든 것을 해보겠다는 마음으로 지원했습니다.”라고 답변",
+      ogTitle: "오브를 즐겨쓰는 친구가 초대했어요.",
+      ogDescription: "노트북으로 입장해주세요.",
+      ogImage:
+        "http://d3bdjeyz3ry3pi.cloudfront.net/static/images/invitation-og.png",
+    },
+    HIDDEN_3fEMQ3: {
+      text: "같은 주제의 질문 중 “이번 생일에 가장 고마움을 느끼는 상대가 있나요?”라는 질문에 “축하해준 사람들 모두한테 정말 고맙다고 느끼지만, 그 중에서도 예상치 못하게 오랜만에 연락을 준 친구들이 특히 더 고마웠던 것 같아요. 생일이라고 하더라도 연락을 안하다가 갑자기 연락하는 일은 쉬운 일이 아니라고 생각해서요”라고 답변",
       ogTitle: "오브를 즐겨쓰는 친구가 초대했어요.",
       ogDescription: "노트북으로 입장해주세요.",
       ogImage:

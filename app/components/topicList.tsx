@@ -11,6 +11,7 @@ import CompletePopup from "../dashboard/popup/completePopup";
 import { useReservationRepository } from "@/providers/ReservationRepositoryContext";
 import DragScroll from "react-indiana-drag-scroll";
 import { cn } from "@/lib/utils";
+import { v4 as uuidv4 } from "uuid";
 
 export default function TopicList(props: {
   title: string;
@@ -171,7 +172,7 @@ export default function TopicList(props: {
       >
         {topicItems.map((topicItem) => (
           <div
-            key={topicItem.topic.id}
+            key={topicItem.topic.id + uuidv4()}
             className={cn(
               "flex flex-col flex-shrink-0 justify-start items-start w-[200px] h-[240px] p-[12px] rounded-[8.32px] bg-grayscale-800 transition-all active:scale-95",
               props.itemClassName
