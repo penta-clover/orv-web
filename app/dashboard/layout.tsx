@@ -1,7 +1,7 @@
 import StartButton from "./startButton";
 import Sidebar from "./sidebar";
 import Popup from "./popup";
-import ActionBar from "./actionbar";
+import ActionBar from "./actionBar";
 import {
   MobileSidebarProvider,
   useMobileSidebar,
