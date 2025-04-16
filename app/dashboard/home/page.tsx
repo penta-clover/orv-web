@@ -83,7 +83,7 @@ export default function Page() {
 
       <div className="h-[24px] xs:h-[104px]" />
 
-      <div className="bottom-[48px] left-[280px] hidden xs:fixed">
+      <div className="fixed bottom-[48px] left-[280px] hidden xs:block">
         <ReservationNotification />
       </div>
     </div>
