@@ -5,6 +5,7 @@ import MobileNotSupported from "./home/mobileNotSupported";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Layout({
   children,
@@ -33,7 +34,7 @@ export default function Layout({
 }
 
 function ActionBar({ className }: { className?: string }) {
-  const router = useRouter();
+
   return (
     <div
       className={cn(
@@ -41,7 +42,7 @@ function ActionBar({ className }: { className?: string }) {
         className
       )}
     >
-      <div className="h-[56px] w-[74px] flex items-center justify-center" onClick={() => router.push("/dashboard/home")}>
+      <Link className="h-[56px] w-[74px] flex items-center justify-center" href="/dashboard/home">
         <Image
           unoptimized
           src="/icons/logo.svg"
@@ -49,7 +50,7 @@ function ActionBar({ className }: { className?: string }) {
           height={20}
           alt={""}
         />
-      </div>
+      </Link>
 
       <div className="flex items-center justify-center grow text-head4 text-grayscale-white" />
     </div>

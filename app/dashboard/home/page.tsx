@@ -51,7 +51,7 @@ export default function Page() {
 
       {userName && hiddenCategoryCodes.length > 0 && (
         <>
-          <div className="h-[48px]" />
+          <div className="h-[24px] xs:h-[48px]" />
           <div className="h-[280px] w-full">
             <TopicList
               title={`${userName}님만을 위한 특별 주제`}
@@ -62,15 +62,15 @@ export default function Page() {
         </>
       )}
 
-      <div className="h-[48px]" />
+      <div className="h-[24px] xs:h-[48px]" />
 
       <div className="h-[280px] w-full">
         <TopicList title="주제 보기" categoryCode={["DEFAULT"]} />
       </div>
 
-      <div className="h-[104px]" />
+      <div className="h-[24px] xs:h-[104px]" />
 
-      <div className="fixed bottom-[48px] left-[280px]">
+      <div className="bottom-[48px] left-[280px] hidden xs:fixed">
         <ReservationNotification />
       </div>
     </div>
