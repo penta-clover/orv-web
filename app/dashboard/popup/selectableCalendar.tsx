@@ -98,7 +98,7 @@ export function SelectableCalendar(props: { onSelect: (date: Date) => void }) {
         )}
       </div>
 
-      <div className="grid grid-cols-7 gap-y-[22px] gap-x-[20px]">
+      <div className="grid grid-cols-7">
         {days?.map((item: DayItem, index: number) => {
           const isSelectedDate: boolean =
             selectedDate?.getTime() ==
@@ -106,7 +106,7 @@ export function SelectableCalendar(props: { onSelect: (date: Date) => void }) {
           return (
             <span
               key={index}
-              className="flex items-center justify-center w-full h-full"
+              className="flex items-center justify-center w-full h-[50px]"
               onClick={
                 item.isSelectable
                   ? () => {
