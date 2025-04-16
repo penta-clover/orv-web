@@ -62,7 +62,7 @@ export default function Page() {
 
       <div className="h-[19px]" />
 
-      <div className="max-w-[532px] w-full aspect-[16/9] rel ative">
+      <div className="max-w-[532px] w-full aspect-[16/9] relative">
         <AnimatePresence mode="wait">
           <motion.div
             key={images[currentIndex].src}
