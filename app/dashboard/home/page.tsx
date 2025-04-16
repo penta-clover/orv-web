@@ -43,10 +43,16 @@ export default function Page() {
 
   return (
     <div className="relative text-grayscale-white w-full h-full pt-[78px] overflow-scroll hide-scrollbar">
-      <h1 className="text-2xl font-bold text-head0 mx-[40px] mb-[24px]">홈</h1>
+      <h1 className="text-2xl font-bold text-head0 mx-[20px] xs:mx-[40px] mb-[24px]">
+        홈
+      </h1>
 
       <div className="h-[276px] w-full">
-        <VideoList />
+        <VideoList
+          titleClassName="mx-[20px] xs:mx-[40px]"
+          listClassName="px-[20px] xs:px-[40px]"
+          showAdditionButton={typeof window !== "undefined" && window.innerWidth >= 480}
+        />
       </div>
 
       {userName && hiddenCategoryCodes.length > 0 && (
@@ -57,6 +63,8 @@ export default function Page() {
               title={`${userName}님만을 위한 특별 주제`}
               categoryCode={hiddenCategoryCodes}
               itemClassName="border-[1.5px] border-main-lilac50"
+              titleClassName="ml-[20px] xs:ml-[40px]"
+              listClassName="px-[20px] xs:px-[40px]"
             />
           </div>
         </>
@@ -65,7 +73,12 @@ export default function Page() {
       <div className="h-[24px] xs:h-[48px]" />
 
       <div className="h-[280px] w-full">
-        <TopicList title="주제 보기" categoryCode={["DEFAULT"]} />
+        <TopicList
+          title="주제 보기"
+          categoryCode={["DEFAULT"]}
+          titleClassName="ml-[20px] xs:ml-[40px]"
+          listClassName="px-[20px] xs:px-[40px]"
+        />
       </div>
 
       <div className="h-[24px] xs:h-[104px]" />

@@ -5,8 +5,17 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useDraggableScroll } from "@/app/components/useDraggableScroll";
 import DragScroll from "react-indiana-drag-scroll";
+import { cn } from "@/lib/utils";
 
-export default function VideoList() {
+export default function VideoList({
+  titleClassName,
+  listClassName,
+  showAdditionButton,
+}: {
+  titleClassName?: string;
+  listClassName?: string;
+  showAdditionButton?: boolean;
+}) {
   const archiveRepository = useArchiveRepository();
   const [videos, setVideos] = useState<Video[] | null>(null);
   const router = useRouter();
@@ -20,7 +29,12 @@ export default function VideoList() {
   if (videos === null) {
     return (
       <div className="flex flex-col">
-        <span className="text-head3 text-grayscale-100 ml-[40px] mb-[12px]">
+        <span
+          className={`text-grayscale-100 ${cn(
+            "text-head3 ml-[40px] mb-[12px]",
+            titleClassName
+          )}`}
+        >
           최근
         </span>
       </div>
@@ -29,11 +43,19 @@ export default function VideoList() {
 
   return (
     <div className="flex flex-col">
-      <span className="text-head3 text-grayscale-100 ml-[40px] mb-[12px]">
+      <span
+        className={`text-grayscale-100 ${cn(
+          "text-head3 ml-[40px] mb-[12px]",
+          titleClassName
+        )}`}
+      >
         최근
       </span>
       <DragScroll
-        className="relative flex flex-row px-[40px] gap-[12px] overflow-x-scroll"
+        className={cn(
+          "relative flex flex-row px-[40px] gap-[12px] overflow-x-scroll",
+          listClassName
+        )}
         style={{ overflowX: "scroll" }}
       >
         {videos.map((video) => (
@@ -64,15 +86,17 @@ export default function VideoList() {
             </div>
           </div>
         ))}
-        <VideoAdditionItem
-          onClick={() => {
-            router.push(
-              `/dashboard/topic?guide-popup=${
-                videos.length === 0 ? "first" : "default"
-              }`
-            );
-          }}
-        />
+        {showAdditionButton && (
+          <VideoAdditionItem
+            onClick={() => {
+              router.push(
+                `/dashboard/topic?guide-popup=${
+                  videos.length === 0 ? "first" : "default"
+                }`
+              );
+            }}
+          />
+        )}
       </DragScroll>
     </div>
   );

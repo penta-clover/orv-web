@@ -16,6 +16,8 @@ export default function TopicList(props: {
   title: string;
   categoryCode: string[];
   itemClassName?: string;
+  titleClassName?: string;
+  listClassName?: string;
 }) {
   const topicRepository = useTopicRepository();
   const storyboardRepository = useStoryboardRepository();
@@ -32,14 +34,15 @@ export default function TopicList(props: {
 
   useEffect(() => {
     async function fetchTopics() {
-      const topics: Topic[] = (await Promise.all(
-        props.categoryCode.map(async (categoryCode) => {
-          const topics: Topic[] = await topicRepository.getTopicByCategoryCode(
-            categoryCode
-          );
-          return topics;
-        })
-      )).flat();
+      const topics: Topic[] = (
+        await Promise.all(
+          props.categoryCode.map(async (categoryCode) => {
+            const topics: Topic[] =
+              await topicRepository.getTopicByCategoryCode(categoryCode);
+            return topics;
+          })
+        )
+      ).flat();
 
       const items = await Promise.all(
         topics.map(async (topic) => {
@@ -69,6 +72,15 @@ export default function TopicList(props: {
             setPopupState(null);
           }}
           onClickReservation={() => {
+            // 만약 모바일 화면 (30rem 이하)라면 /dashboard/reservation으로 이동
+            if (typeof window !== "undefined" && window.innerWidth < 480) {
+              router.push(
+                `/dashboard/mobile-reservation?storyboardId=${popupState.content.topicItem.preview.storyboardId}`
+              );
+              setPopupState(null);
+              return;
+            }
+
             setPopupState({
               name: "reservation",
               content: { topicItem: popupState.content.topicItem },
@@ -128,7 +140,12 @@ export default function TopicList(props: {
   if (topicItems === null) {
     return (
       <div className="flex flex-col">
-        <span className="text-head3 text-grayscale-100 ml-[40px] mb-[12px]">
+        <span
+          className={`text-grayscale-100 ${cn(
+            "text-head3 ml-[40px] mb-[12px]",
+            props.titleClassName
+          )}`}
+        >
           {props.title}
         </span>
       </div>
@@ -137,17 +154,28 @@ export default function TopicList(props: {
 
   return (
     <div className="flex flex-col">
-      <span className="text-head3 text-grayscale-100 ml-[40px] mb-[12px]">
+      <span
+        className={`text-grayscale-100 ${cn(
+          "text-head3 ml-[40px] mb-[12px]",
+          props.titleClassName
+        )}`}
+      >
         {props.title}
       </span>
       <DragScroll
         style={{ overflowX: "scroll" }}
-        className="flex flex-row px-[40px] gap-[12px] overflow-scroll hide-scrollbar"
+        className={cn(
+          "flex flex-row px-[40px] gap-[12px] overflow-scroll hide-scrollbar",
+          props.listClassName
+        )}
       >
         {topicItems.map((topicItem) => (
           <div
             key={topicItem.topic.id}
-            className={cn("flex flex-col flex-shrink-0 justify-start items-start w-[200px] h-[240px] p-[12px] rounded-[8.32px] bg-grayscale-800 transition-all active:scale-95", props.itemClassName)}
+            className={cn(
+              "flex flex-col flex-shrink-0 justify-start items-start w-[200px] h-[240px] p-[12px] rounded-[8.32px] bg-grayscale-800 transition-all active:scale-95",
+              props.itemClassName
+            )}
             onClick={() => {
               setPopupState({ name: "preview", content: { topicItem } });
             }}
@@ -159,12 +187,12 @@ export default function TopicList(props: {
               질문 {topicItem.preview.questionCount}개
             </span>
 
-            <div className="grow"/>
+            <div className="grow" />
 
             <div className="flex flex-row items-center justify-start gap-[3px]">
-              {
-                topicItem.topic.hashtags.map((hashtag, index) => {
-                  return <span
+              {topicItem.topic.hashtags.map((hashtag, index) => {
+                return (
+                  <span
                     key={index}
                     className="text-caption1 text-grayscale-500 mr-[4px] h-[22px] px-[9px] rounded-[11px] bg-grayscale-600"
                     style={{
@@ -173,8 +201,8 @@ export default function TopicList(props: {
                   >
                     {`#${hashtag.name}`}
                   </span>
-                })
-              }
+                );
+              })}
             </div>
           </div>
         ))}
