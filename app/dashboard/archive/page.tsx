@@ -42,25 +42,25 @@ export default function Page() {
 
   return (
     <div className="relative text-grayscale-white w-full h-full pt-[78px] overflow-scroll hide-scrollbar">
-      <h1 className="text-2xl font-bold text-head0 mx-[40px] mb-[24px]">
+      <h1 className="text-2xl font-bold text-head0 mx-[20px] xs:mx-[40px] mb-[24px]">
         인터뷰 기록
       </h1>
       {sortedMonths.map((month) => (
         <div key={month} className="mb-8">
-          <VideoList title={month} videos={groupedVideos[month]} />
+          <VideoList title={month} videos={groupedVideos[month]} titleClassName="ml-[20px] xs:ml-[40px]" listClassName="px-[20px] xs:px-[40px]" />
         </div>
       ))}
 
       {sortedMonths.length === 0 && (
         <div key="none" className="mb-8">
           <div className="flex flex-col">
-            <span className="text-head3 text-grayscale-100 ml-[40px] mb-[12px]">
+            <span className="text-head3 text-grayscale-100  mx-[20px] xs:ml-[40px] mb-[12px]">
               {new Date().getFullYear() +
                 "." +
                 (new Date().getMonth() + 1).toString().padStart(2, "0")}
             </span>
             <div
-              className="flex flex-col w-[320px] h-[236px] ml-[40px]"
+              className="flex flex-col w-[320px] h-[236px] mx-[20px] xs:ml-[40px]"
               onClick={() => {
                 router.push("/dashboard/topic?guide-popup=first");
               }}

@@ -1,9 +1,10 @@
 import { Video } from "@/domain/model/Video";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import DragScroll from "react-indiana-drag-scroll";
 
 
-export default function VideoList(props: {title: string, videos: Video[] |  null}) {
+export default function VideoList(props: {title: string, videos: Video[] |  null, titleClassName?: string, listClassName?: string}) {
 
   if (props.videos === null) {
     return;
@@ -11,10 +12,10 @@ export default function VideoList(props: {title: string, videos: Video[] |  null
 
   return (
     <div className="flex flex-col">
-      <span className="text-head3 text-grayscale-100 ml-[40px] mb-[12px]">
+      <span className={`text-grayscale-100 ${cn("text-head3 ml-[40px] mb-[12px]", props.titleClassName)}`}>
         {props.title}
       </span>
-      <DragScroll className="flex flex-row px-[40px] gap-[12px] overflow-scroll hide-scrollbar" style={{ overflowX: "scroll" }}>
+      <DragScroll className={cn("flex flex-row px-[40px] gap-[12px] overflow-scroll hide-scrollbar", props.listClassName)} style={{ overflowX: "scroll" }}>
         {props.videos.map((video) => (
           <div key={video.id} className="flex flex-col w-[320px] h-[236px]">
             <div className="relative w-[320px] h-[180px] mb-[8px]">

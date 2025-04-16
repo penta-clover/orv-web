@@ -1,11 +1,12 @@
 import StartButton from "./startButton";
 import Sidebar from "./sidebar";
 import Popup from "./popup";
-import MobileNotSupported from "./home/mobileNotSupported";
-import Image from "next/image";
-import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import ActionBar from "./actionbar";
+import {
+  MobileSidebarProvider,
+  useMobileSidebar,
+} from "./mobileSidebarContext";
+import MobileSidebar from "./mobileSidebar";
 
 export default function Layout({
   children,
@@ -14,45 +15,26 @@ export default function Layout({
 }>) {
   return (
     <Popup>
-      <div className="flex flex-row h-[100dvh] w-[calc(100dvw)]">
-        <Sidebar className="hidden xs:inline" />
+      <MobileSidebarProvider>
+        <div className="flex flex-row h-[100dvh] w-[calc(100dvw)]">
+          <Sidebar className="hidden xs:inline" />
 
-        <div className="fixed top-0 block xs:hidden w-full z-40 bg-grayscale-black">
-          <ActionBar className="" />
-        </div>
+          <div className="fixed top-0 block xs:hidden w-full z-40 bg-grayscale-black">
+            <ActionBar className="" />
+          </div>
 
-        <div className="h-[100dvh] w-[calc(100dvw)] xs:w-[calc(100dvw-240px)] ">
-          {children}
-        </div>
+          <div className="h-[100dvh] w-[calc(100dvw)] xs:w-[calc(100dvw-240px)] ">
+            <div className="block xs:hidden">
+              <MobileSidebar />
+            </div>
+            {children}
+          </div>
 
-        <div className="fixed right-[48px] bottom-[48px] hidden xs:inline">
-          <StartButton />
+          <div className="fixed right-[48px] bottom-[48px] hidden xs:inline">
+            <StartButton />
+          </div>
         </div>
-      </div>
+      </MobileSidebarProvider>
     </Popup>
-  );
-}
-
-function ActionBar({ className }: { className?: string }) {
-
-  return (
-    <div
-      className={cn(
-        "flex flex-row items-center justify-between h-[56px] w-full",
-        className
-      )}
-    >
-      <Link className="h-[56px] w-[74px] flex items-center justify-center" href="/dashboard/home">
-        <Image
-          unoptimized
-          src="/icons/logo.svg"
-          width={42}
-          height={20}
-          alt={""}
-        />
-      </Link>
-
-      <div className="flex items-center justify-center grow text-head4 text-grayscale-white" />
-    </div>
   );
 }

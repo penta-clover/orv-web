@@ -16,14 +16,16 @@ const stepVariants = {
 
 export default function Page() {
   return (
-    <div className="relative text-grayscale-white w-full h-full pt-[78px] overflow-scroll hide-scrollbar">
-      <h1 className="text-2xl font-bold text-head0 mx-[40px] mb-[24px]">
+    <div className="relative text-grayscale-white w-full h-[calc(100dvh)] pt-[78px] overflow-scroll hide-scrollbar">
+      <h1 className="text-2xl font-bold text-head0 mx-[20px] xs:mx-[40px] mb-[24px]">
         사용 가이드
       </h1>
 
-      <div className="h-[276px] ml-[40px] w-full">
+      <div className="ml-[20px] xs:ml-[40px] w-full">
         <GuideLine />
       </div>
+
+      <div className="h-[50px]" />
     </div>
   );
 }
