@@ -3,7 +3,7 @@
 import "@/app/components/blackBody.css";
 import Image from "next/image";
 import { SubtitleCanvas } from "../(components)/camera/subtitleCanvas";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import ExitInterviewModal from "../(components)/exitInterviewModal";
 import { useStoryboardRepository } from "@/providers/StoryboardRepositoryContext";
@@ -56,7 +56,10 @@ function Body() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [showTip, setShowTip] = useState<boolean>(true);
   const [currentScene, setCurrentScene] = useState<Scene | undefined>();
-  const [stream, setStream] = useState<MediaStream | null>(null);
+  const [originalVideoStream, setOriginalVideoStream] =
+    useState<MediaStream | null>(null);
+  const [originalAudioStream, setOriginalAudioStream] =
+    useState<MediaStream | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isLowMicVolume, setIsLowMicVolume] = useState(false);
 
@@ -95,7 +98,7 @@ function Body() {
     streamRecorderRef.current = new StreamRecorder();
 
     // TODO: Promise.all로 최적화
-    getCameraStream({ useAudio: true })
+    getCameraStream({ useAudio: false })
       .then(async (originalStream) => {
         const storyboard = await storyboardRepository.getStoryboardInfo(
           storyboardId
@@ -112,11 +115,19 @@ function Body() {
         startTimeRef.current = Date.now();
         if (!canvasRef.current) return;
 
-        const captureStream = canvasRef.current!.captureStream(RECORDING_FPS);
-        originalStream.getAudioTracks().forEach((track) => {
-          captureStream.addTrack(track);
+        // 캡쳐된 비디오와 원본 오디오를 조합해 녹화용 스트림 생성
+        const [videoTrack] = canvasRef
+          .current!.captureStream(RECORDING_FPS)
+          .getVideoTracks();
+
+        const audioStream = await navigator.mediaDevices.getUserMedia({
+          video: false,
+          audio: true,
         });
 
+        setOriginalAudioStream(audioStream);
+        const [audioTrack] = audioStream.getAudioTracks();
+        const captureStream = new MediaStream([videoTrack, audioTrack]);
         try {
           console.log(
             `current canvas resolution: ${canvasRef.current.width}x${canvasRef.current.height}`
@@ -130,20 +141,30 @@ function Body() {
           alert(getPermissionGuideText());
         }
 
-        setStream(originalStream);
+        setOriginalVideoStream(originalStream);
       })
       .catch((error) => {
         alert(getPermissionGuideText());
       });
   }, []);
 
+  const previewStream = useMemo(() => {
+    if (!originalVideoStream) {
+      return null;
+    }
+
+    // 비디오만 복사
+    const [videoTrack] = originalVideoStream.getVideoTracks();
+    return new MediaStream([videoTrack]); // ← 오디오 없음
+  }, [originalVideoStream]);
+
   // stream이 설정된 후, 오디오 볼륨 모니터링
   useEffect(() => {
-    if (!stream) return;
+    if (!originalAudioStream) return;
     const audioContext = new AudioContext();
-    const source = audioContext.createMediaStreamSource(stream);
+    const source = audioContext.createMediaStreamSource(originalAudioStream);
     const analyser = audioContext.createAnalyser();
-    analyser.fftSize = 2048;
+    analyser.fftSize = 512;
     source.connect(analyser);
 
     const bufferLength = analyser.frequencyBinCount;
@@ -179,7 +200,7 @@ function Body() {
       clearInterval(volumeMonitor);
       audioContext.close();
     };
-  }, [stream]);
+  }, [originalAudioStream]);
 
   // 질문 불러오기
   const loadScene = (sceneId: string, number: number) => {
@@ -288,7 +309,7 @@ function Body() {
               />
             ) : (
               <FilteredCanvas
-                stream={stream!}
+                stream={previewStream ?? undefined}
                 filter={filter}
                 ref={previewCanvasRef}
                 overlay="/images/studio-lighting-fhd.png"
@@ -301,10 +322,12 @@ function Body() {
                 isSubtitled(currentScene) ? currentScene.getSubtitles() : []
               }
               style={{
-                width: "0",
-                height: "0",
                 position: "absolute",
-                opacity: "0",
+                top: 0,
+                left: 0,
+                width: "100%", // ← 최소 1 px 이상
+                height: "100%", // ← 최소 1 px 이상
+                opacity: 0.01, // 화면엔 안 보임
                 pointerEvents: "none",
               }}
               fps={RECORDING_FPS}

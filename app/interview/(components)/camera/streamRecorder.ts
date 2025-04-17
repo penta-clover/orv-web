@@ -48,7 +48,9 @@ export class StreamRecorder {
 
     // 후처리된 오디오 트랙을 기존의 녹화 스트림에 추가
     const processedAudioTrack = destination.stream.getAudioTracks()[0];
-    stream.addTrack(processedAudioTrack);
+
+    const videoTrack = stream.getVideoTracks()[0]; // 캔버스 비디오
+    const recordingStream: MediaStream = new MediaStream([videoTrack, processedAudioTrack]);
 
     if (MediaRecorder.isTypeSupported("video/webm;codecs=h264,opus")) {
       this.mimetype = "video/webm;codecs=h264,opus";
@@ -59,7 +61,7 @@ export class StreamRecorder {
     }
 
     console.log("RecorderType", this.mimetype);
-    this.recorder = new MediaRecorder(stream, {
+    this.recorder = new MediaRecorder(recordingStream, {
       mimeType: this.mimetype,
     });
 

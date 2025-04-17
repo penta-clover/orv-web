@@ -33,8 +33,9 @@ export const FilteredCanvas = React.forwardRef<
     video.style.top = "0";
     video.style.left = "0";
     video.style.opacity = "0.001"; 
-    video.style.transform = "scale(0.001)"; // 비디오 요소를 화면에서 보이지 않도록 설정
+    video.style.transform = "scale(0.1)"; // 비디오 요소를 화면에서 보이지 않도록 설정
     video.style.pointerEvents = "none"; // 비디오 요소가 클릭 이벤트를 받지 않도록 설정
+    video.style.display = "block";
     document.body.appendChild(video);
 
     filterRef.current = getFilterUniforms(filter);

@@ -40,7 +40,7 @@ function Body() {
     );
 
   useEffect(() => {
-    getCameraStream()
+    getCameraStream({ useAudio: false })
       .then((stream) => {
         setStream(stream);
         setStreamReady(true);

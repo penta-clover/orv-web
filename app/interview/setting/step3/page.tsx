@@ -34,7 +34,7 @@ function Body() {
   usePermissionReload("microphone");
 
   useEffect(() => {
-    getCameraStream()
+    getCameraStream({ useAudio: false })
       .then((stream) => {
         setStream(stream);
         setStreamReady(true);

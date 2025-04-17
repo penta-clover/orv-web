@@ -26,6 +26,7 @@ export default function MicIndicator(props: {
       const enableMicrophone = async () => {
         try {
           const stream = await navigator.mediaDevices.getUserMedia({
+            video: false,
             audio: true,
           });
 
