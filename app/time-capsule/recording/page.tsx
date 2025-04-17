@@ -31,7 +31,7 @@ function Body() {
   const filter = searchParams.get("filter")! as Filter;
 
   const RECORDING_FPS = 24; // 녹화 프레임 레이트 설정
-  const LIMIT_SECONDS = 5; // 녹화 제한 시간 (초 단위)
+  const LIMIT_SECONDS = 10; // 녹화 제한 시간 (초 단위)
 
   const router = useRouter();
 
@@ -132,7 +132,7 @@ function Body() {
   }, []);
 
   return (
-    <div className="relative flex flex-col bg-dark h-[calc(100dvh)] w-full justify-center">
+    <div className="relative flex flex-col bg-dark h-[calc(100dvh)] w-[calc(100dvw)] justify-center">
       <div className="text-grayscale-50 text-head1 mx-[16px]">
         Q. 나에게 가장 소중한 것은 무엇인가요?
       </div>
