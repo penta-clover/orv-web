@@ -15,7 +15,7 @@ import usePermissionReload from "@/app/interview/(components)/usePermissionReloa
 import { useTempBlobRepository } from "@/providers/TempBlobRepositoryContext";
 import { count } from "console";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 
 export default function Page() {
   return (
@@ -36,7 +36,7 @@ function Body() {
   const router = useRouter();
 
   const [currentScene, setCurrentScene] = useState<Scene | undefined>();
-  const [stream, setStream] = useState<MediaStream | null>(null);
+  const [originalVideoStream, setOriginalVideoStream] = useState<MediaStream | null>(null);
   const streamRecorderRef = useRef<StreamRecorder | null>(null);
   const previewCanvasRef = useRef<HTMLCanvasElement | null>(null); // 녹화 중 사용자에게 표시되는 캔버스
   const canvasRef = useRef<HTMLCanvasElement | null>(null); // 녹화되는 캔버스
@@ -98,14 +98,24 @@ function Body() {
     }
   };
 
+    const previewStream = useMemo(() => {
+      if (!originalVideoStream) {
+        return null;
+      }
+  
+      // 비디오만 복사
+      const [videoTrack] = originalVideoStream.getVideoTracks();
+      return new MediaStream([videoTrack]); // ← 오디오 없음
+    }, [originalVideoStream]);
+
   useEffect(() => {
     streamRecorderRef.current = new StreamRecorder();
 
-    getCameraStream({ useAudio: true }).then((originalStream) => {
-      const captureStream = canvasRef.current!.captureStream(RECORDING_FPS);
-      originalStream.getAudioTracks().forEach((track) => {
-        captureStream.addTrack(track);
-      });
+    getCameraStream({ useAudio: false }).then(async (originalCameraStream) => {
+      const videoTrack = canvasRef.current!.captureStream(RECORDING_FPS).getVideoTracks()[0];
+      const audioTrack = (await navigator.mediaDevices.getUserMedia({ video: false, audio: true })).getAudioTracks()[0];
+
+      const captureStream = new MediaStream([videoTrack, audioTrack]);
 
       try {
         // 캔버스가 준비될 때까지 대기
@@ -117,7 +127,7 @@ function Body() {
         alert(getPermissionGuideText());
       }
 
-      setStream(originalStream);
+      setOriginalVideoStream(originalCameraStream);
     });
   }, []);
 
@@ -137,7 +147,7 @@ function Body() {
           />
         ) : (
           <FilteredCanvas
-            stream={stream!}
+            stream={previewStream ?? undefined}
             filter={filter}
             ref={previewCanvasRef}
             overlay="/images/studio-lighting-fhd.png"
