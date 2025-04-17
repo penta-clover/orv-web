@@ -44,6 +44,7 @@ function Body() {
   useEffect(() => {
     getCameraStream()
       .then((stream) => {
+        console.log("stream", stream);
         setStream(stream);
         setStreamReady(true);
       })
