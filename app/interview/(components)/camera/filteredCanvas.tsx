@@ -14,7 +14,14 @@ export const FilteredCanvas = React.forwardRef<
   HTMLCanvasElement,
   FilteredCanvasProps
 >((props, ref) => {
-  const { stream, filter = "default", overlay, style, className, resolution } = props;
+  const {
+    stream,
+    filter = "default",
+    overlay,
+    style,
+    className,
+    resolution,
+  } = props;
   const filterRef = useRef<FilterData>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useImperativeHandle(ref, () => canvasRef.current as HTMLCanvasElement);
@@ -33,7 +40,7 @@ export const FilteredCanvas = React.forwardRef<
     video.style.position = "absolute";
     video.style.top = "0";
     video.style.left = "0";
-    video.style.opacity = "0.001"; 
+    video.style.opacity = "0.001";
     video.style.transform = "scale(0.1)"; // 비디오 요소를 화면에서 보이지 않도록 설정
     video.style.pointerEvents = "none"; // 비디오 요소가 클릭 이벤트를 받지 않도록 설정
     video.style.display = "block";
@@ -75,20 +82,17 @@ export const FilteredCanvas = React.forwardRef<
     const drawFrame = () => {
       if (video.readyState === video.HAVE_ENOUGH_DATA) {
         // 비디오 크기에 맞춰 캔버스 크기 조정
-        if (
-          canvasRef.current &&
-          (video.videoWidth !== canvasRef.current!.width ||
-            video.videoHeight !== canvasRef.current!.height)
-        ) {
-          canvasRef.current!.width = video.videoWidth;
-          canvasRef.current!.height = video.videoHeight;
-          gl.viewport(
-            0,
-            0,
-            canvasRef.current!.width,
-            canvasRef.current!.height
-          );
+
+        if (!resolution && canvasRef.current) {
+          const vidW = video.videoWidth;
+          const vidH = video.videoHeight;
+          if (vidW !== canvasRef.current.width || vidH !== canvasRef.current.height) {
+            canvasRef.current.width = vidW;
+            canvasRef.current.height = vidH;
+            gl.viewport(0, 0, vidW, vidH);
+          }
         }
+
         webglRenderer.draw(video, filterRef.current!);
         requestAnimationFrame(drawFrame);
       }
@@ -102,8 +106,13 @@ export const FilteredCanvas = React.forwardRef<
     // 비디오 메타데이터 로드 시 렌더링 시작
     video.onloadedmetadata = () => {
       // 초기 캔버스 크기 설정
-      canvasRef.current!.width = video.videoWidth;
-      canvasRef.current!.height = video.videoHeight;
+      if (resolution) {
+        canvasRef.current!.width = resolution.widthPixel;
+        canvasRef.current!.height = resolution.heightPixel;
+      } else {
+        canvasRef.current!.width = video.videoWidth;
+        canvasRef.current!.height = video.videoHeight;
+      }
       gl.viewport(0, 0, canvasRef.current!.width, canvasRef.current!.height);
       drawFrame();
     };
@@ -137,7 +146,7 @@ export const FilteredCanvas = React.forwardRef<
 export function BlankCanvas({
   ref,
   overlay,
-  resolution
+  resolution,
 }: {
   ref: React.RefObject<HTMLCanvasElement | null>;
   overlay?: string;
@@ -160,7 +169,12 @@ export function BlankCanvas({
   }, [overlay]);
 
   return (
-    <canvas ref={ref} className="w-full h-full" width={resolution?.widthPixel ?? 1280} height={resolution?.heightPixel ?? 720} />
+    <canvas
+      ref={ref}
+      className="w-full h-full"
+      width={resolution?.widthPixel ?? 1280}
+      height={resolution?.heightPixel ?? 720}
+    />
   );
 }
 
