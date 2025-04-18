@@ -172,7 +172,7 @@ function Body() {
         {aspect === "none" ? (
           <BlankCanvas
             ref={previewCanvasRef}
-            overlay="/images/studio-lighting-fhd.png"
+            overlay="/images/studio-lighting-no-logo.png"
             resolution={resolution ?? undefined}
           />
         ) : (
@@ -180,7 +180,7 @@ function Body() {
             stream={previewStream ?? undefined}
             filter={filter}
             ref={previewCanvasRef}
-            overlay="/images/studio-lighting-fhd.png"
+            overlay="/images/studio-lighting-no-logo.png"
             resolution={resolution ?? undefined}
           />
         )}
