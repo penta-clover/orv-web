@@ -161,9 +161,9 @@ function Body() {
   }, []);
 
   return (
-    <div className="relative flex flex-col bg-dark h-[calc(100dvh)] w-[calc(100dvw)] justify-center">
+    <div className="relative flex flex-col bg-dark h-[calc(100dvh)] w-full justify-center">
       <div className="text-grayscale-50 text-head1 mx-[16px]">
-        Q. 나에게 가장 소중한 것은 무엇인가요?{`resolution: ${resolution?.widthPixel}x${resolution?.heightPixel}`}
+        Q. 나에게 가장 소중한 것은 무엇인가요?
       </div>
 
       <div className="h-[16px]" />
