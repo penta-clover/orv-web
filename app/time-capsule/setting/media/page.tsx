@@ -19,7 +19,7 @@ function Body() {
 
   return (
     <div className="flex flex-col relative bg-dark w-full h-[calc(100dvh)]">
-      <div className="h-[20dvh]" />
+      <div className="h-[20dvh] shrink" />
 
       <div className="text-head1 text-grayscale-white mx-[16px]">
         지금의 내 모습을
