@@ -112,32 +112,43 @@ function Body() {
   useEffect(() => {
     streamRecorderRef.current = new StreamRecorder();
 
-    getCameraStream({
-      useAudio: false,
-      idealHeight: 1440,
-      idealWidth: 1080,
-    }).then(async (originalCameraStream) => {
-      const videoTrack = canvasRef
-        .current!.captureStream(RECORDING_FPS)
-        .getVideoTracks()[0];
-      const audioTrack = (
-        await navigator.mediaDevices.getUserMedia({ video: false, audio: true })
-      ).getAudioTracks()[0];
+    navigator.mediaDevices
+      .getUserMedia({
+        video: true,
+      })
+      .then(async (originalCameraStream) => {
+        // 해상도 선택
 
-      const captureStream = new MediaStream([videoTrack, audioTrack]);
+        const track = originalCameraStream.getVideoTracks()[0];
+        const caps = track.getCapabilities();
+        const maxWidth = caps.width!.max!; // ex) 4032
+        const bestHeight = Math.round(maxWidth / 0.75);
+        await track.applyConstraints({ width: maxWidth, height: bestHeight });
 
-      try {
-        // 캔버스가 준비될 때까지 대기
-        waitForCanvasReady(() => {
-          countdown();
-          streamRecorderRef.current?.startRecording(captureStream); // 녹화 시작
-        });
-      } catch (error) {
-        alert(getPermissionGuideText());
-      }
+        const videoTrack = canvasRef
+          .current!.captureStream(RECORDING_FPS)
+          .getVideoTracks()[0];
+        const audioTrack = (
+          await navigator.mediaDevices.getUserMedia({
+            video: false,
+            audio: true,
+          })
+        ).getAudioTracks()[0];
 
-      setOriginalVideoStream(originalCameraStream);
-    });
+        const captureStream = new MediaStream([videoTrack, audioTrack]);
+
+        try {
+          // 캔버스가 준비될 때까지 대기
+          waitForCanvasReady(() => {
+            countdown();
+            streamRecorderRef.current?.startRecording(captureStream); // 녹화 시작
+          });
+        } catch (error) {
+          alert(getPermissionGuideText());
+        }
+
+        setOriginalVideoStream(originalCameraStream);
+      });
   }, []);
 
   return (
@@ -153,7 +164,6 @@ function Body() {
           <BlankCanvas
             ref={previewCanvasRef}
             overlay="/images/studio-lighting-fhd.png"
-            resolution={{ widthPixel: 1080, heightPixel: 1440 }}
           />
         ) : (
           <FilteredCanvas
@@ -161,7 +171,6 @@ function Body() {
             filter={filter}
             ref={previewCanvasRef}
             overlay="/images/studio-lighting-fhd.png"
-            resolution={{ widthPixel: 1080, heightPixel: 1440 }}
           />
         )}
         <SubtitleCanvas
