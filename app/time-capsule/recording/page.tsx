@@ -52,6 +52,8 @@ function Body() {
     heightPixel: number;
   } | null>(null);
   const [leftSeconds, setLeftSeconds] = useState(LIMIT_SECONDS);
+  const [startCountdown, setStartCountdown] = useState<number>(3);
+  const isCountdownEnd = useRef<boolean>(false);
   const tempBlobRepository = useTempBlobRepository();
 
   usePermissionReload("microphone");
@@ -67,6 +69,20 @@ function Body() {
       } else {
         console.log(
           `Waiting for canvas to be ready... (${canvas?.width}x${canvas?.height})`
+        );
+      }
+    }, 50); // 50ms 간격으로 체크
+  };
+
+  const waitForStartCountdown = (cb: () => void) => {
+    const interval = setInterval(() => {
+      if (isCountdownEnd.current) {
+        console.log("Start countdown finished");
+        clearInterval(interval);
+        cb();
+      } else {
+        console.log(
+          `Waiting for start countdown... (${isCountdownEnd.current})`
         );
       }
     }, 50); // 50ms 간격으로 체크
@@ -155,8 +171,10 @@ function Body() {
         try {
           // 캔버스가 준비될 때까지 대기
           waitForCanvasReady(() => {
-            countdown();
-            streamRecorderRef.current?.startRecording(captureStream); // 녹화 시작
+            waitForStartCountdown(() => {
+              countdown();
+              streamRecorderRef.current?.startRecording(captureStream); // 녹화 시작
+            });
           });
         } catch (error) {
           alert(getPermissionGuideText());
@@ -164,6 +182,23 @@ function Body() {
 
         setOriginalVideoStream(originalCameraStream);
       });
+  }, []);
+
+  useEffect(() => {
+    const countdown = setInterval(() => {
+      setStartCountdown((prev) => {
+        if (prev === 1) {
+          isCountdownEnd.current = true;
+          clearInterval(countdown);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => {
+      clearInterval(countdown);
+    };
   }, []);
 
   return (
@@ -207,6 +242,13 @@ function Body() {
           }}
           fps={RECORDING_FPS}
         />
+        {!isCountdownEnd.current && (
+          <div className="absolute flex justify-center items-center w-full h-full bg-grayscale-900 opacity-[80] z-50">
+            <div className="text-grayscale-50 text-head1 text-[50px]">
+              {startCountdown}
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="h-[16px] shrink" />
