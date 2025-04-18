@@ -26,7 +26,7 @@ function Body() {
 
   return (
     <div className="flex flex-col h-[calc(100dvh)] justify-center items-center">
-      <div className="h-[20dvh]" />
+      <div className="h-[20dvh] shrink" />
 
       <div className="text-head1 text-grayscale-white w-full px-[16px]">
         10초만에 회원가입 후
