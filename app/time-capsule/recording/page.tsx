@@ -130,8 +130,8 @@ function Body() {
         const maxHeight = caps.height!.max!;
 
         // 해상도 너무 높지 않게 clamp
-        const clampedWidth = Math.min(maxWidth, 1200);
-        const clampedHeight = Math.min(maxHeight, 1600);
+        const clampedWidth = Math.min(maxWidth, 1920);
+        const clampedHeight = Math.min(maxHeight, 2560);
 
         // 비율에 맞춰 조정
         let targetWidth = clampedWidth;
@@ -180,7 +180,7 @@ function Body() {
   return (
     <div className="relative flex flex-col bg-dark h-[calc(100dvh)] w-[calc(100dvw)] justify-center">
       <div className="text-grayscale-50 text-head1 mx-[16px]">
-        Q. 나에게 가장 소중한 것은 무엇인가요?
+        Q. 나에게 가장 소중한 것은 무엇인가요?{`resolution: ${resolution?.widthPixel}x${resolution?.heightPixel}`}
       </div>
 
       <div className="h-[16px]" />
