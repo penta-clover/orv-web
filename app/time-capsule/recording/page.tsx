@@ -70,6 +70,7 @@ function Body() {
     const countdownInterval = setInterval(() => {
       setLeftSeconds((prev) => {
         if (prev === 0) {
+          alert("녹화가 완료되었습니다.");
           clearInterval(countdownInterval);
           streamRecorderRef.current
             ?.stopRecording()
@@ -87,6 +88,7 @@ function Body() {
     try {
       const blob = streamRecorderRef.current?.getBlob();
       if (!blob) {
+        alert("Blob 데이터가 없습니다.");
         console.error("Blob 데이터를 가져오지 못했습니다.");
         // TODO: 사용자에게 오류 알림
         return;
@@ -99,6 +101,7 @@ function Body() {
 
       streamRecorderRef.current?.reset();
     } catch (error) {
+      alert(error);
       console.error("IndexedDB 저장 또는 페이지 이동 중 오류:", error);
     }
   };
