@@ -118,12 +118,30 @@ function Body() {
       })
       .then(async (originalCameraStream) => {
         // 해상도 선택
-
         const track = originalCameraStream.getVideoTracks()[0];
         const caps = track.getCapabilities();
-        const maxWidth = caps.width!.max!; // ex) 4032
-        const bestHeight = Math.round(maxWidth / 0.75);
-        await track.applyConstraints({ width: maxWidth, height: bestHeight });
+
+        // 지원되는 최대값 가져오기
+        const maxWidth = caps.width!.max!;
+        const maxHeight = caps.height!.max!;
+
+        // 해상도 너무 높지 않게 clamp
+        const clampedWidth = Math.min(maxWidth, 1920);
+        const clampedHeight = Math.min(maxHeight, 2560);
+
+        // 비율에 맞춰 조정
+        let targetWidth = clampedWidth;
+        let targetHeight = Math.round(targetWidth / (3 / 4));
+        if (targetHeight > clampedHeight) {
+          targetHeight = clampedHeight;
+          targetWidth = Math.round(targetHeight * (3 / 4));
+        }
+
+        await track.applyConstraints({
+          width: { ideal: targetWidth, max: targetWidth },
+          height: { ideal: targetHeight, max: targetHeight },
+          aspectRatio: 3 / 4,
+        });
 
         const videoTrack = canvasRef
           .current!.captureStream(RECORDING_FPS)
