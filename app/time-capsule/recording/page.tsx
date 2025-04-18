@@ -168,7 +168,7 @@ function Body() {
 
       <div className="h-[16px]" />
 
-      <div className="relative flex justify-center items-center w-full h-full max-h-[calc(100dvw*4/3)] bg-grayscale-900 overflow-hidden">
+      <div className="relative flex justify-center items-center w-full h-full aspect-[4/3] bg-grayscale-900 overflow-hidden">
         {aspect === "none" ? (
           <BlankCanvas
             ref={previewCanvasRef}
