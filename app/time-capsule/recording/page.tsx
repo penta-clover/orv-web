@@ -31,13 +31,12 @@ function Body() {
   const filter = searchParams.get("filter")! as Filter;
 
   const RECORDING_FPS = 24; // 녹화 프레임 레이트 설정
-  const LIMIT_SECONDS = 60; // 녹화 제한 시간 (초 단위)
+  const LIMIT_SECONDS = 10; // 녹화 제한 시간 (초 단위)
 
   const router = useRouter();
 
   const [currentScene, setCurrentScene] = useState<Scene | undefined>();
-  const [originalVideoStream, setOriginalVideoStream] =
-    useState<MediaStream | null>(null);
+  const [originalVideoStream, setOriginalVideoStream] = useState<MediaStream | null>(null);
   const streamRecorderRef = useRef<StreamRecorder | null>(null);
   const previewCanvasRef = useRef<HTMLCanvasElement | null>(null); // 녹화 중 사용자에게 표시되는 캔버스
   const canvasRef = useRef<HTMLCanvasElement | null>(null); // 녹화되는 캔버스
@@ -99,30 +98,22 @@ function Body() {
     }
   };
 
-  const previewStream = useMemo(() => {
-    if (!originalVideoStream) {
-      return null;
-    }
-
-    // 비디오만 복사
-    const [videoTrack] = originalVideoStream.getVideoTracks();
-    return new MediaStream([videoTrack]); // ← 오디오 없음
-  }, [originalVideoStream]);
+    const previewStream = useMemo(() => {
+      if (!originalVideoStream) {
+        return null;
+      }
+  
+      // 비디오만 복사
+      const [videoTrack] = originalVideoStream.getVideoTracks();
+      return new MediaStream([videoTrack]); // ← 오디오 없음
+    }, [originalVideoStream]);
 
   useEffect(() => {
     streamRecorderRef.current = new StreamRecorder();
 
-    getCameraStream({
-      useAudio: false,
-      idealHeight: 1440,
-      idealWidth: 1080,
-    }).then(async (originalCameraStream) => {
-      const videoTrack = canvasRef
-        .current!.captureStream(RECORDING_FPS)
-        .getVideoTracks()[0];
-      const audioTrack = (
-        await navigator.mediaDevices.getUserMedia({ video: false, audio: true })
-      ).getAudioTracks()[0];
+    getCameraStream({ useAudio: false }).then(async (originalCameraStream) => {
+      const videoTrack = canvasRef.current!.captureStream(RECORDING_FPS).getVideoTracks()[0];
+      const audioTrack = (await navigator.mediaDevices.getUserMedia({ video: false, audio: true })).getAudioTracks()[0];
 
       const captureStream = new MediaStream([videoTrack, audioTrack]);
 
@@ -148,12 +139,11 @@ function Body() {
 
       <div className="h-[16px]" />
 
-      <div className="relative flex justify-center items-center w-full h-full max-h-[calc(100dvw*4/3)] bg-grayscale-900 overflow-hidden">
+      <div className="relative flex justify-center items-center w-full h-full max-h-[calc(100dvw*9/16)] aspect-16/9 bg-grayscale-900 overflow-hidden">
         {aspect === "none" ? (
           <BlankCanvas
             ref={previewCanvasRef}
             overlay="/images/studio-lighting-fhd.png"
-            resolution={{ widthPixel: 1080, heightPixel: 1440 }}
           />
         ) : (
           <FilteredCanvas
@@ -161,7 +151,6 @@ function Body() {
             filter={filter}
             ref={previewCanvasRef}
             overlay="/images/studio-lighting-fhd.png"
-            resolution={{ widthPixel: 1080, heightPixel: 1440 }}
           />
         )}
         <SubtitleCanvas

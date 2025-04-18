@@ -7,14 +7,13 @@ interface FilteredCanvasProps {
   overlay?: string;
   className?: string;
   style?: React.CSSProperties;
-  resolution?: { widthPixel: number; heightPixel: number };
 }
 
 export const FilteredCanvas = React.forwardRef<
   HTMLCanvasElement,
   FilteredCanvasProps
 >((props, ref) => {
-  const { stream, filter = "default", overlay, style, className, resolution } = props;
+  const { stream, filter = "default", overlay, style, className } = props;
   const filterRef = useRef<FilterData>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useImperativeHandle(ref, () => canvasRef.current as HTMLCanvasElement);
@@ -28,8 +27,8 @@ export const FilteredCanvas = React.forwardRef<
     video.autoplay = true;
     video.playsInline = true;
     video.muted = true;
-    video.style.width = `${resolution?.widthPixel ?? 1280}px`;
-    video.style.height = `${resolution?.heightPixel ?? 720}px`;
+    video.style.width = "1280px";
+    video.style.height = "720px";
     video.style.position = "absolute";
     video.style.top = "0";
     video.style.left = "0";
@@ -137,11 +136,9 @@ export const FilteredCanvas = React.forwardRef<
 export function BlankCanvas({
   ref,
   overlay,
-  resolution
 }: {
   ref: React.RefObject<HTMLCanvasElement | null>;
   overlay?: string;
-  resolution?: { widthPixel: number; heightPixel: number };
 }) {
   useEffect(() => {
     const canvas = ref.current;
@@ -160,7 +157,7 @@ export function BlankCanvas({
   }, [overlay]);
 
   return (
-    <canvas ref={ref} className="w-full h-full" width={resolution?.widthPixel ?? 1280} height={resolution?.heightPixel ?? 720} />
+    <canvas ref={ref} className="w-full h-full" width={1280} height={720} />
   );
 }
 
