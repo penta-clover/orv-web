@@ -161,7 +161,7 @@ function Body() {
   }, []);
 
   return (
-    <div className="relative flex flex-col bg-dark h-[calc(100dvh)] w-full justify-center">
+    <div className="relative flex flex-col bg-dark h-[calc(100dvh)] overflow-y-hidden w-full justify-center">
       <div className="text-grayscale-50 text-head1 mx-[16px]">
         Q. 나에게 가장 소중한 것은 무엇인가요?
       </div>
@@ -205,10 +205,12 @@ function Body() {
 
       <div className="flex justify-end mx-[16px]">
         <div className="text-grayscale-50 text-head3">
-          {String(
-            100 - Math.floor((leftSeconds / LIMIT_SECONDS) * 100)
-          ).padStart(2, "0")}
-          %
+          { /* 01:00 형태로 현재 녹화 시간 표시 */}
+          {`${Math.floor((LIMIT_SECONDS - leftSeconds) / 60)
+            .toString()
+            .padStart(2, "0")}:${((LIMIT_SECONDS - leftSeconds) % 60)
+            .toString()
+            .padStart(2, "0")}`}
         </div>
       </div>
     </div>
