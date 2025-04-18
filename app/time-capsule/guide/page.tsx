@@ -12,7 +12,7 @@ export default function Page() {
       <CTA
         text="99초 타임캡슐 시작하기"
         onClick={() => {
-          router.push("/time-capsule/setting/media");
+          router.push("/time-capsule/setting/topic");
         }}
         className="w-full h-[56px] mx-[16px] text-head3"
       />

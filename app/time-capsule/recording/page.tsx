@@ -17,6 +17,8 @@ import { count } from "console";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 
+import "@/app/components/blackBody.css";
+
 export default function Page() {
   return (
     <Suspense>
@@ -27,6 +29,9 @@ export default function Page() {
 
 function Body() {
   const searchParams = useSearchParams();
+  const topic = searchParams.get("topic");
+  const question = searchParams.get("question");
+
   const aspect = searchParams.get("aspect")! as Aspect;
   const filter = searchParams.get("filter")! as Filter;
 
@@ -95,7 +100,7 @@ function Body() {
       const blobKey = await tempBlobRepository.saveBlob(blob);
 
       // videoUrl 대신 blobKey 전달
-      router.replace(`/time-capsule/finish?blobKey=${blobKey}`);
+      router.replace(`/time-capsule/finish?blobKey=${blobKey}&topic=${topic}`);
 
       streamRecorderRef.current?.reset();
     } catch (error) {
@@ -126,7 +131,7 @@ function Body() {
 
         await track.applyConstraints({
           aspectRatio: 3 / 4,
-          resizeMode: "none"
+          resizeMode: "none",
         } as any);
 
         setResolution({
@@ -161,14 +166,16 @@ function Body() {
   }, []);
 
   return (
-    <div className="relative flex flex-col bg-dark h-[calc(100dvh)] overflow-y-hidden w-full justify-center">
-      <div className="text-grayscale-50 text-head1 mx-[16px]">
-        Q. 나에게 가장 소중한 것은 무엇인가요?
+    <div className="relative flex flex-col bg-dark h-[calc(100dvh)] overflowy-hidden w-full justify-center">
+      <div className="grow" />
+
+      <div className="text-grayscale-50 text-head2 mx-[16px]">
+        Q. {question}
       </div>
 
-      <div className="h-[16px]" />
+      <div className="h-[16px] shrink" />
 
-      <div className="relative flex justify-center items-center w-full h-full aspect-[4/3] bg-grayscale-900 overflow-hidden">
+      <div className="relative flex justify-center items-center w-full aspect-[3/4] bg-grayscale-900 overflow-hidden hide-scrollbar">
         {aspect === "none" ? (
           <BlankCanvas
             ref={previewCanvasRef}
@@ -201,11 +208,11 @@ function Body() {
         />
       </div>
 
-      <div className="h-[16px]" />
+      <div className="h-[16px] shrink" />
 
       <div className="flex justify-end mx-[16px]">
         <div className="text-grayscale-50 text-head3">
-          { /* 01:00 형태로 현재 녹화 시간 표시 */}
+          {/* 01:00 형태로 현재 녹화 시간 표시 */}
           {`${Math.floor((LIMIT_SECONDS - leftSeconds) / 60)
             .toString()
             .padStart(2, "0")}:${((LIMIT_SECONDS - leftSeconds) % 60)
@@ -213,6 +220,14 @@ function Body() {
             .padStart(2, "0")}`}
         </div>
       </div>
+
+      <div className="grow" />
+
+      <div className="text-center w-full text-grayscale-300 text-caption1">
+        시간이 다 되면 자동으로 기록이 마무리됩니다
+      </div>
+
+      <div className="h-[18px]" />
     </div>
   );
 }

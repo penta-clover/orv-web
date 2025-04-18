@@ -26,6 +26,21 @@ function Body() {
 
   return (
     <div className="flex flex-col h-[calc(100dvh)] justify-center items-center">
+      <div className="h-[20dvh]" />
+
+      <div className="text-head1 text-grayscale-white w-full px-[16px]">
+        10초만에 회원가입 후
+        <br />
+        타임캡슐을 받을 연락처를 남겨주세요
+      </div>
+
+      <div className="text-grayscale-300 text-body4 w-full px-[16px]">
+        오늘 제작해주신 타임캡슐을 안전하게 보관 후 전달드리기 위해서 회원가입이
+        필요해요
+      </div>
+
+      <div className="h-[45px]" />
+
       <div className="flex flex-col space-y-[12px] items-center max-w-[532px] w-full">
         <div className="flex flex-row w-[calc(100%-48px)] justify-center">
           <Link
@@ -55,8 +70,8 @@ function Body() {
             <span>Google 계정으로 계속하기</span>
           </Link>
         </div>
-        <div className="h-[16px]" />
       </div>
+      <div className="grow" />
     </div>
   );
 }

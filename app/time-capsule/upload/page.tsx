@@ -8,6 +8,7 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
 import "@/app/components/blackBody.css";
+import { useMemberRepository } from "@/providers/MemberRepositoryContext";
 
 export default function Page() {
   return (
@@ -20,19 +21,28 @@ export default function Page() {
 function Body() {
   const searchParams = useSearchParams();
   const blobKey = searchParams.get("blobKey")!;
-  const storyboardId = 'C2D8A9C7-293F-4215-A717-E0C9BECD6D9B';
+  const storyboardId = "C2D8A9C7-293F-4215-A717-E0C9BECD6D9B";
 
   const [isUploaded, setIsUploaded] = useState<boolean>(false);
   const [videoId, setVideoId] = useState<string | null>(null);
   const [localVideoUrl, setLocalVideoUrl] = useState<string | null>(null);
-
+  const [dotCount, setDotCount] = useState<number>(1);
 
   const tempBlobRepository = useTempBlobRepository();
   const archiveRepository = useArchiveRepository();
+  const memberRepository = useMemberRepository();
 
   const didProcessBlobRef = useRef(false); // 개발 환경에서 blob에 대한 중복 처리를 방지하기 위한 값
 
   const router = useRouter();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDotCount(prev => (prev % 6) + 1);
+    }, 500);
+    return () => clearInterval(interval);
+  }, []);
+
 
   useEffect(() => {
     if (!blobKey) return;
@@ -124,8 +134,24 @@ function Body() {
         console.timeEnd("IndexedDB 삭제 시간");
         console.log("✅ IndexedDB Blob 삭제 완료");
 
-        router.replace("/time-capsule/suggestion")
+        // 썸네일 및 비디오 이름 설정
+        const myInfo = await memberRepository.getMyInfo();
 
+        await archiveRepository.renameVideo(
+          uploadedVideoId,
+          `${myInfo.nickname}님의 타임캡슐`
+        );
+
+        const blob = await fetch(
+          "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/time-capsule-thumbnail.jpg"
+        );
+
+        const thumbnail = await archiveRepository.updateThumbnail(
+          uploadedVideoId,
+          await blob.blob()
+        );
+
+        router.replace("/time-capsule/suggestion");
       } catch (error) {
         console.error("Blob 처리 또는 업로드 중 에러 발생:", error);
         try {
@@ -151,14 +177,16 @@ function Body() {
   }, [blobKey, tempBlobRepository, archiveRepository, storyboardId]);
 
   return (
-    <div>
-      <span>열심히 타임 캡슐을 만드는 중...</span>
+    <div className="w-[100%] h-[calc(100dvh)] flex flex-col items-center justify-center">
       <Image
         src="/icons/rolling-spinner-grayscale-white.gif"
         alt="loading spinner"
-        width={24}
-        height={24}
+        width={48}
+        height={48}
       />
+      <div className="h-[20px]" />
+      <span className="text-body4 text-grayscale-white">
+      사건의 지평선을 건너는 중{'.'.repeat(dotCount)}</span>
     </div>
   );
 }

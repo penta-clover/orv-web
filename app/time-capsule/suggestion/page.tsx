@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import "@/app/components/blackBody.css";
 
 export default function Page() {
     const router = useRouter();
