@@ -16,6 +16,7 @@ import { useTempBlobRepository } from "@/providers/TempBlobRepositoryContext";
 import { count } from "console";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import "@/app/components/blackBody.css";
 
 export default function Page() {
   return (
@@ -162,7 +163,7 @@ function Body() {
 
   return (
     <div className="relative flex flex-col bg-dark h-[calc(100dvh)] overflow-y-hidden w-full justify-center">
-      <div className="text-grayscale-50 text-head1 mx-[16px]">
+      <div className="text-grayscale-50 text-head2 mx-[16px]">
         Q. 나에게 가장 소중한 것은 무엇인가요?
       </div>
 
