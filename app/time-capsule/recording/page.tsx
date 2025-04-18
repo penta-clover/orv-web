@@ -41,6 +41,10 @@ function Body() {
   const streamRecorderRef = useRef<StreamRecorder | null>(null);
   const previewCanvasRef = useRef<HTMLCanvasElement | null>(null); // 녹화 중 사용자에게 표시되는 캔버스
   const canvasRef = useRef<HTMLCanvasElement | null>(null); // 녹화되는 캔버스
+  const [resolution, setResolution] = useState<{
+    widthPixel: number;
+    heightPixel: number;
+  } | null>(null);
   const [leftSeconds, setLeftSeconds] = useState(LIMIT_SECONDS);
   const tempBlobRepository = useTempBlobRepository();
 
@@ -136,11 +140,15 @@ function Body() {
           targetHeight = clampedHeight;
           targetWidth = Math.round(targetHeight * (3 / 4));
         }
-
         await track.applyConstraints({
           width: { ideal: targetWidth, max: targetWidth },
           height: { ideal: targetHeight, max: targetHeight },
           aspectRatio: 3 / 4,
+        });
+
+        setResolution({
+          widthPixel: targetWidth,
+          heightPixel: targetHeight,
         });
 
         const videoTrack = canvasRef
@@ -182,6 +190,7 @@ function Body() {
           <BlankCanvas
             ref={previewCanvasRef}
             overlay="/images/studio-lighting-fhd.png"
+            resolution={resolution ?? undefined}
           />
         ) : (
           <FilteredCanvas
@@ -189,6 +198,7 @@ function Body() {
             filter={filter}
             ref={previewCanvasRef}
             overlay="/images/studio-lighting-fhd.png"
+            resolution={resolution ?? undefined}
           />
         )}
         <SubtitleCanvas
