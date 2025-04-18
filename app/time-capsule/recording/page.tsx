@@ -130,8 +130,8 @@ function Body() {
         const maxHeight = caps.height!.max!;
 
         // 해상도 너무 높지 않게 clamp
-        const clampedWidth = Math.min(maxWidth, 1920);
-        const clampedHeight = Math.min(maxHeight, 2560);
+        const clampedWidth = Math.min(maxWidth, 1440);
+        const clampedHeight = Math.min(maxHeight, 1920);
 
         // 비율에 맞춰 조정
         let targetWidth = clampedWidth;
