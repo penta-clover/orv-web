@@ -39,7 +39,7 @@ export default function Page() {
         "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/time-capsule-yellow.png",
       alt: "timecapsule-yellow",
       title: "용기",
-      question: "2026년 어느 날, 지쳐있는 나에게\n 해주고 싶은 말이 있나요?",
+      question: "2026년 어느 날, 지쳐있는 나를 위해\n 해주고 싶은 말이 있나요?",
     },
     {
       imgUrl:

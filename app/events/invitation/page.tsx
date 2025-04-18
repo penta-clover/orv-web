@@ -15,7 +15,7 @@ export async function generateMetadata(
       title: "오브를 즐겨쓰는 친구가 초대했어요.",
       description: "노트북으로 입장해주세요.",
       images: [
-        "http://d3bdjeyz3ry3pi.cloudfront.net/static/images/invitation-og.png",
+        "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/invitation-og.png",
       ],
     },
   };

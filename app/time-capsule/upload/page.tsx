@@ -151,7 +151,7 @@ function Body() {
           await blob.blob()
         );
 
-        router.replace("/time-capsule/suggestion");
+        router.replace("/time-capsule/result");
       } catch (error) {
         console.error("Blob 처리 또는 업로드 중 에러 발생:", error);
         try {

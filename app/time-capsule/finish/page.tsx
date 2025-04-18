@@ -21,7 +21,7 @@ function Body() {
 
   return (
     <div className="relative flex flex-col relative bg-dark w-full h-[calc(100dvh)]">
-      <div className="h-[20dvh]" />
+      <div className="h-[20dvh] shrink" />
 
       <div className="text-head1 text-grayscale-white mx-[16px] z-10">
         축하드려요!
