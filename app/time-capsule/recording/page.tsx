@@ -167,17 +167,11 @@ function Body() {
   }, []);
 
   return (
-<<<<<<< HEAD
-    <div className="relative flex flex-col bg-dark h-[calc(100dvh)] overflowy-hidden w-full justify-center">
+    <div className="relative flex flex-col bg-dark h-[calc(100dvh)] overflow-hidden w-full justify-center">
       <div className="grow" />
 
       <div className="text-grayscale-50 text-head2 mx-[16px]">
         Q. {question}
-=======
-    <div className="relative flex flex-col bg-dark h-[calc(100dvh)] overflow-y-hidden w-full justify-center">
-      <div className="text-grayscale-50 text-head2 mx-[16px]">
-        Q. 나에게 가장 소중한 것은 무엇인가요?
->>>>>>> 5ff1c245389d92a274becb80ced5cc37ccf2634c
       </div>
 
       <div className="h-[16px] shrink" />
