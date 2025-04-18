@@ -5,10 +5,22 @@ import { useRouter } from "next/navigation";
 import "@/app/components/blackBody.css";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useMemberRepository } from "@/providers/MemberRepositoryContext";
 
 export default function Page() {
   const [isCopied, setIsCopied] = useState(false);
   const router = useRouter();
+
+  const memberRepository = useMemberRepository();
+  const [nickname, setNickname] = useState<string | null>(null);
+
+  useEffect(() => {
+    memberRepository.getMyInfo().then((member) => {
+      if (member) {
+        setNickname(member.nickname);
+      }
+    });
+  }, []);
 
   useEffect(() => {
     // 클립보드에 복사 성공 시 5초 후에 isCopied 상태를 false로 변경
@@ -26,7 +38,7 @@ export default function Page() {
       <div className="h-[20dvh] shrink" />
 
       <div className="text-head1 text-grayscale-white mx-[16px] z-10">
-        다음 타임캡슐 참여자를
+        {nickname ? `${nickname}님이 ` : ""}다음 타임캡슐 참여자를
         <br />
         초대할 수 있는 링크를 생성했어요!
       </div>
@@ -65,7 +77,9 @@ export default function Page() {
             navigator.clipboard.writeText("https://orv.im/time-capsule");
             setIsCopied(true);
           }}
-          className={`w-full h-[48px] mx-[16px] text-head4 ${isCopied ? "bg-grayscale-white" : "bg-main-lilac50"}`}
+          className={`w-full h-[48px] mx-[16px] text-head4 ${
+            isCopied ? "bg-grayscale-white" : "bg-main-lilac50"
+          }`}
         />
 
         <div className="h-[16px]" />

@@ -3,12 +3,15 @@
 import { cn } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import "@/app/components/blackBody.css";
-import { Suspense } from "react";
+import { Suspense, use, useEffect, useState } from "react";
+import { useMemberRepository } from "@/providers/MemberRepositoryContext";
 
 export default function Page() {
-  return <Suspense>
-    <Body />
-  </Suspense>
+  return (
+    <Suspense>
+      <Body />
+    </Suspense>
+  );
 }
 
 function Body() {
@@ -16,14 +19,25 @@ function Body() {
   const topic = searchParams.get("topic");
   const router = useRouter();
 
+  const memberRepository = useMemberRepository();
+  const [nickname, setNickname] = useState<string | null>(null);
+
+  useEffect(() => {
+    memberRepository.getMyInfo().then((member) => {
+      if (member) {
+        setNickname(member.nickname);
+      }
+    });
+  }, []);
+
   return (
     <div className="flex flex-col relative bg-dark w-full h-[calc(100dvh)]">
       <div className="h-[20dvh]" />
 
       <div className="text-head1 text-grayscale-white mx-[16px]">
-        정확히 한 달 뒤
+        정확히 1년 뒤,
         <br />
-        타임캡슐이 배달됩니다.
+        {nickname ? `${nickname}님의 ` : ""}타임캡슐이 배달됩니다
       </div>
 
       <div className="text-grayscale-300 text-body4 mx-[16px]">
@@ -51,7 +65,7 @@ function Body() {
           className="w-full h-[48px] mx-[16px] text-head4 bg-main-lilac50"
         />
       </div>
-    </div> 
+    </div>
   );
 }
 
