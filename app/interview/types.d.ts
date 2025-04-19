@@ -31,5 +31,7 @@ type FilterData = {
   mistSpeed: number;
   bloomThreshold: number;
   bloomIntensity: number;
+  vignetteRadius: number;
+  vignetteSoftness: number;
 };
 

@@ -251,16 +251,19 @@ function getFilterUniforms(filter: Filter) {
       return {
         ...neutral,
         brightness: 1.0,
-        exposure: 0.0,
-        saturation: 1.05,
-        contrast: 1.2,
-        colorTemp: 0.83,
+        exposure: 0.03,
+        saturation: 0.9,
+        contrast: 1.7,
+        tint: 0.965,
+        colorTemp: 0.84,
         bloomThreshold: 0.5,
         bloomIntensity: 0.05,
-        highlights: 0.4,
+        highlights: 0.35,
         clarity: 0.3,
-        vibrance: 0.08,
-        shadows: 0,
+        vibrance: 0.05,
+        shadows: 0.12,
+        vignetteRadius: 1,
+        vignetteSoftness: 0.9,
       };
     default:
       return {
@@ -289,4 +292,6 @@ const neutral: FilterData = {
   mistSpeed: 0.0,
   bloomThreshold: 0.0,
   bloomIntensity: 0.0,
+  vignetteRadius: 1.0,
+  vignetteSoftness: 0.0,
 };

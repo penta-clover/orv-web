@@ -27,10 +27,12 @@ const fragmentShaderSource = `
   uniform float u_clarity;
   uniform float u_blur;
   uniform float u_mist;
+  uniform float u_vignetteRadius;
+  uniform float u_vignetteSoftness;
   uniform sampler2D u_noise;
-  uniform float     u_time;
-  uniform float     u_mistScale;
-  uniform float     u_mistSpeed;
+  uniform float u_time;
+  uniform float u_mistScale;
+  uniform float u_mistSpeed;
   uniform vec2  u_texelSize;
   uniform bool u_hasOverlay;
   varying vec2 v_texCoord;
@@ -65,7 +67,7 @@ const fragmentShaderSource = `
     float highMask = smoothstep(0.5, 1.0, lum);
     rgb += (1.0 - rgb) * u_highlights * highMask;
     // shadows: preserve dark areas
-    float shadowMask = smoothstep(0.0, 0.5, lum);
+    float shadowMask = smoothstep(0.0, 0.35, lum);
     rgb -= rgb * u_shadows * shadowMask;
 
     // 7. Vibrance (smart saturation)
@@ -121,6 +123,17 @@ const fragmentShaderSource = `
     
     // 0~1 범위로 클램핑
     rgb = clamp(rgb, 0.0, 1.0);
+
+    
+    // 12. Vignette
+    vec2  cc   = uv - vec2(0.5);
+    float dist = length(cc);
+    // 1) 화면 중심 안쪽(dist < radius)은 vig=1, 
+    //    radius→radius+softness 구간에서 1→0 페이드
+    float vig  = 1.0 - smoothstep(u_vignetteRadius,
+                                 u_vignetteRadius + u_vignetteSoftness,
+                                 dist);
+    rgb *= vig;
     
     gl_FragColor = vec4(rgb, color.a);
   }
@@ -290,6 +303,8 @@ export class WebGLRenderer {
       "hasOverlay",
       "bloomThreshold",
       "bloomIntensity",
+      "vignetteRadius",
+      "vignetteSoftness",
     ];
 
     this.gl.useProgram(this.program);
@@ -331,6 +346,8 @@ export class WebGLRenderer {
     this.gl.uniform1f(this.uniformLocations.mistSpeed, 0.0);
     this.gl.uniform1f(this.uniformLocations.bloomThreshold, 0.8);
     this.gl.uniform1f(this.uniformLocations.bloomIntensity, 0.5);
+    this.gl.uniform1f(this.uniformLocations.vignetteRadius,   1.0);
+    this.gl.uniform1f(this.uniformLocations.vignetteSoftness, 0.0);
   }
 
   private createShader(type: number, source: string): WebGLShader | null {
@@ -530,6 +547,12 @@ export class WebGLRenderer {
         this.uniformLocations.bloomIntensity,
         filter.bloomIntensity
       );
+    }
+    if (this.uniformLocations.vignetteRadius) {
+      this.gl.uniform1f(this.uniformLocations.vignetteRadius, filter.vignetteRadius);
+    }
+    if (this.uniformLocations.vignetteSoftness) {
+      this.gl.uniform1f(this.uniformLocations.vignetteSoftness, filter.vignetteSoftness);
     }
 
     this.gl.uniform1f(this.uniformLocations.time, performance.now() * 0.001);
