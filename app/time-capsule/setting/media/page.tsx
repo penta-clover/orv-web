@@ -37,7 +37,7 @@ function Body() {
       <CTA
         text="좋아요! 내 모습도 남겨주세요"
         onClick={() => {
-          router.push(`/time-capsule/recording?aspect=frontal&topic=${topic}&question=${question}`);
+          router.push(`/time-capsule/recording?aspect=frontal&filter=time-capsule&topic=${topic}&question=${question}`);
         }}
         className="w-full h-[48px] mx-[16px] text-head4 bg-main-lilac50"
       />

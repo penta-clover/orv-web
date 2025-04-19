@@ -11,10 +11,25 @@ type Filter =
   | "bright"
   | "natural"
   | "soft"
-  | "lark";
+  | "lark"
+  | "timecapsule";
 
 type FilterData = {
   brightness: number;
   contrast: number;
   saturation: number;
+  exposure: number;
+  colorTemp: number;
+  tint: number;
+  highlights: number;
+  shadows: number;
+  vibrance: number;
+  clarity: number;
+  blur: number;
+  mist: number;
+  mistScale: number;
+  mistSpeed: number;
+  bloomThreshold: number;
+  bloomIntensity: number;
 };
+

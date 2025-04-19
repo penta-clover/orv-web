@@ -86,7 +86,10 @@ export const FilteredCanvas = React.forwardRef<
         if (!resolution && canvasRef.current) {
           const vidW = video.videoWidth;
           const vidH = video.videoHeight;
-          if (vidW !== canvasRef.current.width || vidH !== canvasRef.current.height) {
+          if (
+            vidW !== canvasRef.current.width ||
+            vidH !== canvasRef.current.height
+          ) {
             canvasRef.current.width = vidW;
             canvasRef.current.height = vidH;
             gl.viewport(0, 0, vidW, vidH);
@@ -182,12 +185,14 @@ function getFilterUniforms(filter: Filter) {
   switch (filter) {
     case "bright":
       return {
+        ...neutral,
         brightness: 1.2,
         contrast: 1.0,
         saturation: 1.0,
       };
     case "monotone": {
       return {
+        ...neutral,
         brightness: 1.1,
         contrast: 0.9,
         saturation: 0.0,
@@ -195,51 +200,93 @@ function getFilterUniforms(filter: Filter) {
     }
     case "natural":
       return {
+        ...neutral,
         brightness: 1.05,
         contrast: 1.05,
         saturation: 1.0,
       };
     case "soft":
       return {
+        ...neutral,
         brightness: 1.1,
         contrast: 0.85,
         saturation: 1.1,
       };
     case "lark":
       return {
+        ...neutral,
         brightness: 1.15,
         contrast: 0.95,
         saturation: 0.8,
       };
     case "grayscale":
       return {
+        ...neutral,
         brightness: 1.0,
         contrast: 1.0,
         saturation: 0.0,
       };
     case "warm":
       return {
+        ...neutral,
         brightness: 1.1,
         contrast: 1.0,
         saturation: 1.2,
       };
     case "cold":
       return {
+        ...neutral,
         brightness: 0.9,
         contrast: 1.0,
         saturation: 0.8,
       };
     case "dark":
       return {
+        ...neutral,
         brightness: 0.8,
         contrast: 1.0,
         saturation: 1.0,
       };
+    case "timecapsule":
+      return {
+        ...neutral,
+        brightness: 1.0,
+        exposure: 0.0,
+        saturation: 1.05,
+        contrast: 1.2,
+        colorTemp: 0.85,
+        bloomThreshold: 0.5,
+        bloomIntensity: 0.05,
+        highlights: 0.4,
+        clarity: 0.3,
+        vibrance: 0.2,
+        shadows: 0,
+      };
     default:
       return {
+        ...neutral,
         brightness: 1.0,
         contrast: 1.0,
         saturation: 1.0,
       };
   }
 }
+
+const neutral: FilterData = {
+  brightness: 1.0,
+  contrast: 1.0,
+  saturation: 1.0,
+  exposure: 0.0,
+  colorTemp: 1.0,
+  tint: 1.0,
+  highlights: 0.0,
+  shadows: 0.0,
+  vibrance: 0.0,
+  clarity: 0.0,
+  blur: 0.0,
+  mist: 0.0,
+  mistScale: 0.0,
+  mistSpeed: 0.0,
+  bloomThreshold: 0.0,
+  bloomIntensity: 0.0,
+};
