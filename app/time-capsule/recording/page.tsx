@@ -240,10 +240,11 @@ function Body() {
 
       <div className="grow" />
 
-      <div className="text-grayscale-50 text-head2 mx-[16px]">
-        Q. {question}
-      </div>
-
+      {canLoadMedia !== false && (
+        <div className="text-grayscale-50 text-head2 mx-[16px]">
+          Q. {question}
+        </div>
+      )}
       <div className="h-[16px] shrink" />
 
       <div className="relative flex justify-center items-center w-full aspect-[3/4] bg-grayscale-900 overflow-hidden hide-scrollbar">
