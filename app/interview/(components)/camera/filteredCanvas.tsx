@@ -254,12 +254,12 @@ function getFilterUniforms(filter: Filter) {
         exposure: 0.0,
         saturation: 1.05,
         contrast: 1.2,
-        colorTemp: 0.82,
+        colorTemp: 0.83,
         bloomThreshold: 0.5,
         bloomIntensity: 0.05,
         highlights: 0.4,
         clarity: 0.3,
-        vibrance: 0.2,
+        vibrance: 0.08,
         shadows: 0,
       };
     default:
