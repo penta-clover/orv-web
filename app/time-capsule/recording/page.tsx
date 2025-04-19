@@ -302,22 +302,26 @@ function Body() {
 
       <div className="h-[16px] shrink" />
 
-      <div className="flex justify-end mx-[16px]">
-        <div className="text-grayscale-50 text-head3">
-          {/* 01:00 형태로 현재 녹화 시간 표시 */}
-          {`${Math.floor((LIMIT_SECONDS - leftSeconds) / 60)
-            .toString()
-            .padStart(2, "0")}:${((LIMIT_SECONDS - leftSeconds) % 60)
-            .toString()
-            .padStart(2, "0")}`}
+      {canLoadMedia !== false && (
+        <div className="flex justify-end mx-[16px]">
+          <div className="text-grayscale-50 text-head3">
+            {/* 01:00 형태로 현재 녹화 시간 표시 */}
+            {`${Math.floor((LIMIT_SECONDS - leftSeconds) / 60)
+              .toString()
+              .padStart(2, "0")}:${((LIMIT_SECONDS - leftSeconds) % 60)
+              .toString()
+              .padStart(2, "0")}`}
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="grow" />
 
-      <div className="text-center w-full text-grayscale-300 text-caption1">
-        시간이 다 되면 자동으로 기록이 마무리됩니다
-      </div>
+      {canLoadMedia !== false && (
+        <div className="text-center w-full text-grayscale-300 text-caption1">
+          시간이 다 되면 자동으로 기록이 마무리됩니다
+        </div>
+      )}
 
       <div className="h-[18px]" />
     </div>
