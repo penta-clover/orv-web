@@ -58,7 +58,7 @@ export default function Page() {
   ];
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-full">
       <div className="h-[25px] grow" />
 
       <div className="text-head1 text-grayscale-white mx-[16px]">
@@ -92,7 +92,7 @@ export default function Page() {
         ))}
       </div>
 
-      <div className="h-[15px] grow" />
+      <div className="h-[15px]" />
 
       <div
         className={`relative w-full flex justify-center h-[122px] transition-all ${
@@ -126,11 +126,8 @@ export default function Page() {
         </div>
       </div>
 
-      {!selectedTopic && (
-        <div className="w-full flex justify-center h-[122px]" />
-      )}
-
-      <div className="grow" />
+      <div className="h-[15px] grow" />
+      <div className="h-[74px]" />
 
       <div className="absolute w-full bottom-[26px] z-10">
         <CTA
@@ -140,7 +137,9 @@ export default function Page() {
               return;
             }
 
-            router.push(`/time-capsule/setting/media?topic=${selectedTopic}&question=${question}`);
+            router.push(
+              `/time-capsule/setting/media?topic=${selectedTopic}&question=${question}`
+            );
           }}
           className={`w-full h-[48px] mx-[16px] text-head4 ${
             selectedTopic ? "bg-main-lilac50" : "bg-grayscale-50"
@@ -151,7 +150,7 @@ export default function Page() {
   );
 }
 
-function CTA(props: { text: string; onClick: () => void; className?: string}) {
+function CTA(props: { text: string; onClick: () => void; className?: string }) {
   return (
     <div className="w-full flex justify-center">
       <button
