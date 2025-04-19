@@ -62,7 +62,7 @@ export default function Page() {
       <div className="h-[25px] grow" />
 
       <div className="text-head1 text-grayscale-white mx-[16px]">
-        타임캡슐 주제를 골라주세요
+        타임캡슐에 어떤 주제를 담을까요?
       </div>
 
       <div className="h-[15px]" />
