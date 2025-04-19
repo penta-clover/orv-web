@@ -71,7 +71,7 @@ export default function Page() {
 
       <div className="absolute w-full bottom-[26px] z-10">
         <CTA
-          text={isCopied ? "초대 링크 복사 완료" : "초대 링크 공유하기"}
+          text=""
           onClick={() => {
             // 클립보드에 복사
             navigator.clipboard.writeText("https://orv.im/time-capsule");
@@ -80,7 +80,28 @@ export default function Page() {
           className={`w-full h-[48px] mx-[16px] text-head4 ${
             isCopied ? "bg-grayscale-white" : "bg-main-lilac50"
           }`}
-        />
+        >
+          <div className="flex items-center justify-center">
+            {isCopied ? (
+              <>
+                <Image
+                  src="/icons/check-grayscale-black.svg"
+                  alt="check"
+                  width={27}
+                  height={27}
+                />
+                <div className="w-[2px]" />
+                <div className="text-grayscale-800 text-head4">
+                  {nickname ? `${nickname}님의 ` : ""}초대링크 복사 완료
+                </div>
+              </>
+            ) : (
+              <div className="text-grayscale-800 text-head4">
+                초대링크 공유하기
+              </div>
+            )}
+          </div>
+        </CTA>
 
         <div className="h-[16px]" />
 
@@ -118,7 +139,12 @@ export default function Page() {
   );
 }
 
-function CTA(props: { text: string; onClick: () => void; className?: string }) {
+function CTA(props: {
+  text: string;
+  onClick: () => void;
+  className?: string;
+  children?: React.ReactNode;
+}) {
   return (
     <div className="w-full flex justify-center">
       <button
@@ -130,6 +156,7 @@ function CTA(props: { text: string; onClick: () => void; className?: string }) {
         onClick={props.onClick}
       >
         {props.text}
+        {props.children}
       </button>
     </div>
   );
