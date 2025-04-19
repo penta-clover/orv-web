@@ -58,6 +58,7 @@ function Body() {
   const [isInstagramBrowser, setIsInstagramBrowser] = useState<boolean | null>(
     null
   );
+  const [canLoadMedia, setCanLoadMedia] = useState(false);
 
   usePermissionReload("microphone");
   usePermissionReload("camera");
@@ -155,6 +156,8 @@ function Body() {
         video: true,
       })
       .then(async (originalCameraStream) => {
+        setCanLoadMedia(true);
+
         // 해상도 선택
         const track = originalCameraStream.getVideoTracks()[0];
 
@@ -193,6 +196,9 @@ function Body() {
         }
 
         setOriginalVideoStream(originalCameraStream);
+      })
+      .catch((error) => {
+        setCanLoadMedia(false);
       });
   }, []);
 
@@ -215,7 +221,7 @@ function Body() {
 
   return (
     <div className="relative flex flex-col bg-dark h-[calc(100dvh)] overflow-hidden w-full justify-center">
-      {isInstagramBrowser && (
+      {isInstagramBrowser && !canLoadMedia && (
         <div className="absolute relative flex items-end flex-col top-0 left-0 right-0 px-[20px] pt-[10px] animate-updown z-50">
           <Image
             unoptimized
