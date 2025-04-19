@@ -16,7 +16,7 @@ import { useTempBlobRepository } from "@/providers/TempBlobRepositoryContext";
 import { count } from "console";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
-import "@/app/components/blackBody.css";
+import Image from "next/image";
 
 import "@/app/components/blackBody.css";
 
@@ -55,6 +55,9 @@ function Body() {
   const [startCountdown, setStartCountdown] = useState<number>(3);
   const isCountdownEnd = useRef<boolean>(false);
   const tempBlobRepository = useTempBlobRepository();
+  const [isInstagramBrowser, setIsInstagramBrowser] = useState<boolean | null>(
+    null
+  );
 
   usePermissionReload("microphone");
   usePermissionReload("camera");
@@ -136,6 +139,15 @@ function Body() {
   }, [originalVideoStream]);
 
   useEffect(() => {
+    // Instagram 브라우저 감지
+    const userAgent = navigator.userAgent || navigator.vendor;
+    const isInstagram =
+      userAgent.includes("Instagram") ||
+      (userAgent.includes("FBAN") && userAgent.includes("FBAV"));
+    setIsInstagramBrowser(isInstagram);
+  }, []);
+
+  useEffect(() => {
     streamRecorderRef.current = new StreamRecorder();
 
     navigator.mediaDevices
@@ -203,6 +215,23 @@ function Body() {
 
   return (
     <div className="relative flex flex-col bg-dark h-[calc(100dvh)] overflow-hidden w-full justify-center">
+      {isInstagramBrowser && (
+        <div className="absolute relative flex items-end flex-col top-0 left-0 right-0 px-[20px] pt-[10px] animate-updown z-50">
+          <Image
+            unoptimized
+            src="/icons/tooltip-triangle.svg"
+            alt="tooltip-triangle"
+            width={12}
+            height={20}
+            className="rotate-180 mr-[4px] -mb-[4px]"
+          />
+          <div className="px-[15px] py-[11px] text-body3 text-grayscale-50 whitespace-pre-wrap bg-grayscale-700 rounded-[10px]">
+            녹화가 진행되지 않으면 상단 메뉴에서 "외부 브라우저에서 열기"를
+            선택해주세요
+          </div>
+        </div>
+      )}
+
       <div className="grow" />
 
       <div className="text-grayscale-50 text-head2 mx-[16px]">
