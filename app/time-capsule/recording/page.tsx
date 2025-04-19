@@ -58,7 +58,7 @@ function Body() {
   const [isInstagramBrowser, setIsInstagramBrowser] = useState<boolean | null>(
     null
   );
-  const [canLoadMedia, setCanLoadMedia] = useState(false);
+  const [canLoadMedia, setCanLoadMedia] = useState<boolean | null>(null);
 
   usePermissionReload("microphone");
   usePermissionReload("camera");
@@ -221,7 +221,7 @@ function Body() {
 
   return (
     <div className="relative flex flex-col bg-dark h-[calc(100dvh)] overflow-hidden w-full justify-center">
-      {isInstagramBrowser && !canLoadMedia && (
+      {isInstagramBrowser && canLoadMedia !== true && (
         <div className="absolute relative flex items-end flex-col top-0 left-0 right-0 px-[20px] pt-[10px] animate-updown z-50">
           <Image
             unoptimized
@@ -278,9 +278,22 @@ function Body() {
           fps={RECORDING_FPS}
         />
         {!isCountdownEnd.current && (
-          <div className="absolute flex justify-center items-center w-full h-full bg-grayscale-900 opacity-[80] z-50">
+          <div className="absolute flex justify-center items-center w-full h-full bg-grayscale-900 opacity-[80] z-45">
             <div className="text-grayscale-50 text-head1 text-[50px]">
               {startCountdown}
+            </div>
+          </div>
+        )}
+        {isInstagramBrowser && canLoadMedia === false && (
+          <div className="absolute flex flex-col justify-center items-center w-full h-full bg-grayscale-900 opacity-[80] z-50">
+            <div className="text-head2 text-grayscale-50">
+              외부 브라우저에서 계속할 수 있어요
+            </div>
+            <div className="h-[8px]" />
+            <div className="flex justify-center items-center text-body4 text-grayscale-50 whitespace-pre-wrap text-center">
+              우측 상단 메뉴(···)에서
+              <br />
+              "외부 브라우저에서 열기"를 선택해주세요
             </div>
           </div>
         )}
