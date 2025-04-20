@@ -332,6 +332,6 @@ const handleCapture = async (elem: HTMLElement) => {
     link.click();
   } catch (e) {
     console.error("캡처 실패:", e);
-    alert("특정 영역 캡처에 실패했습니다.");
+    alert("결과 저장에 실패했습니다. 다시 시도해주세요.");
   }
 };
