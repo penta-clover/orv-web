@@ -1,11 +1,13 @@
 "use client";
 
+import html2canvas from "html2canvas";
 import { cn } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import "@/app/components/blackBody.css";
 import { Suspense, use, useEffect, useState } from "react";
 import { useMemberRepository } from "@/providers/MemberRepositoryContext";
 import Image from "next/image";
+import { useRef } from "react";
 
 export default function Page() {
   return (
@@ -20,6 +22,7 @@ function Body() {
   const topic = searchParams.get("topic")!;
   const gifts = searchParams.get("gift")!.split(",");
   const router = useRouter();
+  const entireLetterRef = useRef<HTMLDivElement>(null);
 
   const memberRepository = useMemberRepository();
   const [nickname, setNickname] = useState<string | null>(null);
@@ -66,20 +69,22 @@ function Body() {
       <div className="h-[23dvh] shrink-0" />
 
       {nickname && (
-        <Reply
-          nickname={nickname}
-          topic={topic}
-          firstGift={gifts[0]}
-          secondGift={gifts[1]}
-          thirdGift={gifts[2]}
-        />
+        <div ref={entireLetterRef}>
+          <Reply
+            nickname={nickname}
+            topic={topic}
+            firstGift={gifts[0]}
+            secondGift={gifts[1]}
+            thirdGift={gifts[2]}
+          />
+        </div>
       )}
 
       <div className="w-full z-10">
         <CTA
           text="미래에서 온 편지 다운로드"
           onClick={() => {
-            alert("구현중인 기능입니다.");
+            handleCapture(entireLetterRef.current!);
           }}
           className="w-full h-[48px] mx-[16px] text-head4 bg-grayscale-50"
         />
@@ -144,7 +149,10 @@ function Reply({
       <div className="h-[40px]" />
 
       <p className="text-body1 font-onglyph text-grayscale-white">
-        안녕! 나는 2026년의 {nickname}이야.<br/><br/>{topicMapper(topic)}
+        안녕! 나는 2026년 {new Date().getMonth() + 1}월 {new Date().getDate()}일의 {nickname}이야.
+        <br />
+        <br />
+        {topicMapper(topic)}
       </p>
 
       <div className="h-[70px]" />
@@ -251,7 +259,7 @@ function topicMapper(topic: string) {
     case "불안":
       return "내가 그 영상을 남겼을 때, 난 진짜 힘들었지...포기하고 싶은 순간들이 많았고.. 근데 말야, 지금의 나는 그때의 네가 너무나도 자랑스러워, 버텨줘서 고맙고 포기하지 않아서 다행이야! 지금의 내가 존재한다는 것은 네가 포기하지 않았다는 거겠지? 아 참! 요즘 내가 어떻게 지내는지 들려줄게";
     case "과거":
-      return `아마 1년 전에 난 “과거로 돌아갈 수 있다면 언제로 가고 싶나요?” 질문을 받았었지? 지금의 내가 이 질문에 답을 하자면 난 1년 전으로 돌아가고 싶어... 네가 망설이고 있는 일들이 있다면 최선을 다해 부딪혀 보라고 말해주고 싶어. 실패하더라도, 지금처럼 "그때 해볼걸…" 하고 후회하진 않을 테니까 말야..아 참! 요즘 내가 어떻게 지내는 지 궁금하지 않아??`
+      return `아마 1년 전에 난 “과거로 돌아갈 수 있다면 언제로 가고 싶나요?” 질문을 받았었지? 지금의 내가 이 질문에 답을 하자면 난 1년 전으로 돌아가고 싶어... 네가 망설이고 있는 일들이 있다면 최선을 다해 부딪혀 보라고 말해주고 싶어. 실패하더라도, 지금처럼 "그때 해볼걸…" 하고 후회하진 않을 테니까 말야..아 참! 요즘 내가 어떻게 지내는 지 궁금하지 않아??`;
     case "슬픔":
       return `답장을 보내면서 그 때 당시 나의 얼굴이 떠올랐어. 네가 최근에 겪은 그 슬픔, 누구에게도 말하지 못했던 그 감정...사실 나도 아직 완전히 이겨내진 못했어. 하지만 그 아픔 덕분에 내가 더 단단해질 수 있었던 것 같아. 그러니까, 지금의 너도 기억해줘. 이 시기를 버텨낸 너는 결국 빛나는 사람이 될 거라는 것을.. 아 참! 요즘 내가 어떻게 지내는 지 궁금하지 않아??`;
     case "분노":
@@ -310,3 +318,20 @@ function giftMapper(gift: string) {
       };
   }
 }
+
+const handleCapture = async (elem: HTMLElement) => {
+  try {
+    const canvas = await html2canvas(elem, {
+      useCORS: true,
+      backgroundColor: "rgb(16, 16, 18)",
+    });
+    const dataUrl = canvas.toDataURL("image/png");
+    const link = document.createElement("a");
+    link.href = dataUrl;
+    link.download = `미래에서-온-편지-${Date.now()}.png`;
+    link.click();
+  } catch (e) {
+    console.error("캡처 실패:", e);
+    alert("특정 영역 캡처에 실패했습니다.");
+  }
+};
