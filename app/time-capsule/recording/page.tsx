@@ -230,8 +230,8 @@ function Body() {
 
   return (
     <div className="relative flex flex-col bg-dark h-[calc(100dvh)] overflow-hidden w-full justify-center">
-      {isInstagramBrowser && canLoadMedia !== true && (
-        <div className="absolute relative flex items-end flex-col top-0 left-0 right-0 px-[20px] pt-[10px] animate-updown z-50">
+      {isInstagramBrowser && canLoadMedia === false && (
+        <div className="absolute flex items-end flex-col top-0 left-0 right-0 px-[20px] pt-[10px] animate-updown z-50">
           <Image
             unoptimized
             src="/icons/tooltip-triangle.svg"
