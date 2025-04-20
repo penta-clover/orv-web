@@ -114,7 +114,7 @@ function Body() {
       const blob = streamRecorderRef.current?.getBlob();
       if (!blob) {
         console.error("Blob 데이터를 가져오지 못했습니다.");
-        // TODO: 사용자에게 오류 알림
+        alert("녹화 영상을 저장하는 중 오류가 발생했습니다.")
         return;
       }
 
@@ -127,6 +127,7 @@ function Body() {
       streamRecorderRef.current?.reset();
     } catch (error) {
       console.error("IndexedDB 저장 또는 페이지 이동 중 오류:", error);
+      alert("녹화 영상을 저장하는 중 오류가 발생했습니다.")
     }
   };
 
