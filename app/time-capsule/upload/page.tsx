@@ -156,15 +156,8 @@ function Body() {
         router.replace(`/time-capsule/result?topic=${topic}&gift=${gifts}`);
       } catch (error) {
         console.error("Blob 처리 또는 업로드 중 에러 발생:", error);
-        try {
-          await tempBlobRepository.deleteBlob(blobKey);
-          console.log("오류 발생 후 IndexedDB Blob 삭제 시도 완료");
-        } catch (deleteError) {
-          console.error(
-            "오류 발생 후 IndexedDB Blob 삭제 중 추가 오류:",
-            deleteError
-          );
-        }
+        // 현재 페이지 새로고침
+        router.refresh();
       }
     }
 
