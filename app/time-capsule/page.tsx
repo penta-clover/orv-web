@@ -2,21 +2,95 @@
 
 import Link from "next/link";
 import "@/app/components/blackBody.css";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
+import { Suspense, useEffect, useState } from "react";
 
 export default function Page() {
+  return (
+    <Suspense>
+      <Body />
+    </Suspense>
+  );
+}
+
+function Body() {
+  const searchParam = useSearchParams();
+  const referral = searchParam.get("ref")!;
   const router = useRouter();
 
   return (
     <div className="relative bg-dark w-full">
+      <ActionBar />
+
+      <Capsule />
+
+      <div className="h-[15px] shrink-0" />
+
+      <div className="flex flex-col mx-[15px]">
+        <span className="text-head1 text-[22px] leading-[32px] text-grayscale-white">
+          {referral ? (
+            <>
+              {referral}
+              <span className="font-normal">님이 당신을</span>
+            </>
+          ) : (
+            "당신을"
+          )}
+        </span>
+        <span className="text-head1 text-[22px] leading-[32px] text-grayscale-white">
+          60초 타임캡슐 프로젝트
+          <span className="font-normal">
+            {referral ? "에 초대했어요" : "에 초대합니다"}
+          </span>
+        </span>
+        <span className="text-body4 text-grayscale-300">
+          당신의 오늘을 60초 안에 담아, 미래의 나에게 전달해보세요. 1년 후
+          타임캡슐이 당신에게 돌아옵니다.
+        </span>
+      </div>
+
+      <div className="h-[50px] shrink-0" />
+
       <CTA
-        text="미래의 나에게 메시지 보내기"
+        text="60초 타임캡슐 시작하기"
         onClick={() => {
           router.push("/time-capsule/guide");
         }}
         className="w-full h-[56px] mx-[16px] text-head3"
       />
+
+      <div className="h-[8px] shrink-0" />
+
+      <div className="w-full text-center text-caption1 text-grayscale-300">
+        지금까지 <span className="text-grayscale-white">372</span>명이 이
+        프로젝트를 함께하고 있어요
+      </div>
+
+      <div className="h-[125px] shrink-0" />
+
+      <QuestionSection />
+
+      <div className="h-[125px] shrink-0" />
+
+      <ExampleSection />
+
+      <div className="h-[125px] shrink-0" />
+
+      <Introduction />
+
+      <div className="h-[70px] shrink-0" />
+
+      <CTA
+        text="나만의 타임캡슐 생성하기"
+        onClick={() => {
+          router.push("/time-capsule/guide");
+        }}
+        className="w-full h-[56px] mx-[16px] text-head3"
+      />
+
+      <div className="h-[26px] shrink-0" />
     </div>
   );
 }
@@ -34,6 +108,156 @@ function CTA(props: { text: string; onClick: () => void; className?: string }) {
       >
         {props.text}
       </button>
+    </div>
+  );
+}
+
+function ActionBar() {
+  return (
+    <div className="h-[56px] w-full flex flex-row pl-[16px] shrink-0">
+      <Image src="/icons/logo.svg" alt="logo" width={42} height={20} />
+    </div>
+  );
+}
+
+function Capsule() {
+  return (
+    <div className="relative h-[344px] w-full">
+      <Image
+        src={
+          "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/milky-way.png"
+        }
+        unoptimized
+        alt="milky-way"
+        width={0}
+        height={0}
+        style={{
+          objectFit: "fill",
+          width: "100%",
+          height: "100%",
+          zIndex: 0,
+          position: "absolute",
+          top: "0",
+          left: "0",
+          right: "0",
+          bottom: "0",
+          opacity: "0.65",
+        }}
+      />
+
+      <div className="grow" />
+
+      <div className="flex justify-center items-center w-full h-full">
+        <Image
+          src={
+            "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/time-capsule.png"
+          }
+          unoptimized
+          alt="time capsule"
+          width={0}
+          height={0}
+          style={{
+            objectFit: "contain",
+            width: "200px",
+            height: "200px",
+            zIndex: 10,
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
+function QuestionSection() {
+  return (
+    <div className="flex flex-col items-center w-full">
+      <div className="text-head1 text-grayscale-white flex flex-col items-center">
+        <span>지금으로부터 1년 전</span>
+        <span>당신의 모습을 기억하나요?</span>
+      </div>
+      <div className="h-[16px]" />
+      <div className="text-body2 text-grayscale-400 flex flex-col items-center">
+        <span>1년 전의 내 모습을 떠올려보세요</span>
+      </div>
+      <div className="h-[24px]" />
+      <Image
+        unoptimized
+        src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/question-burble.png"
+        width={287}
+        height={214}
+        alt="question burble"
+      />
+    </div>
+  );
+}
+
+function ExampleSection() {
+  return (
+    <div className="flex flex-col items-center w-full">
+      <div className="text-head1 text-grayscale-white flex flex-col items-center">
+        <span>기억 속에서 곧 사라져버릴</span>
+        <span>오늘의 표정, 기분, 그리고 분위기</span>
+      </div>
+      <div className="h-[16px]" />
+      <div className="text-body2 text-grayscale-400 flex flex-col items-center">
+        <span>지금 이 순간을 타임캡슐에 담아 1년 뒤 꺼내보세요</span>
+      </div>
+      <div className="h-[24px]" />
+      <Image
+        unoptimized
+        src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-demo-ga.jpg"
+        width={0}
+        height={0}
+        style={{
+          objectFit: "contain",
+          width: "100%",
+          height: "100%",
+          zIndex: 10,
+        }}
+        alt="question burble"
+      />
+    </div>
+  );
+}
+
+function Introduction() {
+  const [now, setNow] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatDate = (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    let hours = date.getHours();
+    const minutes = date.getMinutes();
+    const seconds = date.getSeconds();
+    const period = hours < 12 ? '오전' : '오후';
+    hours = hours % 12;
+    if (hours === 0) hours = 12;
+    const paddedMinutes = String(minutes).padStart(2, '0');
+    const paddedSeconds = String(seconds).padStart(2, '0');
+    return `${year}년 ${month}월 ${day}일 ${period} ${hours}시 ${paddedMinutes}분 ${paddedSeconds}초`;
+  };
+
+  return (
+    <div className="flex flex-col text-body1 gap-[36px] text-grayscale-white mx-[20px]">
+      <span>{formatDate(now)}</span>
+
+      <span>
+        매순간 시간은 흐르고 지금 당신의 모습도 시간과 함께 영원히 과거로
+        사라지겠죠
+      </span>
+
+      <span>
+        내가 나를 남기지 않는다면 이 순간은 영원히 사라져 아무도 기억하지 못할
+        거예요
+      </span>
+
+      <span>그 시작을 60초 타임캡슐과 함께 해요</span>
     </div>
   );
 }
