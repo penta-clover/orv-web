@@ -38,6 +38,8 @@ function Body() {
 
   const router = useRouter();
 
+  const loadingTip = [`빛의 속도로 가속하는 중`, `타임워프 게이트에 접근 중`, `사건의 지평선을 건너가는 중`, `은하계를 가로질러 1년 뒤로 떠나는 중...`]
+
   useEffect(() => {
     const interval = setInterval(() => {
       setDotCount(prev => (prev % 6) + 1);
