@@ -149,7 +149,8 @@ function Reply({
       <div className="h-[40px]" />
 
       <p className="text-body1 font-onglyph text-grayscale-white">
-        안녕! 나는 2026년 {new Date().getMonth() + 1}월 {new Date().getDate()}일의 {nickname}이야.
+        안녕! 나는 2026년 {new Date().getMonth() + 1}월 {new Date().getDate()}
+        일의 {nickname}이야.
         <br />
         <br />
         {topicMapper(topic)}
@@ -175,7 +176,7 @@ function Reply({
       </div>
 
       <div className="flex">
-        <div className="w-[2px] shrink-0 inset-y-0 mr-[10px] my-[5px] bg-grayscale-white" />
+        <div className="w-[2px] shrink-0 inset-y-0 mr-[10px] bg-grayscale-white" />
         <div className="text-body1 font-onglyph text-grayscale-white">
           {giftMapper(firstGift)!.text}
         </div>
@@ -201,7 +202,7 @@ function Reply({
       </div>
 
       <div className="flex">
-        <div className="w-[2px] shrink-0 inset-y-0 mr-[10px] my-[5px] bg-grayscale-white" />
+        <div className="w-[2px] shrink-0 inset-y-0 mr-[10px] bg-grayscale-white" />
         <div className="text-body1 font-onglyph text-grayscale-white">
           {giftMapper(secondGift)!.text}
         </div>
@@ -227,7 +228,7 @@ function Reply({
       </div>
 
       <div className="flex">
-        <div className="w-[2px] shrink-0 inset-y-0 mr-[10px] my-[5px] bg-grayscale-white" />
+        <div className="w-[2px] shrink-0 inset-y-0 mr-[10px] bg-grayscale-white" />
         <div className="text-body1 font-onglyph text-grayscale-white">
           {giftMapper(thirdGift)!.text}
         </div>
