@@ -207,11 +207,10 @@ function ExampleSection() {
         unoptimized
         src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-demo-ga.jpg"
         width={0}
-        height={0}
+        height={233}
         style={{
-          objectFit: "contain",
           width: "100%",
-          height: "100%",
+          objectFit: "contain",
           zIndex: 10,
         }}
         alt="question burble"
