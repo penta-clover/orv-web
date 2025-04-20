@@ -45,7 +45,7 @@ export const FilteredCanvas = React.forwardRef<
     video.style.pointerEvents = "none"; // 비디오 요소가 클릭 이벤트를 받지 않도록 설정
     video.style.display = "block";
     document.body.appendChild(video);
-    video.play().catch((err) => console.error("video.play 실패:", err));
+    video.play().catch((err) => console.log("video.play 실패:", err));
 
     filterRef.current = getFilterUniforms(filter);
 
@@ -56,7 +56,7 @@ export const FilteredCanvas = React.forwardRef<
     }
 
     const gl = canvasRef.current.getContext("webgl", {
-      preserveDrawingBuffer: true, // canvas 복사를 위한 buffer 보존
+      preserveDrawingBuffer: false, // 메모리 성능 최적화를 위한 버퍼 유지 비활성화
       powerPreference: "high-performance", // 성능 최적화
       antialias: false, // 안티아일리어싱 비활성화
       depth: false, // 깊이 버퍼 비활성화
