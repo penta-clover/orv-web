@@ -199,11 +199,6 @@ function Body() {
         setOriginalVideoStream(originalCameraStream);
       })
       .catch((error) => {
-        if (!isInstagramBrowser && canLoadMedia === null) {
-          // 새로고침
-          setCanLoadMedia(false);
-          window.location.reload();
-        }
         console.error("getUserMedia error:", error);
       });
   }, []);
