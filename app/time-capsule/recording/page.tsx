@@ -200,7 +200,7 @@ function Body() {
       })
       .catch((error) => {
         console.error("getUserMedia error:", error);
-        alert("카메라를 사용할 수 없습니다. 다시 시도해주세요.");
+        setCanLoadMedia(false);
       });
   }, []);
 
