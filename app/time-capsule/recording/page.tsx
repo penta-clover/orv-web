@@ -52,7 +52,7 @@ function Body() {
     heightPixel: number;
   } | null>(null);
   const [leftSeconds, setLeftSeconds] = useState(LIMIT_SECONDS);
-  const [startCountdown, setStartCountdown] = useState<number>(3);
+  const [startCountdown, setStartCountdown] = useState<number>(5);
   const isCountdownEnd = useRef<boolean>(false);
   const tempBlobRepository = useTempBlobRepository();
   const [isInstagramBrowser, setIsInstagramBrowser] = useState<boolean | null>(
