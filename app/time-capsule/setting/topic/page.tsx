@@ -17,8 +17,8 @@ export default function Page() {
       imgUrl:
         "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/time-capsule-purple.png",
       alt: "timecapsule-purple",
-      title: "가치관",
-      question: "지금 나에게\n 가장 소중한 것은 무엇인가요?",
+      title: "슬픔",
+      question: "최근 가장 슬펐던 일은\n언제인가요?",
     },
     {
       imgUrl:
@@ -31,15 +31,15 @@ export default function Page() {
       imgUrl:
         "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/time-capsule-red.png",
       alt: "timecapsule-red",
-      title: "미래",
-      question: "1년 뒤의 나는\n 어떤 모습이기를 바라나요?",
+      title: "분노",
+      question: "최근에 가장 화가 났던\n일은 언제인가요?",
     },
     {
       imgUrl:
         "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/time-capsule-yellow.png",
       alt: "timecapsule-yellow",
-      title: "용기",
-      question: "2026년 어느 날, 지쳐있는 나를 위해\n 해주고 싶은 말이 있나요?",
+      title: "미래",
+      question: "1년 뒤의 나는\n 어떤 모습이기를 바라나요?",
     },
     {
       imgUrl:
