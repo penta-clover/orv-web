@@ -46,7 +46,7 @@ export default function Page() {
         "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/time-capsule-green.png",
       alt: "timecapsule-green",
       title: "후회",
-      question: "지금 나는 어떤 것을 가장 후회하고 있나요?",
+      question: "지금 나는\n 어떤 것을 가장 후회하고 있나요?",
     },
     {
       imgUrl:
