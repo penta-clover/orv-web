@@ -21,7 +21,7 @@ function Body() {
   const router = useRouter();
 
   return (
-    <div className="relative bg-dark w-full">
+    <div className="relative bg-dark w-full h-[calc(100dvh)] overflow-y-scroll hide-scrollbar">
       <ActionBar />
 
       <Capsule />
