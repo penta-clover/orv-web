@@ -432,7 +432,7 @@ export class WebGLRenderer {
     }
   }
 
-  draw(video: HTMLVideoElement, filter: FilterData) {
+  draw(source: HTMLVideoElement | HTMLCanvasElement, filter: FilterData) {
     if (
       !this.program ||
       !this.positionBuffer ||
@@ -490,7 +490,7 @@ export class WebGLRenderer {
       this.gl.RGBA,
       this.gl.RGBA,
       this.gl.UNSIGNED_BYTE,
-      video
+      source
     );
 
     // 필터 uniform 설정
@@ -561,10 +561,12 @@ export class WebGLRenderer {
     this.gl.uniform1i(this.uniformLocations.noise, 2);
 
     if (this.uniformLocations.texelSize) {
+      const texW = source instanceof HTMLVideoElement ? source.videoWidth : source.width;
+      const texH = source instanceof HTMLVideoElement ? source.videoHeight : source.height;
       this.gl.uniform2f(
         this.uniformLocations.texelSize,
-        1 / video.videoWidth,
-        1 / video.videoHeight
+        1 / texW,
+        1 / texH
       );
     }
 

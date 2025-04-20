@@ -81,23 +81,46 @@ export const FilteredCanvas = React.forwardRef<
     }
 
     const drawFrame = () => {
-      if (video.readyState === video.HAVE_ENOUGH_DATA) {
-        // 비디오 크기에 맞춰 캔버스 크기 조정
+      const cvs = canvasRef.current;
+      if (!cvs) return;
 
-        if (!resolution && canvasRef.current) {
-          const vidW = video.videoWidth;
-          const vidH = video.videoHeight;
-          if (
-            vidW !== canvasRef.current.width ||
-            vidH !== canvasRef.current.height
-          ) {
-            canvasRef.current.width = vidW;
-            canvasRef.current.height = vidH;
-            gl.viewport(0, 0, vidW, vidH);
+      if (video.readyState === video.HAVE_ENOUGH_DATA) {
+        // 캔버스 및 비디오 비율 계산
+        const vidW = video.videoWidth;
+        const vidH = video.videoHeight;
+        const cvsW = cvs.width;
+        const cvsH = cvs.height;
+        const videoRatio = vidW / vidH;
+        const canvasRatio = cvsW / cvsH;
+
+        let source: HTMLVideoElement | HTMLCanvasElement = video;
+
+        if (Math.abs(videoRatio - canvasRatio) > 1e-3) {
+          // 비율 불일치 시 중앙 크롭
+          const offscreen = document.createElement('canvas');
+          offscreen.width = cvsW;
+          offscreen.height = cvsH;
+          const offCtx = offscreen.getContext('2d')!;
+          let sx: number, sy: number, sWidth: number, sHeight: number;
+          if (videoRatio > canvasRatio) {
+            // 비디오가 더 넓으면 좌우 자르기
+            sHeight = vidH;
+            sWidth = vidH * canvasRatio;
+            sx = (vidW - sWidth) / 2;
+            sy = 0;
+          } else {
+            // 비디오가 더 길면 상하 자르기
+            sWidth = vidW;
+            sHeight = vidW / canvasRatio;
+            sx = 0;
+            sy = (vidH - sHeight) / 2;
           }
+          offCtx.drawImage(video, sx, sy, sWidth, sHeight, 0, 0, cvsW, cvsH);
+          source = offscreen;
         }
 
-        webglRenderer.draw(video, filterRef.current!);
+        // WebGL 렌더링
+        webglRenderer.draw(source, filterRef.current!);
       }
       
       requestAnimationFrame(drawFrame);
@@ -110,15 +133,15 @@ export const FilteredCanvas = React.forwardRef<
 
     // 비디오 메타데이터 로드 시 렌더링 시작
     video.onloadedmetadata = () => {
-      // 초기 캔버스 크기 설정
+      const cvs = canvasRef.current!;
       if (resolution) {
-        canvasRef.current!.width = resolution.widthPixel;
-        canvasRef.current!.height = resolution.heightPixel;
+        cvs.width = resolution.widthPixel;
+        cvs.height = resolution.heightPixel;
       } else {
-        canvasRef.current!.width = video.videoWidth;
-        canvasRef.current!.height = video.videoHeight;
+        cvs.width = video.videoWidth;
+        cvs.height = video.videoHeight;
       }
-      gl.viewport(0, 0, canvasRef.current!.width, canvasRef.current!.height);
+      gl.viewport(0, 0, cvs.width, cvs.height);
       drawFrame();
     };
 

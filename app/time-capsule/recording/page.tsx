@@ -160,32 +160,11 @@ function Body() {
       .then(async (originalCameraStream) => {
         setCanLoadMedia(true);
 
-        // 비디오 엘리먼트 생성 및 초기 재생
-        const videoEl = document.createElement('video');
-        videoEl.srcObject = originalCameraStream;
-        videoEl.autoplay = true;
-        videoEl.playsInline = true;
-        videoEl.muted = true;
-        await videoEl.play();
-
-        // iOS 16 이하 감지
-        const ua = navigator.userAgent;
-        const m = ua.match(/OS (\d+)_/);
-        const iosVer = m ? parseInt(m[1], 10) : null;
-        const isiOS16Below = iosVer !== null && iosVer < 17;
-
-        if (isiOS16Below) {
-          // iOS16 이하: 수동 크롭 루프 시작
-          const loop = () => {
-            drawCroppedFrame(videoEl, previewCanvasRef.current!);
-            requestAnimationFrame(loop);
-          };
-          loop();
-        } else {
-          // iOS17 이상: 기존 applyConstraints 방식
-          const track = originalCameraStream.getVideoTracks()[0];
-          await track.applyConstraints({ aspectRatio: 3/4, resizeMode: 'none' } as any);
-        }
+        const track = originalCameraStream.getVideoTracks()[0];
+        await track.applyConstraints({
+          aspectRatio: 3 / 4,
+          resizeMode: "none",
+        } as any);
 
         setResolution({
           widthPixel: 1080,
@@ -348,35 +327,4 @@ function Body() {
       <div className="h-[18px]" />
     </div>
   );
-}
-
-
-function drawCroppedFrame(video: HTMLVideoElement, canvas: HTMLCanvasElement) {
-  const ctx = canvas.getContext('2d')!;
-  const vw = video.videoWidth;
-  const vh = video.videoHeight;
-  const cw = canvas.width;
-  const ch = canvas.height;
-
-  // 캔버스 비율을 유지하며 중앙 크롭 좌표 계산
-  const videoRatio = vw / vh;
-  const canvasRatio = cw / ch;
-  let sx, sy, sWidth, sHeight;
-
-  if (videoRatio > canvasRatio) {
-    // 비디오가 더 넓으면 좌우 자르기
-    sHeight = vh;
-    sWidth = vh * canvasRatio;
-    sx = (vw - sWidth) / 2;
-    sy = 0;
-  } else {
-    // 비디오가 더 길면 상하 자르기
-    sWidth = vw;
-    sHeight = vw / canvasRatio;
-    sx = 0;
-    sy = (vh - sHeight) / 2;
-  }
-
-  ctx.clearRect(0, 0, cw, ch);
-  ctx.drawImage(video, sx, sy, sWidth, sHeight, 0, 0, cw, ch);
 }
