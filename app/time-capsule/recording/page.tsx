@@ -249,7 +249,7 @@ function Body() {
       )}
       <div className="h-[16px] shrink" />
 
-      <div className="relative flex justify-center items-center w-full aspect-[3/4] bg-grayscale-900 overflow-hidden hide-scrollbar">
+      <div className="relative flex justify-center items-center w-full aspect-[3/4] bg-grayscale-900 overflow-hidden hide-scrollbar z-30">
         {aspect === "none" ? (
           <BlankCanvas
             ref={previewCanvasRef}
