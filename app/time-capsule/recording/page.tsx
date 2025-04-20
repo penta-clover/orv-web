@@ -221,13 +221,6 @@ function Body() {
     };
   }, []);
 
-  useEffect(() => {
-    // 인스타그램 브라우저가 아니지만 미디어를 로드할 수 없는 경우
-    if (isInstagramBrowser === false && canLoadMedia === false) {
-      window.location.reload();
-    }
-  }, [isInstagramBrowser, canLoadMedia]);
-
   return (
     <div className="relative flex flex-col bg-dark h-[calc(100dvh)] overflow-hidden w-full justify-center">
       {isInstagramBrowser && canLoadMedia === false && (
