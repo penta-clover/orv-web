@@ -121,7 +121,9 @@ function Body() {
       const blobKey = await tempBlobRepository.saveBlob(blob);
 
       // videoUrl 대신 blobKey 전달
-      router.replace(`/time-capsule/gift/first?blobKey=${blobKey}&topic=${topic}`);
+      router.replace(
+        `/time-capsule/gift/first?blobKey=${blobKey}&topic=${topic}`
+      );
       streamRecorderRef.current?.reset();
     } catch (error) {
       console.error("IndexedDB 저장 또는 페이지 이동 중 오류:", error);
@@ -197,7 +199,11 @@ function Body() {
         setOriginalVideoStream(originalCameraStream);
       })
       .catch((error) => {
-        setCanLoadMedia(false);
+        if (!isInstagramBrowser && canLoadMedia === null) {
+          // 새로고침
+          setCanLoadMedia(false);
+          window.location.reload();
+        }
       });
   }, []);
 

@@ -70,13 +70,13 @@ export default function Page() {
 
       <div className="h-[125px] shrink-0" />
 
-      <div className="fixed flex justify-center w-full bottom-[26px] left-0 right-0">
+      <div className="fixed flex justify-center w-full bottom-[26px] left-0 right-0 z-50">
         <CTA
           text="타임캡슐 시작하기"
           onClick={() => {
             router.push("/time-capsule/setting/topic");
           }}
-          className="w-[calc(100%-40px)] max-w-[610px] h-[56px] text-head3 z-50"
+          className="w-[calc(100%-40px)] max-w-[610px] h-[56px] text-head3"
         />
       </div>
     </div>
