@@ -72,6 +72,10 @@ export const FilteredCanvas = React.forwardRef<
     const webglRenderer = new WebGLRenderer(gl);
     webglRenderer.init();
 
+    // 오프스크린 크롭용 캔버스 재사용
+    const offscreenCanvas = document.createElement('canvas');
+    const offscreenCtx = offscreenCanvas.getContext('2d')!;
+
     if (overlay) {
       const overlayImage = new Image();
       overlayImage.src = overlay;
@@ -97,10 +101,8 @@ export const FilteredCanvas = React.forwardRef<
 
         if (Math.abs(videoRatio - canvasRatio) > 1e-3) {
           // 비율 불일치 시 중앙 크롭
-          const offscreen = document.createElement('canvas');
-          offscreen.width = cvsW;
-          offscreen.height = cvsH;
-          const offCtx = offscreen.getContext('2d')!;
+          // 재사용하는 offscreenCanvas와 offscreenCtx
+          offscreenCtx.clearRect(0, 0, cvsW, cvsH);
           let sx: number, sy: number, sWidth: number, sHeight: number;
           if (videoRatio > canvasRatio) {
             // 비디오가 더 넓으면 좌우 자르기
@@ -115,8 +117,8 @@ export const FilteredCanvas = React.forwardRef<
             sx = 0;
             sy = (vidH - sHeight) / 2;
           }
-          offCtx.drawImage(video, sx, sy, sWidth, sHeight, 0, 0, cvsW, cvsH);
-          source = offscreen;
+          offscreenCtx.drawImage(video, sx, sy, sWidth, sHeight, 0, 0, cvsW, cvsH);
+          source = offscreenCanvas;
         }
 
         // WebGL 렌더링
@@ -141,6 +143,8 @@ export const FilteredCanvas = React.forwardRef<
         cvs.width = video.videoWidth;
         cvs.height = video.videoHeight;
       }
+      offscreenCanvas.width = cvs.width;
+      offscreenCanvas.height = cvs.height;
       gl.viewport(0, 0, cvs.width, cvs.height);
       drawFrame();
     };
