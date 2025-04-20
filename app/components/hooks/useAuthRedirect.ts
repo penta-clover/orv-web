@@ -18,7 +18,7 @@ export default function useAuthRedirect({
     const redirectUrl = Cookies.get("redirectUrl") || "/";
     Cookies.remove("redirectUrl");
 
-    router.replace(redirectUrl);
+    router.push(redirectUrl);
   };
 
   return redirect;
