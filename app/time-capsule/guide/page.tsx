@@ -10,7 +10,7 @@ export default function Page() {
   const router = useRouter();
 
   return (
-    <div className="relative bg-dark w-full px-[20px]">
+    <div className="relative bg-dark w-full px-[20px] h-[calc(100dvh)] overflow-y-scroll hide-scrollbar">
       <div className="h-[75px] shrink-0" />
 
       <div className="text-head1 text-grayscale-white flex flex-col items-start">
@@ -29,7 +29,9 @@ export default function Page() {
 
       <div className="h-[20px] shrink-0" />
 
-      <WorrySection />
+      <div className="flex w-full justify-center">
+        <WorrySection />
+      </div>
 
       <div className="h-[125px] shrink-0" />
 
@@ -42,7 +44,9 @@ export default function Page() {
 
       <div className="h-[20px] shrink-0" />
 
-      <VideoExample />
+      <div className="flex w-full justify-center">
+        <VideoExample />
+      </div>
 
       <div className="h-[125px] shrink-0" />
 
@@ -66,13 +70,13 @@ export default function Page() {
 
       <div className="h-[125px] shrink-0" />
 
-      <div className="fixed w-full bottom-[26px] left-0 right-0">
+      <div className="fixed flex justify-center w-full bottom-[26px] left-0 right-0">
         <CTA
           text="타임캡슐 시작하기"
           onClick={() => {
             router.push("/time-capsule/setting/topic");
           }}
-          className="w-[calc(100%-40px)] h-[56px] text-head3"
+          className="w-[calc(100%-40px)] max-w-[610px] h-[56px] text-head3 z-50"
         />
       </div>
     </div>
@@ -167,7 +171,7 @@ function WorrySection() {
 
 function VideoExample() {
   return (
-    <div className="relative flex flex-col items-center">
+    <div className="relative flex flex-col items-center w-[376px]">
       <Image
         unoptimized
         src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/film.svg"
