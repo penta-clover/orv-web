@@ -144,7 +144,7 @@ function Reply({
       <div className="h-[40px]" />
 
       <p className="text-body1 font-onglyph text-grayscale-white">
-        안녕! 나는 2026년의 {nickname}이야. {topicMapper(topic)}
+        안녕! 나는 2026년의 {nickname}이야.<br/><br/>{topicMapper(topic)}
       </p>
 
       <div className="h-[70px]" />
