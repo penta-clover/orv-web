@@ -29,6 +29,7 @@ function Body() {
   const [videoId, setVideoId] = useState<string | null>(null);
   const [localVideoUrl, setLocalVideoUrl] = useState<string | null>(null);
   const [dotCount, setDotCount] = useState<number>(1);
+  const [tipIndex, setTipIndex] = useState(0);
 
   const tempBlobRepository = useTempBlobRepository();
   const archiveRepository = useArchiveRepository();
@@ -38,15 +39,37 @@ function Body() {
 
   const router = useRouter();
 
-  const loadingTip = [`빛의 속도로 가속하는 중`, `타임워프 게이트에 접근 중`, `사건의 지평선을 건너가는 중`, `은하계를 가로질러 1년 뒤로 떠나는 중...`]
+  const loadingTip = [
+    `빛의 속도로 가속하는 중`,
+    `타임워프 게이트에 접근 중`,
+    `사건의 지평선을 건너가는 중`,
+    `은하계를 가로질러 1년 뒤로 떠나는 중...`,
+  ];
+  const tipDurations = [2000, 2000, 2000];
 
+  // 점 개수 타이머
   useEffect(() => {
     const interval = setInterval(() => {
-      setDotCount(prev => (prev % 6) + 1);
-    }, 500);
+      setDotCount((prev) => (prev % 6) + 1);
+    }, 400);
     return () => clearInterval(interval);
   }, []);
 
+  // 팁 교체 타이머
+  useEffect(() => {
+    // tipIndex 0 → 1 after 2s, 1→2 after 4s, 2→3 after 6s
+    const timers: NodeJS.Timeout[] = [];
+    let acc = 0;
+    for (let i = 0; i < tipDurations.length; i++) {
+      acc += tipDurations[i];
+      timers.push(
+        setTimeout(() => {
+          setTipIndex(i + 1);
+        }, acc)
+      );
+    }
+    return () => timers.forEach((t) => clearTimeout(t));
+  }, []);
 
   useEffect(() => {
     if (!blobKey) return;
@@ -183,7 +206,9 @@ function Body() {
       />
       <div className="h-[20px]" />
       <span className="text-body4 text-grayscale-white">
-      사건의 지평선을 건너는 중{'.'.repeat(dotCount)}</span>
+        {loadingTip[tipIndex]}
+        {".".repeat(dotCount)}
+      </span>
     </div>
   );
 }
