@@ -46,7 +46,7 @@ export default function Page() {
         "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/time-capsule-green.png",
       alt: "timecapsule-green",
       title: "후회",
-      question: "지금 나는 어떤 것을\n  가장 후회하고 있나요?",
+      question: "지금 나는 어떤 것을\n 가장 후회하고 있나요?",
     },
     {
       imgUrl:
@@ -62,7 +62,7 @@ export default function Page() {
       <div className="h-[25px] grow" />
 
       <div className="text-head1 text-grayscale-white mx-[16px]">
-        타임캡슐에 어떤 주제를 담을까요?
+        타임캡슐에 어떤 생각을 담을까요?
       </div>
 
       <div className="h-[15px]" />
@@ -142,7 +142,7 @@ export default function Page() {
             );
           }}
           className={`w-full h-[48px] mx-[16px] text-head4 ${
-            selectedTopic ? "bg-main-lilac50" : "bg-grayscale-50"
+            selectedTopic ? "bg-main-lilac50" : "bg-grayscale-300 text-grayscale-100"
           }`}
         />
       </div>
@@ -152,7 +152,7 @@ export default function Page() {
 
 function CTA(props: { text: string; onClick: () => void; className?: string }) {
   return (
-    <div className="w-full flex justify-center">
+    <div className="w-full flex justify-center text-head4">
       <button
         style={{ boxShadow: "0px 0px 12px rgba(197, 209, 255, 0.6)" }}
         className={cn(
