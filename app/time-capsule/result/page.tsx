@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import "@/app/components/blackBody.css";
 import { Suspense, use, useEffect, useState } from "react";
 import { useMemberRepository } from "@/providers/MemberRepositoryContext";
+import Image from "next/image";
 
 export default function Page() {
   return (
@@ -16,7 +17,8 @@ export default function Page() {
 
 function Body() {
   const searchParams = useSearchParams();
-  const topic = searchParams.get("topic");
+  const topic = searchParams.get("topic")!;
+  const gifts = searchParams.get("gift")!.split(",");
   const router = useRouter();
 
   const memberRepository = useMemberRepository();
@@ -31,24 +33,51 @@ function Body() {
   }, []);
 
   return (
-    <div className="flex flex-col relative bg-dark w-full h-[calc(100dvh)]">
-      <div className="h-[20dvh]" />
+    <div className="flex flex-col relative bg-dark w-full h-[calc(100dvh)] overflow-y-scroll hide-scrollbar">
+      <div className="h-[20dvh] shrink-0" />
 
       <div className="text-head1 text-grayscale-white mx-[16px]">
-        정확히 1년 뒤,
+        1년 뒤{nickname ? `의 ${nickname}님에게` : ""}
         <br />
-        {nickname ? `${nickname}님의 ` : ""}타임캡슐이 배달됩니다
+        타임캡슐과 선물이 전달됐어요
       </div>
 
       <div className="text-grayscale-300 text-body4 mx-[16px]">
-        타임캡슐을 보내드리기 위한 신분증이 발급됐어요. 꼭 잘 가지고 계셔야
-        무사히 타임캡슐을 받으실 수 있어요!
+        1년 뒤의 {nickname ? nickname : ""}님이 선물에 고마워하며 최근 자신의
+        근황을 소개하는 답신을 보냈어요
       </div>
-      <div className="grow" />
 
-      <div className="absolute w-full bottom-[26px] z-10">
+      <div className="h-[23dvh] shrink-0" />
+
+      <span className="w-full text-center text-main-lilac50 text-caption1 mb-[10px] animate-updown">
+        미래에서 온 답장 읽기
+      </span>
+
+      <div className="flex justify-center w-full animate-updown">
+        <Image
+          unoptimized
+          src="/icons/down-arrow.svg"
+          width={20}
+          height={34}
+          alt="down-arrow"
+        />
+      </div>
+
+      <div className="h-[23dvh] shrink-0" />
+
+      {nickname && (
+        <Reply
+          nickname={nickname}
+          topic={topic}
+          firstGift={gifts[0]}
+          secondGift={gifts[1]}
+          thirdGift={gifts[2]}
+        />
+      )}
+
+      <div className="w-full z-10">
         <CTA
-          text="타임캡슐 신분증 다운로드"
+          text="미래에서 온 편지 다운로드"
           onClick={() => {
             alert("구현중인 기능입니다.");
           }}
@@ -65,6 +94,8 @@ function Body() {
           className="w-full h-[48px] mx-[16px] text-head4 bg-main-lilac50"
         />
       </div>
+
+      <div className="h-[20px] shrink-0" />
     </div>
   );
 }
@@ -84,4 +115,194 @@ function CTA(props: { text: string; onClick: () => void; className?: string }) {
       </button>
     </div>
   );
+}
+
+function Reply({
+  nickname,
+  topic,
+  firstGift,
+  secondGift,
+  thirdGift,
+}: {
+  nickname: string;
+  topic: string;
+  firstGift: string;
+  secondGift: string;
+  thirdGift: string;
+}) {
+  return (
+    <div className="flex flex-col mx-[20px]">
+      <div className="text-head1 text-grayscale-white">
+        From. 미래의 {nickname}이<br />
+        To. 현재의 {nickname}에게
+      </div>
+
+      <span className="text-body4 text-grayscale-300">
+        1년 뒤, 당신은 어떻게 지내고 있을까요?
+      </span>
+
+      <div className="h-[40px]" />
+
+      <p className="text-body1 font-onglyph text-grayscale-white">
+        안녕! 나는 2026년의 {nickname}이야. {topicMapper(topic)}
+      </p>
+
+      <div className="h-[70px]" />
+
+      <div className="w-full flex justify-center">
+        <Image
+          src={giftMapper(firstGift)!.image!}
+          unoptimized
+          alt="mind-test-first"
+          width={300}
+          height={300}
+          className="rounded-full"
+        />
+      </div>
+
+      <div className="h-[70px]" />
+
+      <div className="text-head4 font-onglyph text-main-lilac50">
+        1년 뒤 오늘, 가장 기억에 남은 사건
+      </div>
+
+      <div className="flex">
+        <div className="w-[2px] shrink-0 inset-y-0 mr-[10px] my-[5px] bg-grayscale-white" />
+        <div className="text-body1 font-onglyph text-grayscale-white">
+          {giftMapper(firstGift)!.text}
+        </div>
+      </div>
+
+      <div className="h-[70px]" />
+
+      <div className="w-full flex justify-center">
+        <Image
+          src={giftMapper(secondGift)!.image!}
+          unoptimized
+          alt="mind-test-second"
+          width={300}
+          height={300}
+          className="rounded-full"
+        />
+      </div>
+
+      <div className="h-[70px]" />
+
+      <div className="text-head4 font-onglyph text-main-lilac50">
+        1년 뒤 오늘, 내가 먹은 음식
+      </div>
+
+      <div className="flex">
+        <div className="w-[2px] shrink-0 inset-y-0 mr-[10px] my-[5px] bg-grayscale-white" />
+        <div className="text-body1 font-onglyph text-grayscale-white">
+          {giftMapper(secondGift)!.text}
+        </div>
+      </div>
+
+      <div className="h-[70px]" />
+
+      <div className="w-full flex justify-center">
+        <Image
+          src={giftMapper(thirdGift)!.image!}
+          unoptimized
+          alt="mind-test-third"
+          width={300}
+          height={300}
+          className="rounded-full"
+        />
+      </div>
+
+      <div className="h-[70px]" />
+
+      <div className="text-head4 font-onglyph text-main-lilac50">
+        1년 뒤 오늘, 가장 어이 없는 일
+      </div>
+
+      <div className="flex">
+        <div className="w-[2px] shrink-0 inset-y-0 mr-[10px] my-[5px] bg-grayscale-white" />
+        <div className="text-body1 font-onglyph text-grayscale-white">
+          {giftMapper(thirdGift)!.text}
+        </div>
+      </div>
+
+      <div className="h-[70px]" />
+
+      <div className="text-body1 font-onglyph text-grayscale-white">
+        1년 뒤 네 모습을 살펴보니 어때?
+        <br />
+        네가 기대하던 삶과는 좀 다르니?
+        <br />
+        하나 확실한 건, 네가 어떻게 생각하든 난 지금 행복해!
+        <br />
+        너도 그곳에서 행복하면 좋겠어. 안녕!
+      </div>
+
+      <div className="h-[70px]" />
+    </div>
+  );
+}
+
+function topicMapper(topic: string) {
+  switch (topic) {
+    case "후회":
+      return "요즘 나는 후회하던 일은 잊고 미래를 생각하며 살아가고 있어. 그리고 바뀐점이라면... 너보다 약간 더 늙었지만 조금은 더 행복한거 같기도 해. 아 참! 요즘 내가 어떻게 지내는지 들려줄게";
+    case "미래":
+      return "우선 놀라지마!! 너가 그 당시에 바랬던 것들, 이루고자 했던 것들을 모두 이루었고 지금 나는 너가 원했던 모습으로 살아가고 있어. 힘들더라도 한 걸음씩 걸어 온 너가 있기에 지금의 내가 존재하는 거겠지? 지금 내가 해줄 수 있는 말은 너는 잘하고 있고, 조금씩 너가 원하는 모습에 가까워지고 있어!! 아 참! 요즘 내가 어떻게 지내는지 들려줄게";
+    case "불안":
+      return "너가 그 영상을 남겼을 때, 난 진짜 힘들었지...포기하고 싶은 순간들이 많았고.. 근데 말야, 지금의 나는 그때의 너가 너무나도 자랑스러워, 버텨줘서 고맙고 포기하지 않아서 다행이야! 지금의 내가 존재한다는 것은 너가 포기하지 않았다는 거겠지? 아 참! 요즘 내가 어떻게 지내는지 들려줄게";
+    case "과거":
+      return `아마 1년 전에 난 “과거로 돌아갈 수 있다면 언제로 가고 싶나요?” 질문을 받았었지? 지금의 내가 이 질문에 답을 하자면 난 1년 전으로 돌아가고 싶어...후회되는 것들도 많고, 못해본 것들도 참 많은 것 같아. 있잖아, 너가 망설이고 있는 일들이 있다면 최선을 다해 부딪혀 보라고 말해주고 싶어. 실패하더라도, 적어도 지금처럼 "그때 해볼걸…" 하고 후회하진 않을 테니까 말야..아 참! 요즘 내가 어떻게 지내는 지 궁금하지 않아??`
+    default:
+      return "요즘 나에게 바뀐점이라면... 너보다 약간 더 늙었지만 조금은 더 행복한거 같기도 해. 아 참! 요즘 내가 어떻게 지내는지 들려줄게";
+  }
+}
+
+function giftMapper(gift: string) {
+  switch (gift) {
+    case "mos":
+      return {
+        text: `네가 준 책은 잘 받았어. 얼마 전에 소개팅을 했는데
+책에서 배운대로 “하루 세 끼 뭐 드세요?” 물어봤더니,
+그 사람이 공복 인터벌 단식 36시간째라네?
+기절 직전이라며 급히 집에 가셨어. 나, 책 잘못 읽은 거야?`,
+        image:
+          "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/mind-test-mos.jpg",
+      };
+    case "cat":
+      return {
+        text: `길고양이의 왕이 됐어. 덕분에 매일 길거리에 누워있다가 길고양이 친구들의 밤을 뺐어먹을 수 있어. 고양이들 사이에서 몸을 웅크리고 이 편지를 쓰고 있어. 고마워!`,
+        image:
+          "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/mind-test-cat.jpg",
+      };
+    case "dog":
+      return {
+        text: `네가 준 시리얼 잘 먹고 있어! 지금은 단종됐는지 팔질 않아서 아껴먹고 있어. 왠진 모르겠는데 시리얼 먹을 때마다 강아지가 자꾸 쳐다보더라;;`,
+        image:
+          "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/mind-test-dog.jpg",
+      };
+    case "chi":
+      return {
+        text: `오늘 저녁 메뉴는 바로 삼계탕!! 뜨끈한 국물에 밥 말아서 몸보신 좀 해야겠다. 음? 근데 왠 “삐약이"라는 이름표가 있네?`,
+        image:
+          "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/mind-test-chi.jpg",
+      };
+    case "dol":
+      return {
+        text: `나 진짜 어이 없는 일 당했잖아 평소처럼 길을 걷고 있었는데 하늘에서 돌이 떨어졌다니까?? 너무 어이없지 않아? 그것도 그냥 돌이 아니고 짱돌!! 대체 어떤 놈이 하늘에서 돌을 던진거야!!!`,
+        image:
+          "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/mind-test-dol.jpg",
+      };
+    case "ban":
+      return {
+        text: `아니, 오늘 진짜 어이없는 일이 있었어. 어떤 녀석이 바나나를 먹고는, 그 껍질을 아무렇지도 않게 땅에 버리고 갔나 봐. 근데 내가 하필 그걸 밟고 넘어 졌는데 지나가던 사람들이 웃참하더라... 대체 누가 바나나 껍질을 버린거야;;`,
+        image:
+          "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/mind-test-ban.jpg",
+      };
+    default:
+      return {
+        text: "",
+        image:
+          "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/mind-test-ban.jpg",
+      };
+  }
 }

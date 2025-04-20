@@ -45,8 +45,8 @@ export default function Page() {
       imgUrl:
         "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/time-capsule-green.png",
       alt: "timecapsule-green",
-      title: "기록",
-      question: "1년 뒤의 나에게\n 편지를 남겨주세요",
+      title: "후회",
+      question: "지금 나는 어떤 것을 가장 후회하고 있나요?",
     },
     {
       imgUrl:

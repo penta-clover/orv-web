@@ -18,10 +18,12 @@ export default function Page() {
 function Body() {
   const searchParams = useSearchParams();
   const blobKey = searchParams.get("blobKey");
+  const topic = searchParams.get("topic");
+  const gifts = searchParams.get("gift")?.split(",");
   const { setRedirectUrl } = useSetRedirectUrl();
 
   useEffect(() => {
-    setRedirectUrl(`/time-capsule/upload?blobKey=${blobKey}`);
+    setRedirectUrl(`/time-capsule/upload?blobKey=${blobKey}&topic=${topic}&gift=${gifts}`);
   }, []);
 
   return (

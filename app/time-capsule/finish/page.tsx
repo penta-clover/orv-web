@@ -17,6 +17,8 @@ export default function Page() {
 function Body() {
   const searchParam = useSearchParams();
   const blobKey = searchParam.get("blobKey")!;
+  const topic = searchParam.get("topic")!;
+  const gifts = searchParam.get("gift")!.split(",");
   const router = useRouter();
 
   return (
@@ -87,7 +89,7 @@ function Body() {
         <CTA
           text="타임캡슐 받을 연락처 남기기"
           onClick={() => {
-            router.push(`/time-capsule/join?blobKey=${blobKey}`);
+            router.push(`/time-capsule/join?blobKey=${blobKey}&topic=${topic}&gift=${gifts}`);
           }}
           className="w-full h-[48px] mx-[16px] text-head4 bg-main-lilac50"
         />

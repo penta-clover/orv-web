@@ -21,6 +21,8 @@ export default function Page() {
 function Body() {
   const searchParams = useSearchParams();
   const blobKey = searchParams.get("blobKey")!;
+  const topic = searchParams.get("topic")!;
+  const gifts = searchParams.get("gift")?.split(",")!;
   const storyboardId = "C2D8A9C7-293F-4215-A717-E0C9BECD6D9B";
 
   const [isUploaded, setIsUploaded] = useState<boolean>(false);
@@ -151,7 +153,7 @@ function Body() {
           await blob.blob()
         );
 
-        router.replace("/time-capsule/result");
+        router.replace(`/time-capsule/result?topic=${topic}&gift=${gifts}`);
       } catch (error) {
         console.error("Blob 처리 또는 업로드 중 에러 발생:", error);
         try {
