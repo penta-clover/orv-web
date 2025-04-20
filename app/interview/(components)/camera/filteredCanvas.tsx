@@ -45,6 +45,7 @@ export const FilteredCanvas = React.forwardRef<
     video.style.pointerEvents = "none"; // 비디오 요소가 클릭 이벤트를 받지 않도록 설정
     video.style.display = "block";
     document.body.appendChild(video);
+    video.play().catch((err) => console.error("video.play 실패:", err));
 
     filterRef.current = getFilterUniforms(filter);
 
@@ -97,8 +98,9 @@ export const FilteredCanvas = React.forwardRef<
         }
 
         webglRenderer.draw(video, filterRef.current!);
-        requestAnimationFrame(drawFrame);
       }
+      
+      requestAnimationFrame(drawFrame);
     };
 
     const cleanup = () => {
