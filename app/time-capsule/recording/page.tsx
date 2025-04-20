@@ -204,6 +204,7 @@ function Body() {
           setCanLoadMedia(false);
           window.location.reload();
         }
+        console.error("getUserMedia error:", error);
       });
   }, []);
 
