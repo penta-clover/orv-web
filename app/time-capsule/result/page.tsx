@@ -274,7 +274,7 @@ function giftMapper(gift: string) {
       };
     case "cat":
       return {
-        text: `길고양이의 왕이 됐어. 덕분에 매일 길거리에 누워있다가 길고양이 친구들의 밤을 뺐어먹을 수 있어. 고양이들 사이에서 몸을 웅크리고 이 편지를 쓰고 있어. 고마워!`,
+        text: `길고양이의 왕이 됐어. 덕분에 매일 길거리에 누워있다가 길고양이 친구들의 밥을 뺐어먹을 수 있어. 고양이들 사이에서 몸을 웅크리고 이 편지를 쓰고 있어. 고마워!`,
         image:
           "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/mind-test-cat.jpg",
       };

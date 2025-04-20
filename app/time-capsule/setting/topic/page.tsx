@@ -18,7 +18,7 @@ export default function Page() {
         "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/time-capsule-purple.png",
       alt: "timecapsule-purple",
       title: "슬픔",
-      question: "최근 가장 슬펐던 일은\n언제인가요?",
+      question: "최근 가장 슬펐던 일은\n 언제인가요?",
     },
     {
       imgUrl:
@@ -32,7 +32,7 @@ export default function Page() {
         "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/time-capsule-red.png",
       alt: "timecapsule-red",
       title: "분노",
-      question: "최근에 가장 화가 났던\n일은 언제인가요?",
+      question: "최근에 가장 화가 났던\n 일은 언제인가요?",
     },
     {
       imgUrl:
