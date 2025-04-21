@@ -105,16 +105,7 @@ function Body() {
 
         try {
           if (!ffmpeg.loaded) {
-            await ffmpeg.load({
-              coreURL: await toBlobURL(
-                "/ffmpeg/esm/wasm-core.js",
-                "text/javascript"
-              ),
-              wasmURL: await toBlobURL(
-                "/ffmpeg/esm/wasm-core.wasm",
-                "application/wasm"
-              ),
-            });
+            await ffmpeg.load();
           }
         } catch (e) {
           console.warn("WASM 파싱 실패, asm.js 폴백 시도", e);
