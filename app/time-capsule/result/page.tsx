@@ -143,9 +143,9 @@ function Reply({
         안녕! 나는 2026년 {new Date().getMonth() + 1}월 {new Date().getDate()}
         일의 {nickname}이야.
         <div className="h-[40px] shrink-0" />
-        <p className="text-caption1 text-grayscale-300 font-pretendard underline">
+        <span className="text-caption1 text-grayscale-300 font-pretendard underline">
           타임캡슐에 담은 생각: {topicMapper(topic)!.displayName}
-        </p>
+        </span>
         {topicMapper(topic).text}
       </p>
 
