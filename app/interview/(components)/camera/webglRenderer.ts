@@ -132,8 +132,20 @@ const fragmentShaderSource = `
     // 0~1 범위로 클램핑
     rgb = clamp(rgb, 0.0, 1.0);
 
+    // 12. Noise overlay
+    if (u_mist > 0.0) {
+      // uv에 스케일과 시간 기반 오프셋을 줘서 움직이는 노이즈 효과
+      vec2 nuv = uv * u_mistScale + vec2(u_time * u_mistSpeed);
+      float noiseVal = texture2D(u_noise, nuv).r;           // 0~1
+      float n = (noiseVal - 0.5) * u_mist;                   // -0.5~+0.5 범위로 조정
+      rgb = clamp(rgb + n, 0.0, 1.0);
+    }
     
-    // 12. Vignette
+    // 0~1 범위로 클램핑
+    rgb = clamp(rgb, 0.0, 1.0);
+
+    
+    // 13. Vignette
     vec2  cc   = uv - vec2(0.5);
     float dist = length(cc);
     // 1) 화면 중심 안쪽(dist < radius)은 vig=1, 
