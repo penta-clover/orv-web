@@ -358,6 +358,7 @@ const handleCapture = async (elem: HTMLElement) => {
     const canvas = await html2canvas(elem, {
       useCORS: true,
       backgroundColor: "rgb(16, 16, 18)",
+      scale: 2,
     });
     const dataUrl = canvas.toDataURL("image/png");
     const link = document.createElement("a");
