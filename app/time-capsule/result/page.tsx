@@ -39,12 +39,12 @@ function Body() {
     <div className="flex flex-col relative bg-dark w-full h-[calc(100dvh)] overflow-y-scroll hide-scrollbar">
       <div className="h-[20dvh] shrink-0" />
 
-      <div className="text-head1 text-grayscale-white mx-[16px]">
+      <div className="text-head2 text-grayscale-white mx-[16px]">
         1년 뒤{nickname ? `의 ${nickname}님에게` : ""}
         <br />
         타임캡슐과 선물이 전달됐어요
       </div>
-
+my-[5px] 
       <div className="text-grayscale-300 text-body4 mx-[16px]">
         1년 뒤의 {nickname ? nickname : ""}님이 선물에 고마워하며 최근 자신의
         근황을 소개하는 답신을 보냈어요
@@ -52,7 +52,7 @@ function Body() {
 
       <div className="h-[23dvh] shrink-0" />
 
-      <span className="w-full text-center text-main-lilac50 text-caption1 mb-[10px] animate-updown">
+      <span className="w-full text-center text-main-lilac50 text-caption1  mb-[10px] animate-updown">
         미래에서 온 답장 읽기
       </span>
 
@@ -137,12 +137,12 @@ function Reply({
 }) {
   return (
     <div className="flex flex-col mx-[20px]">
-      <div className="text-head1 text-grayscale-white">
+      <div className="text-head2 text-grayscale-white">
         From. 미래의 {nickname}이<br />
         To. 현재의 {nickname}에게
       </div>
 
-      <span className="text-body4 text-grayscale-300">
+      <span className="text-modypy-[5px] 4 text-grayscale-300">
         1년 뒤, 당신은 어떻게 지내고 있을까요?
       </span>
 
@@ -156,7 +156,7 @@ function Reply({
         {topicMapper(topic)}
       </p>
 
-      <div className="h-[70px]" />
+      <div className="h-[60px] shrink-0" />
 
       <div className="w-full flex justify-center">
         <Image
@@ -169,20 +169,24 @@ function Reply({
         />
       </div>
 
-      <div className="h-[70px]" />
+      <div className="h-[60px] shrink-0" />
 
-      <div className="text-head4 font-onglyph text-main-lilac50">
+      <div className="text-head2 font-onglyph text-main-lilac50">
         1년 뒤 오늘, 가장 기억에 남은 사건
       </div>
 
       <div className="flex">
-        <div className="w-[2px] shrink-0 inset-y-0 mr-[10px] bg-grayscale-white" />
+        <div className="w-[2px] my-[5px] shrink-0 inset-y-0 mr-[10px] bg-grayscale-white" />
         <div className="text-body1 font-onglyph text-grayscale-white">
-          {giftMapper(firstGift)!.text}
+          <span className="text-caption1  text-grayscale-300 font-pretendard">
+            첫 번째 선물: {giftMapper(firstGift)!.displayName}
+          </span>
+          <br />
+          <span className="font-onglyph">{giftMapper(firstGift)!.text}</span>
         </div>
       </div>
 
-      <div className="h-[70px]" />
+      <div className="h-[120px] shrink-0" />
 
       <div className="w-full flex justify-center">
         <Image
@@ -195,20 +199,24 @@ function Reply({
         />
       </div>
 
-      <div className="h-[70px]" />
+      <div className="h-[60px] shrink-0" />
 
-      <div className="text-head4 font-onglyph text-main-lilac50">
+      <div className="text-head2 font-onglyph text-main-lilac50">
         1년 뒤 오늘, 내가 먹은 음식
       </div>
 
       <div className="flex">
-        <div className="w-[2px] shrink-0 inset-y-0 mr-[10px] bg-grayscale-white" />
+        <div className="w-[2px] my-[5px] shrink-0 inset-y-0 mr-[10px] bg-grayscale-white" />
         <div className="text-body1 font-onglyph text-grayscale-white">
-          {giftMapper(secondGift)!.text}
+          <span className="text-caption1  text-grayscale-300 font-pretendard">
+            두 번째 선물: {giftMapper(secondGift)!.displayName}
+          </span>
+          <br />
+          <span className="font-onglyph">{giftMapper(secondGift)!.text}</span>
         </div>
       </div>
 
-      <div className="h-[70px]" />
+      <div className="h-[120px] shrink-0" />
 
       <div className="w-full flex justify-center">
         <Image
@@ -221,32 +229,36 @@ function Reply({
         />
       </div>
 
-      <div className="h-[70px]" />
+      <div className="h-[60px] shrink-0" />
 
-      <div className="text-head4 font-onglyph text-main-lilac50">
+      <div className="text-head2 font-onglyph text-main-lilac50">
         1년 뒤 오늘, 가장 어이 없는 일
       </div>
 
       <div className="flex">
-        <div className="w-[2px] shrink-0 inset-y-0 mr-[10px] bg-grayscale-white" />
-        <div className="text-body1 font-onglyph text-grayscale-white">
-          {giftMapper(thirdGift)!.text}
+        <div className="w-[2px] my-[5px] shrink-0 inset-y-0 mr-[10px] bg-grayscale-white" />
+        <div className="text-body1 text-grayscale-white">
+          <span className="font-pretendard text-caption1  text-grayscale-300 font-pretendard">
+            마지막 선물: {giftMapper(thirdGift)!.displayName}
+          </span>
+          <br />
+          <span className="font-onglyph">{giftMapper(thirdGift)!.text}</span>
         </div>
       </div>
 
-      <div className="h-[70px]" />
+      <div className="h-[100px] shrink-0" />
 
-      <div className="text-body1 font-onglyph text-grayscale-white">
-        1년 뒤 네 모습을 살펴보니 어때?
+      <div className="flex flex-col items-center text-body1 font-onglyph text-grayscale-white">
+        <p>1년 뒤 네 모습을 살펴보니 어때?</p>
         <br />
-        네가 기대하던 삶과는 좀 다르니?
+        <p>네가 기대하던 삶과는 좀 다르니?</p>
         <br />
-        하나 확실한 건, 네가 어떻게 생각하든 난 지금 행복해!
+        <p>하나 확실한 건, 네가 어떻게 생각하든 난 지금 행복해!</p>
         <br />
-        너도 그곳에서 행복하면 좋겠어. 안녕!
+        <p>너도 그곳에서 행복하면 좋겠어. 안녕!</p>
       </div>
 
-      <div className="h-[70px]" />
+      <div className="h-[100px] shrink-0" />
     </div>
   );
 }
@@ -274,6 +286,7 @@ function giftMapper(gift: string) {
   switch (gift) {
     case "mos":
       return {
+        displayName: "<모솔 무조건 탈출> 가이드북",
         text: `네가 준 책은 잘 받았어. 얼마 전에 소개팅을 했는데
 책에서 배운대로 “하루 세 끼 뭐 드세요?” 물어봤더니,
 그 사람이 공복 인터벌 단식 36시간째라네?
@@ -283,36 +296,42 @@ function giftMapper(gift: string) {
       };
     case "cat":
       return {
+        displayName: "<고양이 일상 회화> 마스터북",
         text: `길고양이의 왕이 됐어. 덕분에 매일 길거리에 누워있다가 길고양이 친구들의 밥을 뺐어먹을 수 있어. 고양이들 사이에서 몸을 웅크리고 이 편지를 쓰고 있어. 고마워!`,
         image:
           "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/mind-test-cat.jpg",
       };
     case "dog":
       return {
+        display: "강아지 사료",
         text: `네가 준 시리얼 잘 먹고 있어! 지금은 단종됐는지 팔질 않아서 아껴먹고 있어. 왠진 모르겠는데 시리얼 먹을 때마다 강아지가 자꾸 쳐다보더라;;`,
         image:
           "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/mind-test-dog.jpg",
       };
     case "chi":
       return {
+        displayName: "귀여운 병아리",
         text: `오늘 저녁 메뉴는 바로 삼계탕!! 뜨끈한 국물에 밥 말아서 몸보신 좀 해야겠다. 음? 근데 왠 “삐약이"라는 이름표가 있네?`,
         image:
           "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/mind-test-chi.jpg",
       };
     case "dol":
       return {
+        displayName: "돌",
         text: `나 진짜 어이 없는 일 당했잖아 평소처럼 길을 걷고 있었는데 하늘에서 돌이 떨어졌다니까?? 너무 어이없지 않아? 그것도 그냥 돌이 아니고 짱돌!! 대체 어떤 놈이 하늘에서 돌을 던진거야!!!`,
         image:
           "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/mind-test-dol.jpg",
       };
     case "ban":
       return {
+        displayName: "약간 상한 바나나",
         text: `아니, 오늘 진짜 어이없는 일이 있었어. 어떤 녀석이 바나나를 먹고는, 그 껍질을 아무렇지도 않게 땅에 버리고 갔나 봐. 근데 내가 하필 그걸 밟고 넘어 졌는데 지나가던 사람들이 웃참하더라... 대체 누가 바나나 껍질을 버린거야;;`,
         image:
           "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/mind-test-ban.jpg",
       };
     default:
       return {
+        displayName: "",
         text: "",
         image:
           "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/mind-test-ban.jpg",
