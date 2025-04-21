@@ -37,7 +37,7 @@ function Body() {
   const filter = searchParams.get("filter")! as Filter;
 
   const RECORDING_FPS = 24; // 녹화 프레임 레이트 설정
-  const LIMIT_SECONDS = 6000; // 녹화 제한 시간 (초 단위)
+  const LIMIT_SECONDS = 60; // 녹화 제한 시간 (초 단위)
 
   const router = useRouter();
 
@@ -52,7 +52,7 @@ function Body() {
     heightPixel: number;
   } | null>(null);
   const [leftSeconds, setLeftSeconds] = useState(LIMIT_SECONDS);
-  const [startCountdown, setStartCountdown] = useState<number>(1);
+  const [startCountdown, setStartCountdown] = useState<number>(5);
   const isCountdownEnd = useRef<boolean>(false);
   const tempBlobRepository = useTempBlobRepository();
   const [isInstagramBrowser, setIsInstagramBrowser] = useState<boolean | null>(
