@@ -220,7 +220,7 @@ function ExampleSection() {
 }
 
 function Introduction() {
-  const [now, setNow] = useState(new Date());
+  const [now, setNow] = useState<Date>();
 
   useEffect(() => {
     const timer = setInterval(() => setNow(new Date()), 1000);
@@ -244,7 +244,7 @@ function Introduction() {
 
   return (
     <div className="flex flex-col text-body1 gap-[36px] text-grayscale-white mx-[20px]">
-      <span>{formatDate(now)}</span>
+      <span>{now ? formatDate(now) : ""}</span>
 
       <span>
         매순간 시간은 흐르고 지금 당신의 모습도 시간과 함께 영원히 과거로

@@ -3,7 +3,7 @@
 import { useArchiveRepository } from "@/providers/ArchiveRepositoryContext";
 import { useTempBlobRepository } from "@/providers/TempBlobRepositoryContext";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
-import { fetchFile } from "@ffmpeg/util";
+import { fetchFile, toBlobURL } from "@ffmpeg/util";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
@@ -102,8 +102,30 @@ function Body() {
         console.log("2️⃣ FFmpeg 초기화 시작");
         console.time("FFmpeg 초기화 시간");
         const ffmpeg = new FFmpeg();
-        if (!ffmpeg.loaded) {
-          await ffmpeg.load();
+
+        try {
+          if (!ffmpeg.loaded) {
+            await ffmpeg.load({
+              coreURL: await toBlobURL(
+                "/ffmpeg/esm/wasm-core.js",
+                "text/javascript"
+              ),
+              wasmURL: await toBlobURL(
+                "/ffmpeg/esm/wasm-core.wasm",
+                "application/wasm"
+              ),
+            });
+          }
+        } catch (e) {
+          console.warn("WASM 파싱 실패, asm.js 폴백 시도", e);
+          if (!ffmpeg.loaded) {
+            await ffmpeg.load({
+              coreURL: await toBlobURL(
+                "/ffmpeg/umd/ffmpeg-core.js",
+                "text/javascript"
+              ),
+            });
+          }
         }
         console.timeEnd("FFmpeg 초기화 시간");
 
@@ -169,14 +191,18 @@ function Body() {
           `${myInfo.nickname}님의 타임캡슐`
         );
 
-        const blob = await fetch(
-          "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/time-capsule-thumbnail.jpg"
-        );
+        try {
+          const blob = await fetch(
+            "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/time-capsule-thumbnail.jpg"
+          );
 
-        const thumbnail = await archiveRepository.updateThumbnail(
-          uploadedVideoId,
-          await blob.blob()
-        );
+          await archiveRepository.updateThumbnail(
+            uploadedVideoId,
+            await blob.blob()
+          );
+        } catch (error) {
+          console.log("썸네일 업로드 실패", error);
+        }
 
         router.replace(`/time-capsule/result?topic=${topic}&gift=${gifts}`);
       } catch (error) {
