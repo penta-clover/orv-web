@@ -43,7 +43,6 @@ function Body() {
         <br />
         타임캡슐과 선물이 전달됐어요
       </div>
-      my-[5px]
       <div className="text-grayscale-300 text-body4 mx-[16px]">
         1년 뒤의 {nickname ? nickname : ""}님이 선물에 고마워하며 최근 자신의
         근황을 소개하는 답신을 보냈어요
