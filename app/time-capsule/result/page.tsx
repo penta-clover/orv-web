@@ -38,24 +38,20 @@ function Body() {
   return (
     <div className="flex flex-col relative bg-dark w-full h-[calc(100dvh)] overflow-y-scroll hide-scrollbar">
       <div className="h-[20dvh] shrink-0" />
-
       <div className="text-head2 text-grayscale-white mx-[16px]">
         1년 뒤{nickname ? `의 ${nickname}님에게` : ""}
         <br />
         타임캡슐과 선물이 전달됐어요
       </div>
-my-[5px] 
+      my-[5px]
       <div className="text-grayscale-300 text-body4 mx-[16px]">
         1년 뒤의 {nickname ? nickname : ""}님이 선물에 고마워하며 최근 자신의
         근황을 소개하는 답신을 보냈어요
       </div>
-
       <div className="h-[23dvh] shrink-0" />
-
       <span className="w-full text-center text-main-lilac50 text-caption1  mb-[10px] animate-updown">
         미래에서 온 답장 읽기
       </span>
-
       <div className="flex justify-center w-full animate-updown">
         <Image
           unoptimized
@@ -65,9 +61,7 @@ my-[5px]
           alt="down-arrow"
         />
       </div>
-
       <div className="h-[23dvh] shrink-0" />
-
       {nickname && (
         <div ref={entireLetterRef}>
           <Reply
@@ -79,7 +73,6 @@ my-[5px]
           />
         </div>
       )}
-
       <div className="w-full z-10">
         <CTA
           text="미래에서 온 편지 다운로드"
@@ -99,7 +92,6 @@ my-[5px]
           className="w-full h-[48px] mx-[16px] text-head4 bg-main-lilac50"
         />
       </div>
-
       <div className="h-[20px] shrink-0" />
     </div>
   );
@@ -151,9 +143,11 @@ function Reply({
       <p className="text-body1 font-onglyph text-grayscale-white">
         안녕! 나는 2026년 {new Date().getMonth() + 1}월 {new Date().getDate()}
         일의 {nickname}이야.
-        <br />
-        <br />
-        {topicMapper(topic)}
+        <div className="h-[40px] shrink-0" />
+        <p className="text-caption1 text-grayscale-300 font-pretendard underline">
+          타임캡슐에 담은 생각: {topicMapper(topic)!.displayName}
+        </p>
+        {topicMapper(topic).text}
       </p>
 
       <div className="h-[60px] shrink-0" />
@@ -178,7 +172,7 @@ function Reply({
       <div className="flex">
         <div className="w-[2px] my-[5px] shrink-0 inset-y-0 mr-[10px] bg-grayscale-white" />
         <div className="text-body1 font-onglyph text-grayscale-white">
-          <span className="text-caption1  text-grayscale-300 font-pretendard">
+          <span className="text-caption1  text-grayscale-300 font-pretendard underline">
             첫 번째 선물: {giftMapper(firstGift)!.displayName}
           </span>
           <br />
@@ -208,7 +202,7 @@ function Reply({
       <div className="flex">
         <div className="w-[2px] my-[5px] shrink-0 inset-y-0 mr-[10px] bg-grayscale-white" />
         <div className="text-body1 font-onglyph text-grayscale-white">
-          <span className="text-caption1  text-grayscale-300 font-pretendard">
+          <span className="text-caption1  text-grayscale-300 font-pretendard underline">
             두 번째 선물: {giftMapper(secondGift)!.displayName}
           </span>
           <br />
@@ -238,7 +232,7 @@ function Reply({
       <div className="flex">
         <div className="w-[2px] my-[5px] shrink-0 inset-y-0 mr-[10px] bg-grayscale-white" />
         <div className="text-body1 text-grayscale-white">
-          <span className="font-pretendard text-caption1  text-grayscale-300 font-pretendard">
+          <span className="font-pretendard text-caption1  text-grayscale-300 font-pretendard underline">
             마지막 선물: {giftMapper(thirdGift)!.displayName}
           </span>
           <br />
@@ -266,19 +260,40 @@ function Reply({
 function topicMapper(topic: string) {
   switch (topic) {
     case "후회":
-      return "요즘 나는 후회하던 일은 잊고 미래를 생각하며 살아가고 있어. 그리고 바뀐점이라면... 너보다 약간 더 늙었지만 조금은 더 행복한거 같기도 해. 아 참! 요즘 내가 어떻게 지내는지 들려줄게";
+      return {
+        displayName: "후회",
+        text: "요즘 나는 후회하던 일은 잊고 미래를 생각하며 살아가고 있어. 그리고 바뀐점이라면... 너보다 약간 더 늙었지만 조금은 더 행복한거 같기도 해. 아 참! 요즘 내가 어떻게 지내는지 들려줄게",
+      };
     case "미래":
-      return "우선 놀라지마!! 네가 그 당시에 바랬던 것들, 이루고자 했던 것들을 모두 이루었고 지금 나는 네가 원했던 모습으로 살아가고 있어. 힘들더라도 한 걸음씩 걸어 온 네가 있기에 지금의 내가 존재하는 거겠지? 지금 내가 해줄 수 있는 말은 너는 잘하고 있고, 조금씩 네가 원하는 모습에 가까워지고 있어!! 아 참! 요즘 내가 어떻게 지내는지 들려줄게";
+      return {
+        displayName: "미래",
+        text: "우선 놀라지마!! 네가 그 당시에 바랬던 것들, 이루고자 했던 것들을 모두 이루었고 지금 나는 네가 원했던 모습으로 살아가고 있어. 힘들더라도 한 걸음씩 걸어 온 네가 있기에 지금의 내가 존재하는 거겠지? 지금 내가 해줄 수 있는 말은 너는 잘하고 있고, 조금씩 네가 원하는 모습에 가까워지고 있어!! 아 참! 요즘 내가 어떻게 지내는지 들려줄게",
+      };
     case "불안":
-      return "내가 그 영상을 남겼을 때, 난 진짜 힘들었지...포기하고 싶은 순간들이 많았고.. 근데 말야, 지금의 나는 그때의 네가 너무나도 자랑스러워, 버텨줘서 고맙고 포기하지 않아서 다행이야! 지금의 내가 존재한다는 것은 네가 포기하지 않았다는 거겠지? 아 참! 요즘 내가 어떻게 지내는지 들려줄게";
+      return {
+        displayName: "불안",
+        text: "내가 그 영상을 남겼을 때, 난 진짜 힘들었지...포기하고 싶은 순간들이 많았고.. 근데 말야, 지금의 나는 그때의 네가 너무나도 자랑스러워, 버텨줘서 고맙고 포기하지 않아서 다행이야! 지금의 내가 존재한다는 것은 네가 포기하지 않았다는 거겠지? 아 참! 요즘 내가 어떻게 지내는지 들려줄게",
+      };
     case "과거":
-      return `아마 1년 전에 난 “과거로 돌아갈 수 있다면 언제로 가고 싶나요?” 질문을 받았었지? 지금의 내가 이 질문에 답을 하자면 난 1년 전으로 돌아가고 싶어... 네가 망설이고 있는 일들이 있다면 최선을 다해 부딪혀 보라고 말해주고 싶어. 실패하더라도, 지금처럼 "그때 해볼걸…" 하고 후회하진 않을 테니까 말야..아 참! 요즘 내가 어떻게 지내는 지 궁금하지 않아??`;
+      return {
+        displayName: "과거",
+        text: `아마 1년 전에 난 “과거로 돌아갈 수 있다면 언제로 가고 싶나요?” 질문을 받았었지? 지금의 내가 이 질문에 답을 하자면 난 1년 전으로 돌아가고 싶어... 네가 망설이고 있는 일들이 있다면 최선을 다해 부딪혀 보라고 말해주고 싶어. 실패하더라도, 지금처럼 "그때 해볼걸…" 하고 후회하진 않을 테니까 말야..아 참! 요즘 내가 어떻게 지내는 지 궁금하지 않아??`,
+      };
     case "슬픔":
-      return `답장을 보내면서 그 때 당시 나의 얼굴이 떠올랐어. 네가 최근에 겪은 그 슬픔, 누구에게도 말하지 못했던 그 감정...사실 나도 아직 완전히 이겨내진 못했어. 하지만 그 아픔 덕분에 내가 더 단단해질 수 있었던 것 같아. 그러니까, 지금의 너도 기억해줘. 이 시기를 버텨낸 너는 결국 빛나는 사람이 될 거라는 것을.. 아 참! 요즘 내가 어떻게 지내는 지 궁금하지 않아??`;
+      return {
+        displayName: "슬픔",
+        text: `답장을 보내면서 그 때 당시 나의 얼굴이 떠올랐어. 네가 최근에 겪은 그 슬픔, 누구에게도 말하지 못했던 그 감정...사실 나도 아직 완전히 이겨내진 못했어. 하지만 그 아픔 덕분에 내가 더 단단해질 수 있었던 것 같아. 그러니까, 지금의 너도 기억해줘. 이 시기를 버텨낸 너는 결국 빛나는 사람이 될 거라는 것을.. 아 참! 요즘 내가 어떻게 지내는 지 궁금하지 않아??`,
+      };
     case "분노":
-      return `그 때 당시 나는 그 일만 생각하면 속이 부글부글 끓어 올랐었지... 사실 1년이 지난 지금 그 때를 다시 생각하면 화가 너무 나!!! 근데 살다보니까 세상에는 억울한 일도 진짜 많고, 화가 날만 한 일들도 되게 많더라고, 이런 것들을 이겨내지 못하면 결국 상처는 나만 입는 거니까 조금씩 내려 놓는 연습을 하면 좋을 것 같아!! 아 참! 요즘 내가 어떻게 지내는 지 궁금하지 않아??`;
+      return {
+        displayName: "분노",
+        text: `그 때 당시 나는 그 일만 생각하면 속이 부글부글 끓어 올랐었지... 사실 1년이 지난 지금 그 때를 다시 생각하면 화가 너무 나!!! 근데 살다보니까 세상에는 억울한 일도 진짜 많고, 화가 날만 한 일들도 되게 많더라고, 이런 것들을 이겨내지 못하면 결국 상처는 나만 입는 거니까 조금씩 내려 놓는 연습을 하면 좋을 것 같아!! 아 참! 요즘 내가 어떻게 지내는 지 궁금하지 않아??`,
+      };
     default:
-      return "요즘 나에게 바뀐점이라면... 너보다 약간 더 늙었지만 조금은 더 행복한거 같기도 해. 아 참! 요즘 내가 어떻게 지내는지 들려줄게";
+      return {
+        displayName: "",
+        text: "요즘 나에게 바뀐점이라면... 너보다 약간 더 늙었지만 조금은 더 행복한거 같기도 해. 아 참! 요즘 내가 어떻게 지내는지 들려줄게",
+      };
   }
 }
 
