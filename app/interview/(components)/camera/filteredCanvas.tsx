@@ -56,7 +56,7 @@ export const FilteredCanvas = React.forwardRef<
     }
 
     const gl = canvasRef.current.getContext("webgl", {
-      preserveDrawingBuffer: false, // 메모리 성능 최적화를 위한 버퍼 유지 비활성화
+      preserveDrawingBuffer: true,
       powerPreference: "high-performance", // 성능 최적화
       antialias: false, // 안티아일리어싱 비활성화
       depth: false, // 깊이 버퍼 비활성화
