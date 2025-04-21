@@ -56,7 +56,7 @@ export const FilteredCanvas = React.forwardRef<
     }
 
     const gl = canvasRef.current.getContext("webgl", {
-      preserveDrawingBuffer: false,
+      preserveDrawingBuffer: true,
       powerPreference: "high-performance", // 성능 최적화
       antialias: false, // 안티아일리어싱 비활성화
       depth: false, // 깊이 버퍼 비활성화
@@ -99,27 +99,27 @@ export const FilteredCanvas = React.forwardRef<
 
         let source: HTMLVideoElement | HTMLCanvasElement = video;
 
-        // if (Math.abs(videoRatio - canvasRatio) > 1e-3) {
-        // 비율 불일치 시 중앙 크롭
-        // 재사용하는 offscreenCanvas와 offscreenCtx
-        offscreenCtx.clearRect(0, 0, cvsW, cvsH);
-        let sx: number, sy: number, sWidth: number, sHeight: number;
-        if (videoRatio > canvasRatio) {
-          // 비디오가 더 넓으면 좌우 자르기
-          sHeight = vidH;
-          sWidth = vidH * canvasRatio;
-          sx = (vidW - sWidth) / 2;
-          sy = 0;
-        } else {
-          // 비디오가 더 길면 상하 자르기
-          sWidth = vidW;
-          sHeight = vidW / canvasRatio;
-          sx = 0;
-          sy = (vidH - sHeight) / 2;
+        if (Math.abs(videoRatio - canvasRatio) > 1e-3) {
+          // 비율 불일치 시 중앙 크롭
+          // 재사용하는 offscreenCanvas와 offscreenCtx
+          offscreenCtx.clearRect(0, 0, cvsW, cvsH);
+          let sx: number, sy: number, sWidth: number, sHeight: number;
+          if (videoRatio > canvasRatio) {
+            // 비디오가 더 넓으면 좌우 자르기
+            sHeight = vidH;
+            sWidth = vidH * canvasRatio;
+            sx = (vidW - sWidth) / 2;
+            sy = 0;
+          } else {
+            // 비디오가 더 길면 상하 자르기
+            sWidth = vidW;
+            sHeight = vidW / canvasRatio;
+            sx = 0;
+            sy = (vidH - sHeight) / 2;
+          }
+          offscreenCtx.drawImage(video, sx, sy, sWidth, sHeight, 0, 0, cvsW, cvsH);
+          source = offscreenCanvas;
         }
-        offscreenCtx.drawImage(video, sx, sy, sWidth, sHeight, 0, 0, cvsW, cvsH);
-        source = offscreenCanvas;
-        // }
 
         // WebGL 렌더링
         webglRenderer.draw(source, filterRef.current!);
