@@ -40,12 +40,14 @@ function Body() {
   const router = useRouter();
 
   const loadingTip = [
+    `가장 가까운 타임워프 게이트를 찾는 중`,
     `빛의 속도로 가속하는 중`,
+    `소행성 벨트를 통과하는 중`,
     `타임워프 게이트에 접근 중`,
     `사건의 지평선을 건너가는 중`,
     `은하계를 가로질러 1년 뒤로 떠나는 중`,
   ];
-  const tipDurations = [4800, 4800, 4800];
+  const tipDurations = [4800, 4800, 4800, 4800, 4800]; // 각 팁의 지속 시간 (ms)
 
   // 점 개수 타이머
   useEffect(() => {
@@ -225,6 +227,9 @@ function Body() {
       <span className="text-body4 text-grayscale-white">
         {loadingTip[tipIndex]}
         {".".repeat(dotCount)}
+      </span>
+      <span className="text-caption2 text-grayscale-300">
+        영상을 저장하고 있습니다. 화면을 끄지 말고 기다려주세요.
       </span>
     </div>
   );
