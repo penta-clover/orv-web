@@ -97,29 +97,7 @@ export const FilteredCanvas = React.forwardRef<
         const videoRatio = vidW / vidH;
         const canvasRatio = cvsW / cvsH;
 
-        let source: HTMLVideoElement | HTMLCanvasElement = video;
-
-        if (Math.abs(videoRatio - canvasRatio) > 1e-3) {
-          // 비율 불일치 시 중앙 크롭
-          // 재사용하는 offscreenCanvas와 offscreenCtx
-          offscreenCtx.clearRect(0, 0, cvsW, cvsH);
-          let sx: number, sy: number, sWidth: number, sHeight: number;
-          if (videoRatio > canvasRatio) {
-            // 비디오가 더 넓으면 좌우 자르기
-            sHeight = vidH;
-            sWidth = vidH * canvasRatio;
-            sx = (vidW - sWidth) / 2;
-            sy = 0;
-          } else {
-            // 비디오가 더 길면 상하 자르기
-            sWidth = vidW;
-            sHeight = vidW / canvasRatio;
-            sx = 0;
-            sy = (vidH - sHeight) / 2;
-          }
-          offscreenCtx.drawImage(video, sx, sy, sWidth, sHeight, 0, 0, cvsW, cvsH);
-          source = offscreenCanvas;
-        }
+        const source: HTMLVideoElement | HTMLCanvasElement = video;
 
         // WebGL 렌더링
         webglRenderer.draw(source, filterRef.current!);
@@ -146,6 +124,25 @@ export const FilteredCanvas = React.forwardRef<
       offscreenCanvas.width = cvs.width;
       offscreenCanvas.height = cvs.height;
       gl.viewport(0, 0, cvs.width, cvs.height);
+
+      const vRatio = video.videoWidth / video.videoHeight;
+      const cRatio = cvs.width / cvs.height;
+
+      if (Math.abs(vRatio - cRatio) < 1e-3) {
+        // 비율 동일 → 크롭 해제
+        webglRenderer.setCrop(false, [0, 0, 1, 1]);
+      } else if (vRatio > cRatio) {
+        // 비디오가 더 넓음 → 좌우 잘라내기
+        const w = cRatio / vRatio;          // 남길 영역 폭
+        const x = (1 - w) / 2;
+        webglRenderer.setCrop(true, [x, 0, w, 1]);
+      } else {
+        // 비디오가 더 길음 → 상하 잘라내기
+        const h = vRatio / cRatio;          // 남길 영역 높이
+        const y = (1 - h) / 2;
+        webglRenderer.setCrop(true, [0, y, 1, h]);
+      }
+
       drawFrame();
     };
 

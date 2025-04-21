@@ -34,11 +34,19 @@ const fragmentShaderSource = `
   uniform float u_mistScale;
   uniform float u_mistSpeed;
   uniform vec2  u_texelSize;
+  uniform bool  u_enableCrop;
+  uniform vec4  u_cropUV;
   uniform bool u_hasOverlay;
   varying vec2 v_texCoord;
   
   void main() {
     vec2 uv = v_texCoord;
+    if (u_enableCrop) {
+      uv = vec2(
+        u_cropUV.x + v_texCoord.x * u_cropUV.z,
+        u_cropUV.y + v_texCoord.y * u_cropUV.w
+      );
+    }
     vec4 color = texture2D(u_image, v_texCoord);
     vec3 rgb = color.rgb;
 
@@ -305,6 +313,8 @@ export class WebGLRenderer {
       "bloomIntensity",
       "vignetteRadius",
       "vignetteSoftness",
+      "enableCrop",
+      "cropUV",
     ];
 
     this.gl.useProgram(this.program);
@@ -326,6 +336,14 @@ export class WebGLRenderer {
     if (this.uniformLocations.hasOverlay) {
       this.gl.useProgram(this.program);
       this.gl.uniform1i(this.uniformLocations.hasOverlay, 0);
+    }
+
+    // 초기 crop 상태 설정
+    if (this.uniformLocations.enableCrop) {
+      this.gl.uniform1i(this.uniformLocations.enableCrop, 0);
+    }
+    if (this.uniformLocations.cropUV) {
+      this.gl.uniform4f(this.uniformLocations.cropUV, 0, 0, 1, 1);
     }
 
     // 초기 필터 값 설정
@@ -430,6 +448,17 @@ export class WebGLRenderer {
         emptyData
       );
     }
+  }
+  
+  setCrop(enable: boolean, uv: [number, number, number, number]) {
+    this.gl.useProgram(this.program!);
+    if (this.uniformLocations.enableCrop)
+      this.gl.uniform1i(this.uniformLocations.enableCrop, enable ? 1 : 0);
+    if (enable && this.uniformLocations.cropUV)
+      this.gl.uniform4f(
+        this.uniformLocations.cropUV,
+        uv[0], uv[1], uv[2], uv[3]
+      );
   }
 
   draw(source: HTMLVideoElement | HTMLCanvasElement, filter: FilterData) {
