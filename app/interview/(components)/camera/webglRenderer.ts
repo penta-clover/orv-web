@@ -47,7 +47,7 @@ const fragmentShaderSource = `
         u_cropUV.y + v_texCoord.y * u_cropUV.w
       );
     }
-    vec4 color = texture2D(u_image, v_texCoord);
+    vec4 color = texture2D(u_image, uv);
     vec3 rgb = color.rgb;
 
      // 1. Exposure (stop adjustment)
@@ -364,7 +364,7 @@ export class WebGLRenderer {
     this.gl.uniform1f(this.uniformLocations.mistSpeed, 0.0);
     this.gl.uniform1f(this.uniformLocations.bloomThreshold, 0.8);
     this.gl.uniform1f(this.uniformLocations.bloomIntensity, 0.5);
-    this.gl.uniform1f(this.uniformLocations.vignetteRadius,   1.0);
+    this.gl.uniform1f(this.uniformLocations.vignetteRadius, 1.0);
     this.gl.uniform1f(this.uniformLocations.vignetteSoftness, 0.0);
   }
 
@@ -449,16 +449,23 @@ export class WebGLRenderer {
       );
     }
   }
-  
+
   setCrop(enable: boolean, uv: [number, number, number, number]) {
     this.gl.useProgram(this.program!);
-    if (this.uniformLocations.enableCrop)
+    console.log(enable);
+    console.log(uv);
+    if (this.uniformLocations.enableCrop) {
       this.gl.uniform1i(this.uniformLocations.enableCrop, enable ? 1 : 0);
-    if (enable && this.uniformLocations.cropUV)
+    }
+    if (enable && this.uniformLocations.cropUV) {
       this.gl.uniform4f(
         this.uniformLocations.cropUV,
-        uv[0], uv[1], uv[2], uv[3]
+        uv[0],
+        uv[1],
+        uv[2],
+        uv[3]
       );
+    }
   }
 
   draw(source: HTMLVideoElement | HTMLCanvasElement, filter: FilterData) {
@@ -578,10 +585,16 @@ export class WebGLRenderer {
       );
     }
     if (this.uniformLocations.vignetteRadius) {
-      this.gl.uniform1f(this.uniformLocations.vignetteRadius, filter.vignetteRadius);
+      this.gl.uniform1f(
+        this.uniformLocations.vignetteRadius,
+        filter.vignetteRadius
+      );
     }
     if (this.uniformLocations.vignetteSoftness) {
-      this.gl.uniform1f(this.uniformLocations.vignetteSoftness, filter.vignetteSoftness);
+      this.gl.uniform1f(
+        this.uniformLocations.vignetteSoftness,
+        filter.vignetteSoftness
+      );
     }
 
     this.gl.uniform1f(this.uniformLocations.time, performance.now() * 0.001);
@@ -590,13 +603,11 @@ export class WebGLRenderer {
     this.gl.uniform1i(this.uniformLocations.noise, 2);
 
     if (this.uniformLocations.texelSize) {
-      const texW = source instanceof HTMLVideoElement ? source.videoWidth : source.width;
-      const texH = source instanceof HTMLVideoElement ? source.videoHeight : source.height;
-      this.gl.uniform2f(
-        this.uniformLocations.texelSize,
-        1 / texW,
-        1 / texH
-      );
+      const texW =
+        source instanceof HTMLVideoElement ? source.videoWidth : source.width;
+      const texH =
+        source instanceof HTMLVideoElement ? source.videoHeight : source.height;
+      this.gl.uniform2f(this.uniformLocations.texelSize, 1 / texW, 1 / texH);
     }
 
     this.gl.drawArrays(this.gl.TRIANGLE_STRIP, 0, 4);
@@ -639,6 +650,8 @@ export class WebGLRenderer {
       texelSize: null,
       overlay: null,
       hasOverlay: null,
+      enableCrop: null,
+      cropUV: null,
     };
     this.attributeLocations = null;
   }
