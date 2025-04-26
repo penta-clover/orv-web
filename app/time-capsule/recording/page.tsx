@@ -97,15 +97,17 @@ function Body() {
       setLeftSeconds((prev) => {
         if (prev === 0) {
           clearInterval(countdownInterval);
-          streamRecorderRef.current
-            ?.stopRecording()
-            .then(() => downloadRecording());
+          endInterview();
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
     return countdownInterval;
+  };
+
+  const endInterview = () => {
+    streamRecorderRef.current?.stopRecording().then(() => downloadRecording());
   };
 
   const downloadRecording = async () => {
@@ -319,6 +321,24 @@ function Body() {
           Q. {question}
         </div>
       )}
+
+      <div
+        className={`absolute bottom-[20px] right-[20px] flex justify-center items-center z-50 text-grayscale-white text-head4 px-[16px] h-[50px] bg-grayscale-700 rounded-full gap-[6px] active:scale-95 transition-all ${
+          isCountdownEnd.current ? "opacity-100" : "opacity-0"
+        }`}
+        onClick={() => {
+          endInterview();
+        }}
+      >
+        <Image
+          unoptimized
+          src="/icons/rec-stop-rectangle.svg"
+          width={18}
+          height={18}
+          alt={"stop recording"}
+        />
+        <p>녹화 종료하기</p>
+      </div>
 
       <div className="h-[16px] shrink" />
 
