@@ -128,7 +128,12 @@ function Body() {
           className="h-[100dvh] shrink-0 mx-[16px] bg-grayscale-white z-20"
         />
       )}
-      <div className="h-[calc(100dvh-160px)] shrink-0 z-20" />
+      <div className="w-full flex justify-center items-center h-[100px] shrink-0 z-20">
+        <div className="rounded-full h-[50px] px-[20px] flex justify-center items-center shrink-0 text-head4 font-bold underline text-grayscale-50 bg-grayscale-700 transition-all active:scale-95" onClick={() => {handleCapture(entireLetterRef.current!);}}>
+          이미지 저장하기
+        </div>
+      </div>
+      <div className="h-[calc(100dvh-220px)] shrink-0 z-20" />
       <div className="h-[160px] shrink-0 z-20 pointer-events-none" />
       <div
         className={`fixed bottom-0 left-0 w-full z-10`}
@@ -232,7 +237,9 @@ function Invitation() {
           text=""
           onClick={() => {
             // 클립보드에 복사
-            navigator.clipboard.writeText(`https://orv.im/time-capsule?ref=${nickname}`);
+            navigator.clipboard.writeText(
+              `https://orv.im/time-capsule?ref=${nickname}`
+            );
             setIsCopied(true);
           }}
           className={`w-full h-[48px] mx-[16px] text-head4 ${
