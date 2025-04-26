@@ -56,12 +56,6 @@ function Body() {
           ratio = Math.min((scrollY - start) / range, 1);
         }
         setRevealRatio(ratio);
-
-        console.log(
-          `scrollY: ${scrollY}, blurThreshold: ${blurThreshold}, scrollBlur: ${
-            Math.min(scrollY / blurThreshold, 1) * 16
-          }, ratio: ${ratio}`
-        );
       }
     };
 
