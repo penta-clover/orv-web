@@ -556,11 +556,22 @@ const handleCapture = async (elem: HTMLElement) => {
       backgroundColor: "rgb(16, 16, 18)",
       scale: 2,
     });
-    const dataUrl = canvas.toDataURL("image/png");
-    const link = document.createElement("a");
-    link.href = dataUrl;
-    link.download = `미래에서-온-편지-${Date.now()}.png`;
-    link.click();
+
+    canvas.toBlob((blob) => {
+      if (!blob) throw new Error("blob 생성 실패");
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `미래에서-온-편지-${Date.now()}.png`;
+      document.body.appendChild(link); // iOS에서 필수
+      link.click();
+
+      setTimeout(() => {
+        URL.revokeObjectURL(url);
+        link.remove();
+      }, 1000);
+    }, "image/png");
   } catch (e) {
     console.error("캡처 실패:", e);
     alert("결과 저장에 실패했습니다. 다시 시도해주세요.");
