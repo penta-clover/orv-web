@@ -574,7 +574,7 @@ const handleCapture = async (elem: HTMLElement) => {
       const file = new File([blob], `미래에서-온-편지.png`, { type: "image/png" });
       if (navigator.canShare?.({ files: [file] })) {
         try {
-          await navigator.share({ files: [file], title: "타임캡슐 이미지" });
+          await navigator.share({ files: [file], title: "미래에서 온 편지" });
           return;             // 사진 저장 후 함수 종료 → 아래 다운로드 코드 건너뜀
         } catch (e) {
           // 사용자가 취소하면 그대로 ↓ fallback 진행
