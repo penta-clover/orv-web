@@ -22,7 +22,7 @@ function Body() {
 
   return (
     <div className="relative bg-dark w-full h-[calc(100dvh)] overflow-y-scroll hide-scrollbar">
-      <div className="fixed top-0 left-0 right-0 z-40">
+      <div className="absolute top-0 left-0 right-0 z-40">
         <ActionBar />
       </div>
 
