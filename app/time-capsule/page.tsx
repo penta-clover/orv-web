@@ -70,6 +70,10 @@ function Body() {
 
       <div className="h-[125px] shrink-0" />
 
+      <DemoVideo />
+
+      <div className="h-[125px] shrink-0" />
+
       <QuestionSection />
 
       <div className="h-[125px] shrink-0" />
@@ -219,6 +223,37 @@ function ExampleSection() {
   );
 }
 
+function DemoVideo() {
+  return (
+    <div className="flex flex-col items-center w-full">
+      <div className="text-head1 text-grayscale-white flex flex-col items-center">
+        <span>1년 전 과거의 나로부터</span>
+        <span>도착한 타임캡슐</span>
+      </div>
+      <div className="h-[16px]" />
+      <div className="text-body2 text-grayscale-400 flex flex-col items-center">
+        <span>그 날의 감정, 기분, 온도가 고스란히 담긴 기억이 배달됐어요</span>
+      </div>
+      <div className="h-[24px]" />
+
+      <div className="w-full aspect-[16/9] relative">
+        <video
+          src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/timecapsule-demo-video-13fps.mp4"
+          width={0}
+          height={0}
+          autoPlay
+          muted
+          loop
+          style={{
+            objectFit: "contain",
+            width: "100%",
+            height: "100%",}}
+        />
+      </div>
+    </div>
+  );
+}
+
 function Introduction() {
   const [now, setNow] = useState<Date>();
 
@@ -234,11 +269,11 @@ function Introduction() {
     let hours = date.getHours();
     const minutes = date.getMinutes();
     const seconds = date.getSeconds();
-    const period = hours < 12 ? '오전' : '오후';
+    const period = hours < 12 ? "오전" : "오후";
     hours = hours % 12;
     if (hours === 0) hours = 12;
-    const paddedMinutes = String(minutes).padStart(2, '0');
-    const paddedSeconds = String(seconds).padStart(2, '0');
+    const paddedMinutes = String(minutes).padStart(2, "0");
+    const paddedSeconds = String(seconds).padStart(2, "0");
     return `${year}년 ${month}월 ${day}일 ${period} ${hours}시 ${paddedMinutes}분 ${paddedSeconds}초`;
   };
 
