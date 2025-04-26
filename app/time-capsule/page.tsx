@@ -128,10 +128,10 @@ function ActionBar() {
 
 function Capsule() {
   return (
-    <div className="relative h-[344px] w-full">
+    <div className="relative h-[400px] w-full">
       <Image
         src={
-          "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/milky-way.png"
+          "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/milky-way.jpg"
         }
         unoptimized
         alt="milky-way"
@@ -146,14 +146,18 @@ function Capsule() {
           top: "0",
           left: "0",
           right: "0",
-          bottom: "0",
-          opacity: "0.5",
+          bottom: "0"
         }}
       />
 
       <div className="grow" />
 
-      <div className="flex justify-center items-center w-full h-full">
+      <div className="flex flex-col justify-center items-center w-full h-full animate-updown gap-[32px]">
+        <div className="flex justify-center items-center bg-grayscale-white w-[263px] h-[36px] rounded-[8px] text-body4 text-grayscale-700">
+          <span className="font-bold">1년 전의 나</span>로부터&nbsp;
+          <span className="font-bold">타임캡슐</span>이 도착했어요.
+        </div>
+
         <Image
           src={
             "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/time-capsule.png"

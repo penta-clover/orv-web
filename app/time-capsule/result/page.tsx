@@ -312,15 +312,12 @@ function Invitation() {
         />
       </div>
 
-      <div className="milky-way-mask-container">
-        <Image
-          src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/milky-way.png"
-          alt="milky-way"
-          unoptimized
-          fill
-          className="milky-way-mask"
-        />
-      </div>
+      <Image
+        src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/milky-way.jpg"
+        alt="milky-way"
+        unoptimized
+        fill
+      />
     </div>
   );
 }

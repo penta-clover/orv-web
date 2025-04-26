@@ -32,7 +32,7 @@ function Body() {
 
       <Image
         src={
-          "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/milky-way.png"
+          "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/milky-way.jpg"
         }
         unoptimized
         alt="milky-way"
@@ -47,8 +47,7 @@ function Body() {
           top: "0",
           left: "0",
           right: "0",
-          bottom: "0",
-          opacity: "0.5",
+          bottom: "0"
         }}
       />
 
