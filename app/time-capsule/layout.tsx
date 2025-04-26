@@ -3,7 +3,7 @@ import { Metadata, ResolvingMetadata } from "next";
 export const metadata: Metadata = {
   openGraph: {
     title: "60초 타임캡슐 프로젝트에 초대됐어요",
-    description: "1년 뒤 나에게 60초 선물하세요",
+    description: "1년 뒤 나에게 60초의 추억을 선물하세요",
     images: [
       "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/time-capsule-thumbnail.jpg",
     ],
