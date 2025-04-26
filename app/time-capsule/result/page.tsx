@@ -59,13 +59,20 @@ function Body() {
       if (entireLetterRef.current) {
         const letterHeight = entireLetterRef.current.offsetHeight;
         // start 지점을 최소 0 이상으로 클램프
-        const start = Math.max(letterHeight - window.innerHeight * 0.07, 0);
-        const range = window.innerHeight * 1;
+        const start = Math.max(letterHeight + window.innerHeight * 0.85, 0);
+        const range = window.innerHeight * 0.15;
         let ratio = 0;
         if (scrollY >= start) {
-          ratio = Math.min((scrollY - start) / range, 1);
+          const t = Math.min((scrollY - start) / range, 1)
+          ratio = Math.max(Math.pow(t,10), 0.3);
+          setRevealRatio(ratio);
+        } else if (scrollY >= entireLetterRef.current.offsetHeight + 220) {
+          setRevealRatio(0.3);
+        } else {
+          setRevealRatio(0);
         }
-        setRevealRatio(ratio);
+
+        console.log(`scrollY: ${scrollY}, start: ${start}, ratio: ${ratio}`);
       }
     };
 
@@ -88,7 +95,7 @@ function Body() {
       className="flex flex-col relative bg-dark w-full h-[calc(100dvh)] overflow-y-scroll hide-scrollbar"
     >
       <div
-        className="h-[90dvh] fixed left-0 top-0 w-full z-0"
+        className="h-[90dvh] fixed left-0 right-0 top-0 mx-auto w-full max-w-[650px] z-0"
         style={{ filter: `blur(${scrollBlur}px)`, opacity: hideFirst ? 0 : 1 }}
       >
         <div className="h-[20dvh] shrink-0" />
@@ -147,10 +154,24 @@ function Body() {
           {isSaving ? "다운로드 중..." : "이미지 저장하기"}
         </div>
       </div>
-      <div className="h-[calc(100dvh-220px)] shrink-0 z-20" />
+      <div className="h-[50px] shrink-0 z-20" />
+      <div className="flex flex-col items-center justify-center w-full animate-updown z-30 gap-[5px]">
+        <Image
+          unoptimized
+          src="/icons/down-arrow.svg"
+          width={20}
+          height={34}
+          alt="down-arrow"
+        />
+
+        <span className="w-full flex justify-center text-main-lilac50 text-caption1 mb-[10px] animate-updown">
+          아래로 쭉 스크롤해서 다음 화면으로 넘어가기
+        </span>
+      </div>
+      <div className="h-[calc(100dvh-280px)] shrink-0 z-20" />
       <div className="h-[160px] shrink-0 z-20 pointer-events-none" />
       <div
-        className={`fixed bottom-0 left-0 w-full z-10`}
+        className={`fixed bottom-0 left-0 right-0 mx-auto w-full max-w-[650px] z-10`}
         style={{
           filter: `blur(${(1 - revealRatio) * 8}px)`,
           opacity: revealRatio, // 추가
