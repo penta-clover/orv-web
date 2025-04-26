@@ -29,9 +29,19 @@ function Body() {
   const [scrollBlur, setScrollBlur] = useState(0);
   const [hideFirst, setHideFirst] = useState(false);
   const [revealRatio, setRevealRatio] = useState(0);
+  const [isSaving, setIsSaving] = useState(false);
 
   const memberRepository = useMemberRepository();
   const [nickname, setNickname] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isSaving) {
+      const timer = setTimeout(() => {
+        setIsSaving(false);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [isSaving]);
 
   useEffect(() => {
     const sc = scrollRef.current;
@@ -123,7 +133,7 @@ function Body() {
         />
       )}
       <div className="w-full flex justify-center items-center h-[100px] shrink-0 z-20">
-        <div className="rounded-full h-[50px] px-[20px] flex justify-center items-center shrink-0 text-head4 font-bold text-grayscale-50 bg-grayscale-700 transition-all active:scale-95" onClick={() => {handleCapture(entireLetterRef.current!);}}>
+        <div className={`rounded-full h-[50px] px-[20px] flex justify-center items-center shrink-0 text-head4 font-bold ${isSaving ? "text-grayscale-700 bg-grayscale-200": "text-grayscale-50 bg-grayscale-700"}transition-all active:scale-95`} onClick={() => {handleCapture(entireLetterRef.current!);}}>
           이미지 저장하기
         </div>
       </div>
@@ -554,11 +564,22 @@ const handleCapture = async (elem: HTMLElement) => {
     const canvas = await html2canvas(elem, {
       useCORS: true,
       backgroundColor: "rgb(16, 16, 18)",
-      scale: window.devicePixelRatio * 2,
+      scale: window.devicePixelRatio,
     });
 
-    canvas.toBlob((blob) => {
+    canvas.toBlob(async (blob) => {
       if (!blob) throw new Error("blob 생성 실패");
+
+      // 1. Web Share 가능하면 공유 시트 열기
+      const file = new File([blob], `미래에서-온-편지.png`, { type: "image/png" });
+      if (navigator.canShare?.({ files: [file] })) {
+        try {
+          await navigator.share({ files: [file], title: "타임캡슐 이미지" });
+          return;             // 사진 저장 후 함수 종료 → 아래 다운로드 코드 건너뜀
+        } catch (e) {
+          // 사용자가 취소하면 그대로 ↓ fallback 진행
+        }
+      }
 
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
