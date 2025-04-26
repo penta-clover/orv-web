@@ -260,8 +260,11 @@ function DemoVideo() {
 
 function Introduction() {
   const [now, setNow] = useState<Date>();
+  const [start, setStart] = useState<Date>();
 
   useEffect(() => {
+    setStart(new Date());
+    setNow(new Date());
     const timer = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
@@ -282,20 +285,24 @@ function Introduction() {
   };
 
   return (
-    <div className="flex flex-col text-body1 gap-[36px] text-grayscale-white mx-[20px]">
-      <span>{now ? formatDate(now) : ""}</span>
+    <div className="flex flex-col gap-[26px] text-grayscale-white mx-[20px]">
+      <span className="text-head2">{now ? formatDate(now) : ""}</span>
 
-      <span>
-        매순간 시간은 흐르고 지금 당신의 모습도 시간과 함께 영원히 과거로
-        사라지겠죠
+      {now && start && (
+        <span className="text-body2">
+          이곳에 들어온 지 어느새 {now.getSeconds() - start.getSeconds()}초가
+          흘렀어요.
+        </span>
+      )}
+
+      <span className="text-body2">
+        단 1분, 그 시간을 타임캡슐에 담아 당신의 소중한 순간을 기록해 보세요.
       </span>
 
-      <span>
-        내가 나를 남기지 않는다면 이 순간은 영원히 사라져 아무도 기억하지 못할
-        거예요
+      <span className="text-body2">
+        오늘 남긴 이 짧은 기록이 미래의 나에게 특별한 선물이 될 거예요. 당신의
+        이야기로 타임캡슐을 완성해주세요.
       </span>
-
-      <span>그 시작을 60초 타임캡슐과 함께 해요</span>
     </div>
   );
 }
