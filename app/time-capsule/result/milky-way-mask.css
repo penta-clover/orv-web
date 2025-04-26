@@ -1,0 +1,20 @@
+.milky-way-mask-container {
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.milky-way-mask {
+  object-fit: fill;       /* 기존 style 유지 */
+  width: 100%;
+  height: 100%;
+  /* 가장자리로 갈수록 투명해지는 원형 마스크 */
+  mask-image: radial-gradient(circle farthest-corner at center, black 70%, transparent 100%);
+  mask-mode: alpha;
+  -webkit-mask-image: radial-gradient(circle farthest-corner at center, black 70%, transparent 100%);
+  -webkit-mask-mode: alpha;
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+}

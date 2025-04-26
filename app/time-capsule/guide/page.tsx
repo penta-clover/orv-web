@@ -53,6 +53,28 @@ export default function Page() {
       <div className="flex items-center gap-[9px]">
         <CircleNumber num={3} />
         <span className="text-grayscale-300 text-head3">
+          타임캡슐에 함께 담을 것 선택하기
+        </span>
+      </div>
+
+      <div className="h-[20px] shrink-0" />
+
+      <div className="flex w-full justify-center items-center">
+        <div className="flex justify-center w-[328px] bg-[#EFEFEF] rounded-[5px]">
+          <Image
+            src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/mysterious-gift.jpg"
+            alt="letter"
+            width={191}
+            height={191}
+          />
+        </div>
+      </div>
+
+      <div className="h-[125px] shrink-0" />
+
+      <div className="flex items-center gap-[9px]">
+        <CircleNumber num={4} />
+        <span className="text-grayscale-300 text-head3">
           1년 뒤, 타임캡슐 받아보기
         </span>
       </div>
@@ -137,7 +159,7 @@ function WorrySection() {
               : "bg-grayscale-700"
           }`}
         >
-          1년 뒤 나는 어떤 모습이길 바라나요?
+          지금 나에게 가장 소중한 것은 무엇인가요?
         </span>
         <span className="grow" />
       </div>
@@ -150,7 +172,7 @@ function WorrySection() {
               : "bg-grayscale-800"
           }`}
         >
-          요즘 갖고 있는 고민이 있다면 알려주세요
+          일년 뒤의 나는 어떤 생각을 하고 있을까요?
         </span>
       </div>
       <div className="flex flex-row w-full">
@@ -161,7 +183,7 @@ function WorrySection() {
               : "bg-grayscale-700"
           }`}
         >
-          지금 나는 어떤 것을 가장 후회하고 있나요?
+          요즘 나를 가장 힘들게 하는 것은 무엇인가요?
         </span>
         <span className="grow" />
       </div>
