@@ -240,7 +240,7 @@ function DemoVideo() {
 
       <div className="w-full aspect-[16/9] relative">
         <video
-          src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/timecapsule-demo-video-13fps.mp4"
+          src="https://d3bdjeyz3ry3pi.cloudfront.net/static/videos/timecapsule-demo-video-13fps.mp4"
           width={0}
           height={0}
           autoPlay
