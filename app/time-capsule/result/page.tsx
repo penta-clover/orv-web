@@ -63,8 +63,8 @@ function Body() {
         const range = window.innerHeight * 0.15;
         let ratio = 0;
         if (scrollY >= start) {
-          const t = Math.min((scrollY - start) / range, 1)
-          ratio = Math.max(Math.pow(t,10), 0.3);
+          const t = Math.min((scrollY - start) / range, 1);
+          ratio = Math.max(Math.pow(t, 10), 0.3);
           setRevealRatio(ratio);
         } else if (scrollY >= entireLetterRef.current.offsetHeight + 220) {
           setRevealRatio(0.3);
@@ -454,15 +454,13 @@ function Reply({
       <div className="h-[60px] shrink-0" />
 
       <div className="flex flex-col items-center text-body1 font-onglyph text-grayscale-black">
-        <p>이상으로 2026년 나의 근황이었어</p>
-        <div className="h-[3px] shrink-0" />
-        <p>1년 뒤 네 모습을 살펴보니 어때?</p>
-        <div className="h-[3px] shrink-0" />
-        <p>네가 기대하던 삶과는 좀 다르니?</p>
+        <p>네가 기대하던 삶과는 좀 다른가?</p>
         <div className="h-[3px] shrink-0" />
         <p>하나 확실한 건, 난 지금 너무너무 행복해!</p>
         <div className="h-[3px] shrink-0" />
-        <p>너도 그곳에서 행복하면 좋겠어. 안녕!</p>
+        <p>그러니까 미래는 걱정말고</p>
+        <div className="h-[3px] shrink-0" />
+        <p>2025년의 너가 더 행복하길 바랄게. 안녕!</p>
       </div>
 
       <div className="h-[30px] shrink-0" />
