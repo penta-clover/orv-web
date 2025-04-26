@@ -71,8 +71,6 @@ function Body() {
         } else {
           setRevealRatio(0);
         }
-
-        console.log(`scrollY: ${scrollY}, start: ${start}, ratio: ${ratio}`);
       }
     };
 
