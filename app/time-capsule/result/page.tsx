@@ -129,7 +129,7 @@ function Body() {
         />
       )}
       <div className="w-full flex justify-center items-center h-[100px] shrink-0 z-20">
-        <div className="rounded-full h-[50px] px-[20px] flex justify-center items-center shrink-0 text-head4 font-bold underline text-grayscale-50 bg-grayscale-700 transition-all active:scale-95" onClick={() => {handleCapture(entireLetterRef.current!);}}>
+        <div className="rounded-full h-[50px] px-[20px] flex justify-center items-center shrink-0 text-head4 font-bold text-grayscale-50 bg-grayscale-700 transition-all active:scale-95" onClick={() => {handleCapture(entireLetterRef.current!);}}>
           이미지 저장하기
         </div>
       </div>
