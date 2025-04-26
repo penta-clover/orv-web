@@ -243,6 +243,7 @@ function DemoVideo() {
           height={0}
           autoPlay
           muted
+          playsInline
           loop
           style={{
             objectFit: "contain",
