@@ -17,21 +17,21 @@ export default function Page() {
       imgUrl:
         "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/time-capsule-purple.png",
       alt: "timecapsule-purple",
-      title: "슬픔",
+      title: "설렘",
       question: "최근 가장 슬펐던 일은\n 언제인가요?",
     },
     {
       imgUrl:
         "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/time-capsule-blue.png",
       alt: "timecapsule-blue",
-      title: "과거",
-      question: "과거로 돌아갈 수 있다면\n 언제로 가고 싶나요?",
+      title: "불안",
+      question: "요즘 갖고 있는\n 고민이 있다면 알려주세요",
     },
     {
       imgUrl:
         "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/time-capsule-red.png",
       alt: "timecapsule-red",
-      title: "분노",
+      title: "사랑",
       question: "최근에 가장 화가 났던\n 일은 언제인가요?",
     },
     {
@@ -39,21 +39,21 @@ export default function Page() {
         "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/time-capsule-yellow.png",
       alt: "timecapsule-yellow",
       title: "미래",
-      question: "1년 뒤의 나는\n 어떤 모습이기를 바라나요?",
+      question: "일년 뒤의 나는\n 어떤 모습이기를 바라나요?",
     },
     {
       imgUrl:
         "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/time-capsule-green.png",
       alt: "timecapsule-green",
-      title: "후회",
+      title: "감사",
       question: "지금 나는 어떤 것을\n 가장 후회하고 있나요?",
-    },
+    },  
     {
       imgUrl:
         "https://d3bdjeyz3ry3pi.cloudfront.net/static/images/time-capsule-orange.png",
       alt: "timecapsule-orange",
-      title: "불안",
-      question: "요즘 갖고 있는\n 가장 큰 고민은 무엇인가요?",
+      title: "미래",
+      question: "일년 뒤의 나는\n 어떤 모습이기를 바라나요?",
     },
   ];
 
@@ -84,7 +84,7 @@ export default function Page() {
               width={100}
               height={100}
               className="w-[100px] h-[100px]"
-            />
+            /> 
             <div className="text-head4 text-grayscale-white mt-2">
               {topic.title}
             </div>

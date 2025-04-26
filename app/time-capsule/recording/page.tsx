@@ -37,7 +37,7 @@ function Body() {
   const filter = searchParams.get("filter")! as Filter;
 
   const RECORDING_FPS = 24; // 녹화 프레임 레이트 설정
-  const LIMIT_SECONDS = 60; // 녹화 제한 시간 (초 단위)
+  const LIMIT_SECONDS = 6000; // 녹화 제한 시간 (초 단위)
 
   const router = useRouter();
 
@@ -162,12 +162,12 @@ function Body() {
 
         const track = originalCameraStream.getVideoTracks()[0];
         await track.applyConstraints({
-          aspectRatio: 3 / 4,
+          aspectRatio: 1 / 1,
           resizeMode: "none",
         } as any);
 
         setResolution({
-          widthPixel: 1080,
+          widthPixel: 1440,
           heightPixel: 1440,
         });
 
@@ -222,6 +222,26 @@ function Body() {
 
   return (
     <div className="relative flex flex-col bg-dark h-[calc(100dvh)] overflow-hidden w-full justify-center">
+      {canLoadMedia !== false && (
+        <div className="flex justify-between items-center mx-[10px]">
+          <div className="flex items-center gap-[4px]">
+            <div className="flex flex-col justify-center items-center w-[12px] h-[12px] m-[2px] rounded-full bg-[#FF0000] text-caption1 text-grayscale-black shrink-0" />
+            <div className="text-grayscale-50 text-body4">
+              {/* 01:00 형태로 현재 녹화 시간 표시 */}
+              {`${Math.floor((LIMIT_SECONDS - leftSeconds) / 60)
+                .toString()
+                .padStart(2, "0")}:${((LIMIT_SECONDS - leftSeconds) % 60)
+                .toString()
+                .padStart(2, "0")}`}
+            </div>
+          </div>
+
+          <div className="text-grayscale-300 text-caption1">
+            시간이 다 되면 자동으로 기록이 마무리됩니다
+          </div>
+        </div>
+      )}
+
       {isInstagramBrowser && canLoadMedia === false && (
         <div className="absolute flex items-end flex-col top-0 left-0 right-0 px-[20px] pt-[10px] animate-updown z-50">
           <Image
@@ -239,16 +259,7 @@ function Body() {
         </div>
       )}
 
-      <div className="grow" />
-
-      {canLoadMedia !== false && (
-        <div className="text-grayscale-50 text-head2 mx-[16px]">
-          Q. {question}
-        </div>
-      )}
-      <div className="h-[16px] shrink" />
-
-      <div className="relative flex justify-center items-center w-full aspect-[3/4] bg-grayscale-900 overflow-hidden hide-scrollbar z-30">
+      <div className="relative flex justify-center items-center w-full aspect-[1/1] bg-grayscale-900 overflow-hidden hide-scrollbar z-30">
         {aspect === "none" ? (
           <BlankCanvas
             ref={previewCanvasRef}
@@ -301,28 +312,17 @@ function Body() {
         )}
       </div>
 
+      <div className="h-[8px] shrink" />
+
+      {canLoadMedia !== false && (
+        <div className="text-grayscale-50 text-head2 mx-[16px]">
+          Q. {question}
+        </div>
+      )}
+
       <div className="h-[16px] shrink" />
 
-      {canLoadMedia !== false && (
-        <div className="flex justify-end mx-[16px]">
-          <div className="text-grayscale-50 text-head3">
-            {/* 01:00 형태로 현재 녹화 시간 표시 */}
-            {`${Math.floor((LIMIT_SECONDS - leftSeconds) / 60)
-              .toString()
-              .padStart(2, "0")}:${((LIMIT_SECONDS - leftSeconds) % 60)
-              .toString()
-              .padStart(2, "0")}`}
-          </div>
-        </div>
-      )}
-
       <div className="grow" />
-
-      {canLoadMedia !== false && (
-        <div className="text-center w-full text-grayscale-300 text-caption1">
-          시간이 다 되면 자동으로 기록이 마무리됩니다
-        </div>
-      )}
 
       <div className="h-[18px]" />
     </div>

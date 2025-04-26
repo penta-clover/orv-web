@@ -13,7 +13,7 @@ export default function Page() {
 
 function Body() {
   const searchParams = useSearchParams();
-  const topic = searchParams.get("topic");
+  const topic = searchParams.get("topic"); 
   const question = searchParams.get("question");
   const router = useRouter();
 
