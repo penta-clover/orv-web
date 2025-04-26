@@ -564,7 +564,7 @@ const handleCapture = async (elem: HTMLElement) => {
     const canvas = await html2canvas(elem, {
       useCORS: true,
       backgroundColor: "rgb(16, 16, 18)",
-      scale: window.devicePixelRatio,
+      scale: window.devicePixelRatio * 2,
     });
 
     canvas.toBlob(async (blob) => {
