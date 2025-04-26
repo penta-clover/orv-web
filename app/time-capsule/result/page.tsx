@@ -144,7 +144,7 @@ function Body() {
             handleCapture(entireLetterRef.current!);
           }}
         >
-          이미지 저장하기
+          {isSaving ? "다운로드 중..." : "이미지 저장하기"}
         </div>
       </div>
       <div className="h-[calc(100dvh-220px)] shrink-0 z-20" />
