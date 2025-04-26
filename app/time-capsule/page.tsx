@@ -22,7 +22,9 @@ function Body() {
 
   return (
     <div className="relative bg-dark w-full h-[calc(100dvh)] overflow-y-scroll hide-scrollbar">
-      <ActionBar />
+      <div className="fixed top-0 left-0 right-0 z-40">
+        <ActionBar />
+      </div>
 
       <Capsule />
 
@@ -145,7 +147,7 @@ function Capsule() {
           left: "0",
           right: "0",
           bottom: "0",
-          opacity: "0.65",
+          opacity: "0.5",
         }}
       />
 
@@ -248,7 +250,8 @@ function DemoVideo() {
           style={{
             objectFit: "contain",
             width: "100%",
-            height: "100%",}}
+            height: "100%",
+          }}
         />
       </div>
     </div>
