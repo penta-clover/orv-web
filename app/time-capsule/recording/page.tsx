@@ -59,6 +59,7 @@ function Body() {
     null
   );
   const [canLoadMedia, setCanLoadMedia] = useState<boolean | null>(null);
+  const [isScriptOpened, setIsScriptOpened] = useState<boolean>(false);
 
   usePermissionReload("microphone");
   usePermissionReload("camera");
@@ -223,9 +224,9 @@ function Body() {
   }, []);
 
   return (
-    <div className="relative flex flex-col bg-dark h-[calc(100dvh)] overflow-hidden w-full justify-center">
+    <div className="relative flex flex-col bg-dark h-[calc(100dvh)] overflow-scroll w-full hide-scrollbar">
       {canLoadMedia !== false && (
-        <div className="flex justify-between items-center mx-[10px]">
+        <div className="flex justify-between items-center mx-[10px] shrink-0 h-[22px]">
           <div className="flex items-center gap-[4px]">
             <div className="flex flex-col justify-center items-center w-[12px] h-[12px] m-[2px] rounded-full bg-[#FF0000] text-caption1 text-grayscale-black shrink-0" />
             <div className="text-grayscale-50 text-body4">
@@ -245,7 +246,7 @@ function Body() {
       )}
 
       {isInstagramBrowser && canLoadMedia === false && (
-        <div className="absolute flex items-end flex-col top-0 left-0 right-0 px-[20px] pt-[10px] animate-updown z-50">
+        <div className="absolute flex items-end flex-col top-0 left-0 right-0 px-[20px] pt-[10px] animate-updown z-50 shrink-0">
           <Image
             unoptimized
             src="/icons/tooltip-triangle.svg"
@@ -261,7 +262,7 @@ function Body() {
         </div>
       )}
 
-      <div className="relative flex justify-center items-center w-full aspect-[1/1] bg-grayscale-900 overflow-hidden hide-scrollbar z-30">
+      <div className="relative flex justify-center items-center w-full aspect-[1/1] bg-grayscale-900 overflow-hidden hide-scrollbar z-30 shrink-0">
         {aspect === "none" ? (
           <BlankCanvas
             ref={previewCanvasRef}
@@ -312,32 +313,57 @@ function Body() {
             </div>
           </div>
         )}
+        {canLoadMedia !== false && (
+          <div className="absolute flex flex-col justify-end items-center w-full h-full z-50">
+            <div className="text-head3 text-grayscale-200 px-[16px] w-full mb-[10px]">
+              Q. {question}
+            </div>
+          </div>
+        )}
       </div>
 
-      <div className="h-[8px] shrink" />
-
-      {canLoadMedia !== false && (
-        <div className="text-grayscale-50 text-head2 mx-[16px]">
-          Q. {question}
+      {canLoadMedia && !isScriptOpened && (
+        <div
+          className="flex justify-center items-center bg-grayscale-800 m-[14px] h-[46px] w-[calc(100%-28px)] flex text-head4 text-grayscale-300 rounded-full transition-all active:scale-95"
+          onClick={() => setIsScriptOpened(true)}
+        >
+          무슨 말을 할지 고민이라면 click!
         </div>
       )}
 
-      <div
-        className={`absolute bottom-[20px] right-[20px] flex justify-center items-center z-50 text-grayscale-white text-head4 px-[16px] h-[50px] bg-grayscale-700 rounded-full gap-[6px] active:scale-95 transition-all ${
-          isCountdownEnd.current ? "opacity-100" : "opacity-0"
-        }`}
-        onClick={() => {
-          endInterview();
-        }}
-      >
-        <Image
-          unoptimized
-          src="/icons/rec-stop-rectangle.svg"
-          width={18}
-          height={18}
-          alt={"stop recording"}
-        />
-        <p>녹화 종료하기</p>
+      {canLoadMedia && isScriptOpened && (
+        <div
+          className="p-[14px] h-full max-h-[calc(100dvh-min(650px,100dvw))] overflow-scroll hide-scrollbar"
+          onClick={() => setIsScriptOpened(true)}
+        >
+          {scriptMapper(topic ?? "").map((script, index) => (
+            <div key={"script" + index}>
+              <div className="text-grayscale-200 text-body2">{script}</div>
+              <div className="h-[26px]" />
+            </div>
+          ))}
+          <div className="h-[20px]" />
+        </div>
+      )}
+
+      <div className="fixed bottom-[20px] left-1/2 transform -translate-x-1/2 w-full max-w-[650px] flex justify-end items-center z-40">
+        <div
+          className={`flex justify-center items-center z-50 text-grayscale-white text-head4 px-[16px] mr-[20px] w-[116px] h-[46px] bg-grayscale-700 rounded-full gap-[6px] active:scale-95 transition-all ${
+            isCountdownEnd.current ? "opacity-100" : "opacity-0"
+          }`}
+          onClick={() => {
+            endInterview();
+          }}
+        >
+          <Image
+            unoptimized
+            src="/icons/rec-stop-rectangle.svg"
+            width={18}
+            height={18}
+            alt={"stop recording"}
+          />
+          <p>녹화 종료</p>
+        </div>
       </div>
 
       <div className="h-[16px] shrink" />
@@ -346,5 +372,54 @@ function Body() {
 
       <div className="h-[18px]" />
     </div>
+  );
+}
+
+function scriptMapper(topic: string): string[] {
+  return (
+    {
+      나: [
+        "안녕, __아. 지금은 2025년 __월 __일이야. 오늘 나는 __ 기분으로 이 영상을 찍고 있어.",
+        "요즘 나는 __(공부, 일, 취미 등)을 하고 있고 하루하루 __ 생각을 하면서 살고 있어.",
+        "일년 뒤 나에게 해주고 싶은 말은 __이야. 이 말을 해주고 싶은 이유는 __이야",
+        "지금 이 영상을 보는 너는 어떤 삶을 살고 있어? 행복해?",
+        "지금 이 순간의 나도, 미래의 너도 다 소중해. 1년 뒤 웃으며 만나자. 사랑해, __아!",
+      ],
+      불안: [
+        "안녕, __아. 지금은 2025년 __월 __일이야. 오늘 나는 __ 기분으로 이 영상을 찍고 있어.",
+        "요즘 나는 __(공부, 일, 취미 등)을 하고 있고 하루하루 __ 생각을 하면서 살고 있어.",
+        "요즘 가장 많이 하는 고민은 __야. 이게 고민인 이유는 __이야.",
+        "지금 이 영상을 보는 너는 어떤 삶을 살고 있어? 행복해?",
+        "지금 이 순간의 나도, 미래의 너도 다 소중해. 1년 뒤 웃으며 만나자. 사랑해, __아!",
+      ],
+      사랑: [
+        "안녕, __아. 지금은 2025년 __월 __일이야. 오늘 나는 __ 기분으로 이 영상을 찍고 있어.",
+        "요즘 나는 __(공부, 일, 취미 등)을 하고 있고 하루하루 __ 생각을 하면서 살고 있어.",
+        "지금 타임캡슐을 만들면서 떠오르는 사람은 __이야. __이 떠오른 이유는 내가 가장 좋아하기 때문이지. 일년 뒤에도 그럴 수 있으면 좋겠어.",
+        "지금 이 영상을 보는 너는 어떤 삶을 살고 있어? 행복해?",
+        "지금 이 순간의 나도, 미래의 너도 다 소중해. 1년 뒤 웃으며 만나자. 사랑해, __아!",
+      ],
+      미래: [
+        "안녕, __아. 지금은 2025년 __월 __일이야. 오늘 나는 __ 기분으로 이 영상을 찍고 있어.",
+        "요즘 나는 __(공부, 일, 취미 등)을 하고 있고 하루하루 __ 생각을 하면서 살고 있어.",
+        "1년 뒤의 나는 __ 모습이면 좋겠어. 지금과는 __ 점이 달라지겠지?",
+        "지금 이 영상을 보는 너는 어떤 삶을 살고 있어? 행복해?",
+        "지금 이 순간의 나도, 미래의 너도 다 소중해. 1년 뒤 웃으며 만나자. 사랑해, __아!",
+      ],
+      과거: [
+        "안녕, __아. 지금은 2025년 __월 __일이야. 오늘 나는 __ 기분으로 이 영상을 찍고 있어.",
+        "요즘 나는 __(공부, 일, 취미 등)을 하고 있고 하루하루 __ 생각을 하면서 살고 있어.",
+        "나는 과거로 돌아갈 수 있다면 __ 때로 돌아가고 싶어. __ 때로 돌아가고 싶은 이유는 __이야.",
+        "지금 이 영상을 보는 너는 어떤 삶을 살고 있어? 행복해?",
+        "지금 이 순간의 나도, 미래의 너도 다 소중해. 1년 뒤 웃으며 만나자. 사랑해, __아!",
+      ],
+      행복: [
+        "안녕, __아. 지금은 2025년 __월 __일이야. 오늘 나는 __ 기분으로 이 영상을 찍고 있어.",
+        "요즘 나는 __(공부, 일, 취미 등)을 하고 있고 하루하루 __ 생각을 하면서 살고 있어.",
+        "최근 가장 행복했던 일은 __이야. __이 나한테 행복했던 이유는 __ 때문이야.",
+        "지금 이 영상을 보는 너는 어떤 삶을 살고 있어? 행복해?",
+        "지금 이 순간의 나도, 미래의 너도 다 소중해. 1년 뒤 웃으며 만나자. 사랑해, __아!",
+      ],
+    }[topic] ?? []
   );
 }
