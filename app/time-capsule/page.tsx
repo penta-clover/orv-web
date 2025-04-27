@@ -206,26 +206,31 @@ function ExampleSection() {
   return (
     <div className="flex flex-col items-center w-full">
       <div className="text-head1 text-grayscale-white flex flex-col items-center">
-        <span>기억 속에서 곧 사라져버릴</span>
-        <span>오늘의 표정, 기분, 그리고 분위기</span>
+        <span>지금의 나를 타임캡슐에 담아</span>
+        <span>미래의 나에게 보내드려요</span>
       </div>
       <div className="h-[16px]" />
       <div className="text-body2 text-grayscale-400 flex flex-col items-center">
-        <span>지금 이 순간을 타임캡슐에 담아 1년 뒤 꺼내보세요</span>
+        <span>예상하지 못한 순간에 더 큰 설렘과 감동이 찾아갈 거에요</span>
       </div>
       <div className="h-[24px]" />
-      <Image
-        unoptimized
-        src="https://d3bdjeyz3ry3pi.cloudfront.net/static/images/landing-demo-ga.jpg"
-        width={0}
-        height={233}
-        style={{
-          width: "100%",
-          objectFit: "contain",
-          zIndex: 10,
-        }}
-        alt="question burble"
-      />
+
+      <div className="w-full aspect-[4/3] relative">
+        <video
+          src="https://d3bdjeyz3ry3pi.cloudfront.net/static/videos/timecapsule-demo-video2.mp4"
+          width={0}
+          height={0}
+          autoPlay
+          muted
+          playsInline
+          loop
+          style={{
+            objectFit: "contain",
+            width: "100%",
+            height: "100%",
+          }}
+        />
+      </div>
     </div>
   );
 }
