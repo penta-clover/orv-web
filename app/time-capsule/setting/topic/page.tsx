@@ -59,10 +59,12 @@ export default function Page() {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="h-[25px] grow" />
+      <div className="h-[10px] grow" />
 
       <div className="text-head1 text-grayscale-white mx-[16px]">
-        타임캡슐에 어떤 생각을 담을까요?
+        <p>타임캡슐에 담을 영상편지의</p>
+        <p>주제를 선택해주세요</p>
+        <p className="text-body4 text-grayscale-300">편하게 말할 수 있도록 도와주는 '가이드 대본'을 제공합니다.</p>
       </div>
 
       <div className="h-[15px]" />
