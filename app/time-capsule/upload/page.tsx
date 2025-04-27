@@ -110,12 +110,16 @@ function Body() {
             await ffmpeg.load();
           }
         } catch (e) {
-          console.warn("WASM 파싱 실패, asm.js 폴백 시도", e);
+          console.warn("WASM 파싱 실패, 재시도", e);
           if (!ffmpeg.loaded) {
             await ffmpeg.load({
               coreURL: await toBlobURL(
                 "/ffmpeg/umd/ffmpeg-core.js",
                 "text/javascript"
+              ),
+              wasmURL: await toBlobURL(
+                "/ffmpeg/umd/ffmpeg-core.wasm",
+                "application/wasm"
               ),
             });
           }
