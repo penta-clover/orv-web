@@ -42,6 +42,10 @@ export default function Page() {
         </span>
       </div>
 
+      <div className="h-[24px] shrink-0 text-body3 text-grayscale-400 font-normal ml-[33px]">
+        영상편지, 음성편지 중 원하는대로 선택할 수 있어요
+      </div>
+
       <div className="h-[20px] shrink-0" />
 
       <div className="flex w-full justify-center">
@@ -55,6 +59,10 @@ export default function Page() {
         <span className="text-grayscale-300 text-head3">
           타임캡슐에 함께 담을 것 선택하기
         </span>
+      </div>
+
+      <div className="h-[24px] shrink-0 text-body3 text-grayscale-400 font-normal ml-[33px]">
+        영상편지와 함께 보낼 가상의 선물이 준비되어 있어요
       </div>
 
       <div className="h-[20px] shrink-0" />
@@ -77,6 +85,10 @@ export default function Page() {
         <span className="text-grayscale-300 text-head3">
           1년 뒤, 타임캡슐 받아보기
         </span>
+      </div>
+
+      <div className="h-[24px] shrink-0 text-body3 text-grayscale-400 font-normal ml-[33px]">
+        딱 1년 뒤 남겨주신 연락처로 타임캡슐을 보내드려요!
       </div>
 
       <div className="h-[20px] shrink-0" />
@@ -172,7 +184,7 @@ function WorrySection() {
               : "bg-grayscale-800"
           }`}
         >
-          일년 뒤의 나는 어떤 생각을 하고 있을까요?
+          일년 뒤의 나는 어떤 모습이기를 바라나요?
         </span>
       </div>
       <div className="flex flex-row w-full">
@@ -183,7 +195,7 @@ function WorrySection() {
               : "bg-grayscale-700"
           }`}
         >
-          요즘 나를 가장 힘들게 하는 것은 무엇인가요?
+          요즘 가지고 있는 고민이 있다면 알려주세요
         </span>
         <span className="grow" />
       </div>
