@@ -150,9 +150,9 @@ function Capsule() {
         }}
       />
 
-      <div className="grow" />
+      <div className="h-[88px]" />
 
-      <div className="flex flex-col justify-center items-center w-full h-full animate-updown gap-[32px]">
+      <div className="flex flex-col justify-start items-center w-full h-full animate-updown gap-[48px]">
         <div className="flex justify-center items-center bg-grayscale-white w-[263px] h-[36px] rounded-[8px] text-body4 text-grayscale-700">
           <span className="font-bold">1년 전의 나</span>로부터&nbsp;
           <span className="font-bold">타임캡슐</span>이 도착했어요.
@@ -168,12 +168,13 @@ function Capsule() {
           height={0}
           style={{
             objectFit: "contain",
-            width: "200px",
-            height: "200px",
+            width: "175px",
+            height: "175px",
             zIndex: 10,
           }}
         />
       </div>
+      <div className="grow" />
     </div>
   );
 }
