@@ -457,7 +457,7 @@ function Reply({
         <div className="h-[3px] shrink-0" />
         <p>그러니까 미래는 걱정말고</p>
         <div className="h-[3px] shrink-0" />
-        <p>2025년의 너가 더 행복하길 바랄게. 안녕!</p>
+        <p>2025년의 네가 더 행복하길 바랄게. 안녕!</p>
       </div>
 
       <div className="h-[30px] shrink-0" />
