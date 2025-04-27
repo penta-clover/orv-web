@@ -146,7 +146,7 @@ function Capsule() {
           top: "0",
           left: "0",
           right: "0",
-          bottom: "0"
+          bottom: "0",
         }}
       />
 
@@ -265,6 +265,15 @@ function DemoVideo() {
 function Introduction() {
   const [now, setNow] = useState<Date>();
   const [start, setStart] = useState<Date>();
+  const [elapsed, setElapsed] = useState<number>(0);
+
+  useEffect(() => {
+    const startTime = Date.now();
+    const timer = setInterval(() => {
+      setElapsed(Math.floor((Date.now() - startTime) / 1000));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     setStart(new Date());
@@ -294,8 +303,7 @@ function Introduction() {
 
       {now && start && (
         <span className="text-body2">
-          이곳에 들어온 지 어느새 {now.getSeconds() - start.getSeconds()}초가
-          흘렀어요.
+          이곳에 들어온 지 어느새 {elapsed}초가 흘렀어요.
         </span>
       )}
 
