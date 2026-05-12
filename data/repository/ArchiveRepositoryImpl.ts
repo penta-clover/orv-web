@@ -5,6 +5,12 @@ import { ApiResult } from "../ApiResult";
 import { Video } from "@/domain/model/Video";
 import { ThumbnailCandidate } from "@/domain/model/ThumbnailCandidate";
 
+interface PresignedUploadUrlResponse {
+  videoId: string;
+  uploadUrl: string;
+  expiresAt: string;
+}
+
 export class ArchiveRepositoryImpl implements ArchiveRepository {
   constructor(private api: Api) {}
 
@@ -28,31 +34,63 @@ export class ArchiveRepositoryImpl implements ArchiveRepository {
   }
 
   async uploadVideo(video: Blob, storyboardId: string): Promise<string> {
-    const requestPath = "/archive/recorded-video";
-    const formData = new FormData();
-    formData.append("video", video, "video");
-    formData.append("storyboardId", storyboardId);
+    const uploadUrlPath = `/archive/upload-url?storyboardId=${encodeURIComponent(
+      storyboardId
+    )}`;
+    const uploadUrlResult: ApiResult<PresignedUploadUrlResponse> =
+      await this.api.getV1<PresignedUploadUrlResponse>(uploadUrlPath);
 
-    console.log(formData.get("video"));
-
-    const result: ApiResult<string> = await this.api.post<string>(
-      requestPath,
-      formData
-    );
-
-    if (result.statusCode !== "201" || result.data === null) {
+    if (uploadUrlResult.statusCode !== "200" || uploadUrlResult.data === null) {
       throw new Error(
-        `[API Error] ArchiveRepositoryImpl.uploadVideo\n` +
+        `[API Error] ArchiveRepositoryImpl.uploadVideo.requestUploadUrl\n` +
           `Parameters:\n` +
-          `  - video: ${video}\n` +
           `  - storyboardId: ${storyboardId}\n` +
           `Response:\n` +
-          `  - Status: ${result.statusCode}\n` +
-          `  - Message: ${result.message}`
+          `  - Status: ${uploadUrlResult.statusCode}\n` +
+          `  - Message: ${uploadUrlResult.message}`
       );
     }
 
-    return result.data;
+    const { videoId, uploadUrl } = uploadUrlResult.data;
+    const directUploadResponse = await fetch(uploadUrl, {
+      method: "PUT",
+      headers: {
+        "Content-Type": video.type || "video/mp4",
+      },
+      body: video,
+    });
+
+    if (!directUploadResponse.ok) {
+      throw new Error(
+        `[API Error] ArchiveRepositoryImpl.uploadVideo.directUpload\n` +
+          `Parameters:\n` +
+          `  - videoId: ${videoId}\n` +
+          `  - storyboardId: ${storyboardId}\n` +
+          `Response:\n` +
+          `  - Status: ${directUploadResponse.status}\n` +
+          `  - Message: ${directUploadResponse.statusText}`
+      );
+    }
+
+    const confirmPath = "/archive/recorded-video";
+    const confirmResult: ApiResult<string> = await this.api.postV1<string>(
+      confirmPath,
+      { videoId }
+    );
+
+    if (confirmResult.statusCode !== "200" || confirmResult.data === null) {
+      throw new Error(
+        `[API Error] ArchiveRepositoryImpl.uploadVideo.confirmUpload\n` +
+          `Parameters:\n` +
+          `  - videoId: ${videoId}\n` +
+          `  - storyboardId: ${storyboardId}\n` +
+          `Response:\n` +
+          `  - Status: ${confirmResult.statusCode}\n` +
+          `  - Message: ${confirmResult.message}`
+      );
+    }
+
+    return confirmResult.data;
   }
 
   async renameVideo(videoId: string, title: string): Promise<void> {
@@ -76,17 +114,17 @@ export class ArchiveRepositoryImpl implements ArchiveRepository {
   }
 
   async updateThumbnail(videoId: string, capturedImage: Blob): Promise<void> {
-    const requestPath = `/archive/video/${videoId}/thumbnail`;
+    const requestPath = `/archive/video/${videoId}/thumbnail/upload`;
 
     const formData = new FormData();
     formData.append("thumbnail", capturedImage, "thumbnail");
 
-    const result: ApiResult<void> = await this.api.put<void>(
+    const result: ApiResult<boolean> = await this.api.putV1<boolean>(
       requestPath,
       formData
     );
 
-    if (result.statusCode !== "200") {
+    if (result.statusCode !== "200" || result.data === false) {
       throw new Error(
         `[API Error] ArchiveRepositoryImpl.updateThumbnail\n` +
           `Parameters:\n` +

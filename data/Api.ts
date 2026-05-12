@@ -46,6 +46,23 @@ export class Api {
     body: object,
     headers: object = {}
   ): Promise<ApiResult<T>> {
+    return this.postToBaseUrl(Api.baseUrl, path, body, headers);
+  }
+
+  async postV1<T>(
+    path: string,
+    body: object,
+    headers: object = {}
+  ): Promise<ApiResult<T>> {
+    return this.postToBaseUrl(Api.baseUrlV1, path, body, headers);
+  }
+
+  private async postToBaseUrl<T>(
+    baseUrl: string,
+    path: string,
+    body: object,
+    headers: object = {}
+  ): Promise<ApiResult<T>> {
     const isFormData = body instanceof FormData;
     const requestHeaders: HeadersInit = isFormData
       ? { ...headers }
@@ -54,7 +71,7 @@ export class Api {
           ...headers,
         };
 
-    const response = await fetch(`${Api.baseUrl}${path}`, {
+    const response = await fetch(`${baseUrl}${path}`, {
       method: "POST",
       headers: requestHeaders,
       body: isFormData ? body : JSON.stringify(body),
