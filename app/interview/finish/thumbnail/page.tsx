@@ -5,17 +5,18 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useArchiveRepository } from "@/providers/ArchiveRepositoryContext";
 import {
   Suspense,
+  useCallback,
   useEffect,
   useImperativeHandle,
   useRef,
   useState,
 } from "react";
 import { VideoMetadata } from "@/domain/model/VideoMetadata";
+import { ThumbnailCandidate } from "@/domain/model/ThumbnailCandidate";
 import { useMemberRepository } from "@/providers/MemberRepositoryContext";
 import { MyInfo } from "@/domain/model/MyInfo";
 import Image from "next/image";
 import ExitInterviewModal from "../../(components)/exitInterviewModal";
-import { get } from "http";
 import { getPermissionGuideText } from "../../(components)/getPermissionGuideText";
 import usePermissionReload from "../../(components)/usePermissionReload";
 
@@ -35,6 +36,19 @@ function Body() {
   const [capturedImage, setCapturedImage] = useState<Blob | null>(null);
   const [nickname, setNickname] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isRecommendationModalOpen, setIsRecommendationModalOpen] =
+    useState<boolean>(false);
+  const [thumbnailCandidates, setThumbnailCandidates] = useState<
+    ThumbnailCandidate[]
+  >([]);
+  const [isThumbnailCandidatesLoading, setIsThumbnailCandidatesLoading] =
+    useState<boolean>(false);
+  const [thumbnailCandidateError, setThumbnailCandidateError] = useState<
+    string | null
+  >(null);
+  const [selectingCandidateId, setSelectingCandidateId] = useState<
+    number | null
+  >(null);
   const router = useRouter();
 
   const memberRepository = useMemberRepository();
@@ -45,6 +59,97 @@ function Body() {
       .getMyInfo()
       .then((myInfo: MyInfo) => setNickname(myInfo.nickname));
   }, []);
+
+  const fetchThumbnailCandidates = useCallback(
+    async (showLoading: boolean = true) => {
+      if (!videoId) {
+        return;
+      }
+
+      if (showLoading) {
+        setIsThumbnailCandidatesLoading(true);
+      }
+      setThumbnailCandidateError(null);
+
+      try {
+        const candidates = await archiveRepository.getThumbnailCandidates(
+          videoId
+        );
+        setThumbnailCandidates(candidates);
+      } catch (error: any) {
+        console.error("썸네일 후보 조회 실패:", error);
+        setThumbnailCandidateError(
+          "썸네일 후보를 불러오지 못했어요. 잠시 후 다시 시도해주세요."
+        );
+      } finally {
+        if (showLoading) {
+          setIsThumbnailCandidatesLoading(false);
+        }
+      }
+    },
+    [archiveRepository, videoId]
+  );
+
+  useEffect(() => {
+    if (
+      !isRecommendationModalOpen ||
+      !videoId ||
+      thumbnailCandidates.length > 0 ||
+      selectingCandidateId !== null
+    ) {
+      return;
+    }
+
+    const intervalId = window.setInterval(() => {
+      fetchThumbnailCandidates(false);
+    }, 3000);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, [
+    fetchThumbnailCandidates,
+    isRecommendationModalOpen,
+    selectingCandidateId,
+    thumbnailCandidates.length,
+    videoId,
+  ]);
+
+  const openRecommendationModal = () => {
+    if (!videoId) {
+      alert("비디오 정보를 찾을 수 없습니다.");
+      return;
+    }
+
+    setThumbnailCandidates([]);
+    setThumbnailCandidateError(null);
+    setSelectingCandidateId(null);
+    setIsRecommendationModalOpen(true);
+    fetchThumbnailCandidates(true);
+  };
+
+  const selectThumbnailCandidate = async (candidate: ThumbnailCandidate) => {
+    if (!videoId || selectingCandidateId !== null) {
+      return;
+    }
+
+    setSelectingCandidateId(candidate.id);
+    setThumbnailCandidateError(null);
+
+    try {
+      await archiveRepository.selectThumbnailCandidate(videoId, candidate.id);
+      const videoMetadata: VideoMetadata = await archiveRepository.getVideo(
+        videoId
+      );
+      router.replace(`/interview/finish/download?videoId=${videoMetadata.id}`);
+    } catch (error: any) {
+      console.error("추천 썸네일 선택 실패:", error);
+      setThumbnailCandidateError(
+        "썸네일 선택에 실패했어요. 다시 시도해주세요."
+      );
+      setSelectingCandidateId(null);
+    }
+  };
 
   return (
     <ExitInterviewModal
@@ -90,6 +195,14 @@ function Body() {
                   }}
                 >
                   촬영하기
+                </button>
+
+                <div className="h-[12px]" />
+                <button
+                  className="h-[48px] px-[18px] bg-grayscale-800 border border-grayscale-600 text-grayscale-50 rounded-[12px] text-head4 transition-all active:scale-95"
+                  onClick={openRecommendationModal}
+                >
+                  썸네일 추천 받기
                 </button>
               </div>
             ) : (
@@ -195,9 +308,189 @@ function Body() {
           />
           <span className="text-head3 text-grayscale-800">이전으로</span>
         </div>
+
+        <ThumbnailRecommendationModal
+          isOpen={isRecommendationModalOpen}
+          candidates={thumbnailCandidates}
+          isLoading={isThumbnailCandidatesLoading}
+          errorMessage={thumbnailCandidateError}
+          selectingCandidateId={selectingCandidateId}
+          onClose={() => setIsRecommendationModalOpen(false)}
+          onRetry={() => fetchThumbnailCandidates(true)}
+          onSelect={selectThumbnailCandidate}
+        />
       </div>
     </ExitInterviewModal>
   );
+}
+
+function ThumbnailRecommendationModal(props: {
+  isOpen: boolean;
+  candidates: ThumbnailCandidate[];
+  isLoading: boolean;
+  errorMessage: string | null;
+  selectingCandidateId: number | null;
+  onClose: () => void;
+  onRetry: () => void;
+  onSelect: (candidate: ThumbnailCandidate) => void;
+}) {
+  const {
+    isOpen,
+    candidates,
+    isLoading,
+    errorMessage,
+    selectingCandidateId,
+    onClose,
+    onRetry,
+    onSelect,
+  } = props;
+
+  useEffect(() => {
+    if (!isOpen || selectingCandidateId !== null) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, onClose, selectingCandidateId]);
+
+  if (!isOpen) {
+    return null;
+  }
+
+  const shouldShowSkeleton =
+    candidates.length === 0 && (isLoading || !errorMessage);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 px-[24px]"
+      role="dialog"
+      aria-modal="true"
+      onClick={selectingCandidateId === null ? onClose : undefined}
+    >
+      <div
+        className="relative w-full max-w-[920px] max-h-[calc(100dvh-64px)] overflow-y-auto rounded-[16px] border border-grayscale-700 bg-grayscale-900 shadow-[0_24px_80px_rgba(0,0,0,0.45)]"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <button
+          type="button"
+          aria-label="닫기"
+          className="absolute right-[16px] top-[16px] flex h-[44px] w-[44px] items-center justify-center rounded-[10px] bg-grayscale-800 transition-all active:scale-95 disabled:opacity-50"
+          disabled={selectingCandidateId !== null}
+          onClick={onClose}
+        >
+          <Image
+            unoptimized
+            src="/icons/x.svg"
+            width={24}
+            height={24}
+            alt=""
+          />
+        </button>
+
+        <div className="px-[28px] py-[32px] sm:px-[36px]">
+          <div className="pr-[48px] text-white font-semibold text-[28px] leading-[36px]">
+            썸네일 추천
+          </div>
+          <div className="h-[24px]" />
+
+          {errorMessage && candidates.length > 0 && (
+            <>
+              <div className="rounded-[10px] bg-grayscale-800 px-[16px] py-[12px] text-grayscale-100 text-[14px] leading-[22px]">
+                {errorMessage}
+              </div>
+              <div className="h-[14px]" />
+            </>
+          )}
+
+          {errorMessage && candidates.length === 0 ? (
+            <div className="flex min-h-[240px] flex-col items-center justify-center rounded-[12px] bg-grayscale-800 px-[24px] text-center">
+              <p className="text-grayscale-200 text-[16px] leading-[26px]">
+                {errorMessage}
+              </p>
+              <div className="h-[18px]" />
+              <button
+                type="button"
+                className="h-[44px] px-[18px] rounded-[10px] bg-main-lilac50 text-grayscale-800 text-head4 transition-all active:scale-95"
+                onClick={onRetry}
+              >
+                다시 시도
+              </button>
+            </div>
+          ) : shouldShowSkeleton ? (
+            <ThumbnailCandidateSkeleton />
+          ) : (
+            <div className="grid grid-cols-1 gap-[14px] sm:grid-cols-2 lg:grid-cols-3">
+              {candidates.map((candidate) => (
+                <button
+                  type="button"
+                  key={candidate.id}
+                  className="group relative aspect-[16/9] overflow-hidden rounded-[12px] border-[2px] border-transparent bg-grayscale-800 text-left transition-all hover:border-main-lilac50 active:scale-[0.99] disabled:cursor-wait disabled:opacity-75"
+                  disabled={selectingCandidateId !== null}
+                  onClick={() => onSelect(candidate)}
+                >
+                  <img
+                    src={candidate.imageUrl}
+                    alt="썸네일 후보"
+                    className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.02]"
+                  />
+                  <div className="absolute bottom-[10px] right-[10px] rounded-full bg-black/70 px-[10px] py-[4px] text-[13px] leading-[18px] text-white">
+                    {formatTimestamp(candidate.timestampMs)}
+                  </div>
+                  {selectingCandidateId === candidate.id && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/60 text-white text-head4">
+                      선택 중...
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ThumbnailCandidateSkeleton() {
+  return (
+    <div className="flex min-h-[300px] flex-col justify-center">
+      <div className="grid grid-cols-1 gap-[14px] sm:grid-cols-2 lg:grid-cols-3">
+        {[0, 1, 2].map((item) => (
+          <div
+            key={item}
+            className="relative aspect-[16/9] overflow-hidden rounded-[12px] bg-grayscale-800"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-grayscale-900 via-grayscale-700 to-grayscale-900 animate-skeleton-wave" />
+          </div>
+        ))}
+      </div>
+      <div className="h-[24px]" />
+      <p className="text-center text-grayscale-300 text-[16px] leading-[26px]">
+        썸네일로 쓸만한 장면을 고르고 있어요. 잠시만 기다려주세요
+      </p>
+    </div>
+  );
+}
+
+function formatTimestamp(timestampMs: number) {
+  if (!Number.isFinite(timestampMs)) {
+    return "0:00";
+  }
+
+  const totalSeconds = Math.max(0, Math.floor(timestampMs / 1000));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+
+  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }
 
 function CountdownComponent(props: {

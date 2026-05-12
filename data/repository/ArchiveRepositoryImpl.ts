@@ -3,6 +3,7 @@ import { ArchiveRepository } from "@/domain/repository/ArchiveRepository";
 import { Api } from "../Api";
 import { ApiResult } from "../ApiResult";
 import { Video } from "@/domain/model/Video";
+import { ThumbnailCandidate } from "@/domain/model/ThumbnailCandidate";
 
 export class ArchiveRepositoryImpl implements ArchiveRepository {
   constructor(private api: Api) {}
@@ -91,6 +92,50 @@ export class ArchiveRepositoryImpl implements ArchiveRepository {
           `Parameters:\n` +
           `  - videoId: ${videoId}\n` +
           `  - capturedImage: ${capturedImage}\n` +
+          `Response:\n` +
+          `  - Status: ${result.statusCode}\n` +
+          `  - Message: ${result.message}`
+      );
+    }
+  }
+
+  async getThumbnailCandidates(videoId: string): Promise<ThumbnailCandidate[]> {
+    const requestPath = `/archive/video/${videoId}/thumbnail-candidates`;
+
+    const result: ApiResult<ThumbnailCandidate[]> = await this.api.getV1<
+      ThumbnailCandidate[]
+    >(requestPath);
+
+    if (result.statusCode !== "200") {
+      throw new Error(
+        `[API Error] ArchiveRepositoryImpl.getThumbnailCandidates\n` +
+          `Parameters:\n` +
+          `  - videoId: ${videoId}\n` +
+          `Response:\n` +
+          `  - Status: ${result.statusCode}\n` +
+          `  - Message: ${result.message}`
+      );
+    }
+
+    return result.data ?? [];
+  }
+
+  async selectThumbnailCandidate(
+    videoId: string,
+    candidateId: number
+  ): Promise<void> {
+    const requestPath = `/archive/video/${videoId}/thumbnail/select`;
+
+    const result: ApiResult<void> = await this.api.putV1<void>(requestPath, {
+      candidateId,
+    });
+
+    if (result.statusCode !== "200") {
+      throw new Error(
+        `[API Error] ArchiveRepositoryImpl.selectThumbnailCandidate\n` +
+          `Parameters:\n` +
+          `  - videoId: ${videoId}\n` +
+          `  - candidateId: ${candidateId}\n` +
           `Response:\n` +
           `  - Status: ${result.statusCode}\n` +
           `  - Message: ${result.message}`
