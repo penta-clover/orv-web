@@ -7,6 +7,7 @@ import {
   useMobileSidebar,
 } from "./mobileSidebarContext";
 import MobileSidebar from "./mobileSidebar";
+import AuthGuard from "./authGuard";
 
 export default function Layout({
   children,
@@ -14,27 +15,29 @@ export default function Layout({
   children: React.ReactNode;
 }>) {
   return (
-    <Popup>
-      <MobileSidebarProvider>
-        <div className="flex flex-row h-[100dvh] w-[calc(100dvw)]">
-          <Sidebar className="hidden xs:inline" />
+    <AuthGuard>
+      <Popup>
+        <MobileSidebarProvider>
+          <div className="flex flex-row h-[100dvh] w-[calc(100dvw)]">
+            <Sidebar className="hidden xs:inline" />
 
-          <div className="fixed top-0 block xs:hidden w-full z-40 bg-grayscale-black">
-            <ActionBar className="" />
-          </div>
-
-          <div className="h-[100dvh] w-[calc(100dvw)] xs:w-[calc(100dvw-240px)] ">
-            <div className="block xs:hidden">
-              <MobileSidebar />
+            <div className="fixed top-0 block xs:hidden w-full z-40 bg-grayscale-black">
+              <ActionBar className="" />
             </div>
-            {children}
-          </div>
 
-          <div className="fixed right-[48px] bottom-[48px] hidden xs:inline">
-            <StartButton />
+            <div className="h-[100dvh] w-[calc(100dvw)] xs:w-[calc(100dvw-240px)] ">
+              <div className="block xs:hidden">
+                <MobileSidebar />
+              </div>
+              {children}
+            </div>
+
+            <div className="fixed right-[48px] bottom-[48px] hidden xs:inline">
+              <StartButton />
+            </div>
           </div>
-        </div>
-      </MobileSidebarProvider>
-    </Popup>
+        </MobileSidebarProvider>
+      </Popup>
+    </AuthGuard>
   );
 }

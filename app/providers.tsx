@@ -5,7 +5,6 @@ import { EarlybirdRepositoryProvider } from "@/providers/EarlybirdRepositoryCont
 import { FirebaseProvider } from "@/providers/FirebaseContext";
 import { MemberRepositoryProvider } from "@/providers/MemberRepositoryContext";
 import { ReservationRepositoryProvider } from "@/providers/ReservationRepositoryContext";
-import { StorageProvider } from "@/providers/StorageContext";
 import { StoryboardRepositoryProvider } from "@/providers/StoryboardRepositoryContext";
 import { TemplateServiceProvider } from "@/providers/TemplateServiceContext";
 import { TermRepositoryProvider } from "@/providers/TermRepositoryContext";
@@ -17,29 +16,27 @@ export default function Providers({ children }: { children: ReactNode }) {
   return (
     <FirebaseProvider>
       <ApiProvider>
-        <StorageProvider>
-          <AuthRepositoryProvider>
-            <EarlybirdRepositoryProvider>
-              <ArchiveRepositoryProvider>
-                <MemberRepositoryProvider>
-                  <TermRepositoryProvider>
-                    <TopicRepositoryProvider>
-                      <StoryboardRepositoryProvider>
-                        <ReservationRepositoryProvider>
-                          <TemplateServiceProvider>
-                            <TempBlobRepositoryProvider>
-                              {children}
-                            </TempBlobRepositoryProvider>
-                          </TemplateServiceProvider>
-                        </ReservationRepositoryProvider>
-                      </StoryboardRepositoryProvider>
-                    </TopicRepositoryProvider>
-                  </TermRepositoryProvider>
-                </MemberRepositoryProvider>
-              </ArchiveRepositoryProvider>
-            </EarlybirdRepositoryProvider>
-          </AuthRepositoryProvider>
-        </StorageProvider>
+        <AuthRepositoryProvider>
+          <EarlybirdRepositoryProvider>
+            <ArchiveRepositoryProvider>
+              <MemberRepositoryProvider>
+                <TermRepositoryProvider>
+                  <TopicRepositoryProvider>
+                    <StoryboardRepositoryProvider>
+                      <ReservationRepositoryProvider>
+                        <TemplateServiceProvider>
+                          <TempBlobRepositoryProvider>
+                            {children}
+                          </TempBlobRepositoryProvider>
+                        </TemplateServiceProvider>
+                      </ReservationRepositoryProvider>
+                    </StoryboardRepositoryProvider>
+                  </TopicRepositoryProvider>
+                </TermRepositoryProvider>
+              </MemberRepositoryProvider>
+            </ArchiveRepositoryProvider>
+          </EarlybirdRepositoryProvider>
+        </AuthRepositoryProvider>
       </ApiProvider>
     </FirebaseProvider>
   );

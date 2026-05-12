@@ -3,7 +3,6 @@
 import { ReactNode, createContext, useContext } from "react";
 import { MemberRepository } from "@/domain/repository/MemberRepository";
 import { useApi } from "./ApiContext";
-import { useStorage } from "./StorageContext";
 import { MemberRepositoryImpl } from "@/data/repository/MemberRepositoryImpl";
 
 const MemberRepositoryContext = createContext<MemberRepository | null>(null);
@@ -16,8 +15,7 @@ export function MemberRepositoryProvider({
   children,
 }: MemberRepositoryProviderProps) {
   const api = useApi();
-  const storage = useStorage();
-  const memberRepository = new MemberRepositoryImpl(api, storage);
+  const memberRepository = new MemberRepositoryImpl(api);
 
   return (
     <MemberRepositoryContext.Provider value={memberRepository}>

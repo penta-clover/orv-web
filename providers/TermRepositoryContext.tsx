@@ -3,7 +3,6 @@
 import { TermRepository } from "@/domain/repository/TermRepository";
 import { createContext, ReactNode, useContext } from "react";
 import { useApi } from "./ApiContext";
-import { useStorage } from "./StorageContext";
 import { TermRepositoryImpl } from "@/data/repository/TermRepositoryImpl";
 
 const TermRepositoryContext = createContext<TermRepository | null>(null);
@@ -16,8 +15,7 @@ export function TermRepositoryProvider({
     children,
 }: TermRepositoryProviderProps) {
     const api = useApi();
-    const storage = useStorage();
-    const termRepository = new TermRepositoryImpl(api, storage);
+    const termRepository = new TermRepositoryImpl(api);
 
     return (
         <TermRepositoryContext.Provider value={termRepository}>

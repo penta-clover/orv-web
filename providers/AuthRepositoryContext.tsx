@@ -3,7 +3,6 @@
 import { ReactNode, createContext, useContext } from "react";
 import { AuthRepository } from "@/domain/repository/AuthRepository";
 import { useApi } from "./ApiContext";
-import { useStorage } from "./StorageContext";
 import { AuthRepositoryImpl } from "@/data/repository/AuthRepositoryImpl";
 
 const AuthRepositoryContext = createContext<AuthRepository | null>(null);
@@ -16,8 +15,7 @@ export function AuthRepositoryProvider({
   children,
 }: AuthRepositoryProviderProps) {
   const api = useApi();
-  const storage = useStorage();
-  const authRepository = new AuthRepositoryImpl(api, storage);
+  const authRepository = new AuthRepositoryImpl(api);
 
   return (
     <AuthRepositoryContext.Provider value={authRepository}>

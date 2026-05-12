@@ -1,25 +1,19 @@
 import { AuthRepository } from "@/domain/repository/AuthRepository";
 import { Api } from "../Api";
-import { Storage } from "../Storage";
 import { NicknameValidation } from "@/domain/model/NicknameValidation";
 import { JoinInfo } from "@/domain/model/JoinInfo";
-import { jwtDecode } from 'jwt-decode';
 
 // TODO: 예외 처리
 export class AuthRepositoryImpl implements AuthRepository {
-  constructor(private api: Api, private storage: Storage) {}
+  constructor(private api: Api) {}
   
   async validateNickname(nickname: string): Promise<NicknameValidation> {
     const requestPath = `/auth/nicknames?nickname=${encodeURIComponent(nickname)}`;
-    const result = await this.api.get<NicknameValidation>(requestPath, {
-      'Authorization': `Bearer ${this.storage.getAuthToken()}`
-    });
+    const result = await this.api.get<NicknameValidation>(requestPath);
 
     if (result.statusCode !== "200") {
       throw new Error(
         `[API Error] AuthRepositoryImpl.validateNickname\n` +
-          `Headers:\n` +
-          `  - Authorization: ${this.storage.getAuthToken()}\n` +
           `Parameters:\n` +
           `  - nickname: ${nickname}\n` +
           `Response:\n` +
@@ -31,15 +25,11 @@ export class AuthRepositoryImpl implements AuthRepository {
   }
 
   async join(info: JoinInfo): Promise<boolean> {
-    const result = await this.api.post<boolean>(`/auth/join`, info, {
-      'Authorization': `Bearer ${this.storage.getAuthToken()}`
-    });
+    const result = await this.api.post<boolean>(`/auth/join`, info);
 
     if (result.statusCode !== "200") {
       throw new Error(
         `[API Error] AuthRepositoryImpl.join\n` +
-          `Headers:\n` +
-          `  - Authorization: ${this.storage.getAuthToken()}\n` +
           `Parameters:\n` +
           `  - info: ${info}\n` +
           `Response:\n` +
@@ -47,31 +37,28 @@ export class AuthRepositoryImpl implements AuthRepository {
           `  - Message: ${result.message}`
       );
     }
-    return result.data!;
-  }
-  
-  getAuthToken(): string | null {
-    return this.storage.getAuthToken();
-  }
-  
-  setAuthToken(authToken: string) {
-    this.storage.setAuthToken(authToken);
+    return true;
   }
 
-  isTokenValid(): boolean {
-    const token: string | null = this.storage.getAuthToken();
-
-    if (token === null) {
+  async isAuthenticated(): Promise<boolean> {
+    try {
+      const result = await this.api.get<unknown>(`/member/my-info`);
+      return result.statusCode === "200";
+    } catch {
       return false;
     }
+  }
 
-    const decodedToken = jwtDecode(token);
+  async logout(): Promise<void> {
+    const result = await this.api.post<null>(`/auth/logout`, {});
 
-    if (decodedToken === undefined || decodedToken.exp === undefined) {
-      return false;
+    if (result.statusCode !== "200") {
+      throw new Error(
+        `[API Error] AuthRepositoryImpl.logout\n` +
+          `Response:\n` +
+          `  - Status: ${result.statusCode}\n` +
+          `  - Message: ${result.message}`
+      );
     }
-
-    const currentTime = Date.now() / 1000;
-    return decodedToken.exp > currentTime;
   }
 }

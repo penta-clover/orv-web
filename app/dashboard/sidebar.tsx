@@ -8,12 +8,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import ChannelTalkButton from "../components/channelTalkButtonV2";
-import { useStorage } from "@/providers/StorageContext";
 import { cn } from "@/lib/utils";
+import { useAuthRepository } from "@/providers/AuthRepositoryContext";
 
 export default function Sidebar({ className }: { className?: string }) {
   const memberRepository: MemberRepository = useMemberRepository();
-  const storage = useStorage();
+  const authRepository = useAuthRepository();
   const [myInfo, setMyInfo] = useState<MyInfo | null>(null);
   const router = useRouter();
   const pathname = usePathname();
@@ -188,9 +188,14 @@ export default function Sidebar({ className }: { className?: string }) {
         </ChannelTalkButton>
         <div
           className="h-[46px] w-[208px] mx-[16px] px-[18px] py-[10px] rounded-[16px] flex flex-row items-center gap-[14px] transition-all hover:bg-grayscale-800 active:scale-95"
-          onClick={() => {
-            storage.clearAuthToken();
-            router.push("/");
+          onClick={async () => {
+            try {
+              await authRepository.logout();
+            } catch (error) {
+              console.error("Failed to logout", error);
+            } finally {
+              router.push("/");
+            }
           }}
         >
           <Image

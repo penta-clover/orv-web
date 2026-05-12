@@ -13,14 +13,11 @@ function Body() {
   const handleRedirect = useAuthRedirect({authRepository: authRepository});
 
   useEffect(() => {
-    if (!params.has("jwtToken")) {
+    if (!params.has("isNewUser")) {
       alert("잘못된 요청입니다.");
       router.replace("/auth/desktop");
       return;
     }
-
-    const jwtToken = params.get("jwtToken");
-    authRepository.setAuthToken(jwtToken!);
 
     const isNewUser = params.get("isNewUser") === "true";
 

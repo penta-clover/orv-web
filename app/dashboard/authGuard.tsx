@@ -2,19 +2,12 @@
 
 import { useAuthRepository } from "@/providers/AuthRepositoryContext";
 import { useRouter } from "next/navigation";
-import { Suspense, useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
-export default function Page() {
-  return (
-    <Suspense>
-      <Body />
-    </Suspense>
-  );
-}
-
-function Body() {
+export default function AuthGuard({ children }: { children: ReactNode }) {
   const authRepository = useAuthRepository();
   const router = useRouter();
+  const [isChecked, setIsChecked] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -22,11 +15,12 @@ function Body() {
     authRepository.isAuthenticated().then((isAuthenticated) => {
       if (!isMounted) return;
 
-      if (isAuthenticated) {
-        router.replace(`/dashboard/home`);
-      } else {
-        router.replace(`/auth/desktop`);
+      if (!isAuthenticated) {
+        router.replace("/");
+        return;
       }
+
+      setIsChecked(true);
     });
 
     return () => {
@@ -34,5 +28,7 @@ function Body() {
     };
   }, [authRepository, router]);
 
-  return null;
+  if (!isChecked) return null;
+
+  return <>{children}</>;
 }

@@ -3,10 +3,15 @@ import { ApiResult } from "./ApiResult";
 export class Api {
   static baseUrl: string = `${process.env.NEXT_PUBLIC_API_SERVER_BASE_URL}/api/v0`;
 
+  static authLoginUrl(provider: string): string {
+    return `${Api.baseUrl}/auth/login/${provider}`;
+  }
+
   async get<T>(path: string, headers: HeadersInit = {}): Promise<ApiResult<T>> {
     const response = await fetch(`${Api.baseUrl}${path}`, {
       method: "GET",
       headers: headers,
+      credentials: "include",
     });
 
     if (response.ok) {
@@ -37,6 +42,7 @@ export class Api {
       method: "POST",
       headers: requestHeaders,
       body: isFormData ? body : JSON.stringify(body),
+      credentials: "include",
     });
 
     if (response.ok) {
@@ -67,6 +73,7 @@ export class Api {
       method: "PATCH",
       headers: requestHeaders,
       body: isFormData ? body : JSON.stringify(body),
+      credentials: "include",
     });
 
     if (response.ok) {
@@ -97,6 +104,7 @@ export class Api {
       method: "PUT",
       headers: requestHeaders,
       body: isFormData ? body : JSON.stringify(body),
+      credentials: "include",
     });
 
     if (response.ok) {

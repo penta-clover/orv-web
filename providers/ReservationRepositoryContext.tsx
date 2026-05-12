@@ -3,7 +3,6 @@
 import { ReservationRepository } from "@/domain/repository/ReservationRepository";
 import { createContext, ReactNode, useContext } from "react";
 import { useApi } from "./ApiContext";
-import { useStorage } from "./StorageContext";
 import { ReservationRepositoryImpl } from "@/data/repository/ReservationRepositoryImpl";
 
 
@@ -17,8 +16,7 @@ export function ReservationRepositoryProvider({
     children,
 }: ReservationRepositoryProviderProps) {
     const api = useApi();
-    const storage = useStorage();
-    const reservationRepository = new ReservationRepositoryImpl(api, storage);
+    const reservationRepository = new ReservationRepositoryImpl(api);
 
     return (
         <ReservationRepositoryContext.Provider value={reservationRepository}>

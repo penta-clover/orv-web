@@ -1,5 +1,6 @@
 "use client";
 
+import { Api } from "@/data/Api";
 import Link from "next/link";
 import Image from "next/image";
 import "@/app/components/blackBody.css";
@@ -96,7 +97,7 @@ export default function Page() {
       <div className="flex flex-col space-y-[12px] items-center max-w-[532px] w-full">
         <div className="flex flex-row w-full justify-center px-[24px]">
           <Link
-            href="https://api.orv.im/api/v0/auth/login/kakao"
+            href={Api.authLoginUrl("kakao")}
             className="flex flex-row grow space-x-[8px] items-center justify-center rounded-[10px] text-grayscale-black text-body2 h-[48px] max-w-[450px] bg-[#FCE34C] transition-all active:scale-95"
           >
             <Image
@@ -110,7 +111,7 @@ export default function Page() {
         </div>
         <div className="flex flex-row w-full justify-center px-[24px]">
           <Link
-            href="https://api.orv.im/api/v0/auth/login/google"
+            href={Api.authLoginUrl("google")}
             className="flex flex-row grow space-x-[8px] items-center justify-center border-[1px] border-lightgray rounded-[10px] text-grayscale-black text-body2 h-[48px] max-w-[450px] bg-grayscale-white transition-all active:scale-95"
           >
             <Image

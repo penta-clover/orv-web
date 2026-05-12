@@ -3,7 +3,6 @@
 import { TopicRepository } from "@/domain/repository/TopicRepository";
 import { ReactNode, createContext, useContext } from "react";
 import { useApi } from "./ApiContext";
-import { useStorage } from "./StorageContext";
 import { TopicRepositoryImpl } from "@/data/repository/TopicRepositoryImpl";
 
 const TopicRepositoryContext = createContext<TopicRepository | null>(null);
@@ -16,8 +15,7 @@ export function TopicRepositoryProvider({
   children,
 }: TopicRepositoryProviderProps) {
   const api = useApi();
-  const storage = useStorage();
-  const topicRepository = new TopicRepositoryImpl(api, storage);
+  const topicRepository = new TopicRepositoryImpl(api);
 
   return (
     <TopicRepositoryContext.Provider value={topicRepository}>

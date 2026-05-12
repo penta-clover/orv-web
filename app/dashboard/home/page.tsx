@@ -7,7 +7,6 @@ import ReservationNotification from "./reservationNotification";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useMemberRepository } from "@/providers/MemberRepositoryContext";
-import { useAuthRepository } from "@/providers/AuthRepositoryContext";
 
 export default function Page() {
   const router = useRouter();
@@ -15,14 +14,6 @@ export default function Page() {
   const [hiddenCategoryCodes, setHiddenCategoryCodes] = useState<string[]>([]);
 
   const memberRepository = useMemberRepository();
-  const authRepository = useAuthRepository();
-
-  useEffect(() => {
-    const isTokenValid = authRepository.isTokenValid();
-    if (!isTokenValid) {
-      router.replace("/");
-    }
-  }, []);
 
   useEffect(() => {
     // 모바일 미지원 해제

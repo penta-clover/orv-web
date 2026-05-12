@@ -3,7 +3,6 @@
 import { StoryboardRepository } from "@/domain/repository/StoryboardRepository";
 import { createContext, ReactNode, useContext } from "react";
 import { useApi } from "./ApiContext";
-import { useStorage } from "./StorageContext";
 import { StoryboardRepositoryImpl } from "@/data/repository/StoryboardRepositoryImpl";
 
 const StoryboardRepositoryContext = createContext<StoryboardRepository | null>(null);
@@ -16,8 +15,7 @@ export function StoryboardRepositoryProvider({
     children,
 }: StoryboardRepositoryProviderProps) {
     const api = useApi();
-    const storage = useStorage();
-    const storyboardRepository = new StoryboardRepositoryImpl(api, storage);
+    const storyboardRepository = new StoryboardRepositoryImpl(api);
 
     return (
         <StoryboardRepositoryContext.Provider value={storyboardRepository}>
