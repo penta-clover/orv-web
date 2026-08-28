@@ -7,8 +7,17 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
+        // static/ 마케팅·랜딩 자산 — 여러 외부 사이트도 이 CloudFront 링크를
+        // 그대로 쓰고 있어 계속 유지한다 (K3S 마이그레이션 D12 결정).
         protocol: "https",
         hostname: "d3bdjeyz3ry3pi.cloudfront.net",
+      },
+      {
+        // archive/videos, archive/images 등 사용자 업로드 미디어 — 홈서버 MinIO로 이관.
+        // 포트가 표준 443이 아니므로 명시 필수.
+        protocol: "https",
+        hostname: "s3.orv.im",
+        port: "16443",
       },
     ],
   },
